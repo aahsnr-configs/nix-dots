@@ -1,0 +1,3 @@
+#!/bin/bash
+sudo nixos-rebuild boot --flake $HOME/nix-dots#zephyrus --upgrade --verbose --option substitute false --impure --keep-going
+#sudo nixos-rebuild boot --flake $HOME/nix-dots#zephyrus --upgrade --verbose --option substitute false --impure --keep-going --max-jobs 1 --cores 10

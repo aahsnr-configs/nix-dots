@@ -1,0 +1,77 @@
+{ inputs, pkgs, ... }:
+
+{
+  environment.systemPackages = with pkgs; [
+    aide
+    appimage-run
+    brave
+    bitwarden-desktop
+    bleachbit
+    btop
+    cached-nix-shell
+    cachix
+    cargo
+    celluloid
+    chkrootkit
+    cmake
+    deluge-gtk
+    element-desktop
+    evince
+    exfatprogs
+    fastfetch
+    fd
+    ffmpeg
+    file-roller
+    firefox
+    fzf
+    gcc
+    glib
+    glibc
+    glibcLocales
+    gnumake
+    gst_all_1.gst-plugins-base
+    gst_all_1.gst-plugins-good
+    gst_all_1.gst-plugins-ugly
+    gst_all_1.gst-plugins-bad
+    imagemagick
+    offlineimap
+    jq
+    killall
+    libratbag
+    linux-firmware
+    lm_sensors
+    lsd
+    lutris
+    masterpdfeditor
+    mu
+    nix-prefetch
+    nix-prefetch-github
+    nodejs
+    nwg-look
+    nwg-drawer
+    libreoffice-qt6-fresh
+    openssl
+    piper
+    # planify
+    pulseaudio
+    qalculate-gtk
+    ripgrep
+    rust-bin.stable.latest.default
+    seatd
+    standardnotes
+    tealdeer
+    ticktick
+    tree
+    typescript
+    unzip
+    udiskie
+    wget
+    wl-clipboard
+    xdg-user-dirs
+    xdg-user-dirs-gtk
+    xournalpp
+    zotero-beta
+    #inputs.zen-browser.packages."${system}".specific
+  ];
+}
+

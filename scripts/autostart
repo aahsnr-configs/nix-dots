@@ -1,0 +1,7 @@
+#!/bin/bash
+hyprctl keyword monitor "eDP-1,disable"
+GDK_DPI_SCALE=0.7 uwsm app -- hyprpanel
+uwsm app -- hyprsunset -t 5500
+uwsm app -- pypr
+# nwg-dock-hyprland
+# gsettings set org.gnome.desktop.interface text-scaling-factor 1.6

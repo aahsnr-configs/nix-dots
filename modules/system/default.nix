@@ -1,0 +1,50 @@
+{ config, pkgs, inputs, ... }:
+
+{
+  imports = [
+    ./adguard
+    ./asus
+    ./bluetooth
+    #./build
+    ./catppuccin
+    ./clamav
+    ./clipmenu
+    ./build
+    #./dconf
+    #./environment
+    ./fonts
+    ./gnupg
+    ./graphics
+    #./greetd
+    ./hyprland
+    ./kernel
+    #./lightdm
+    ./logind
+    ./misc
+    ./network
+    ./nix
+    ./openssh
+    ./pkgs
+    ./polkit
+    ./portal
+    ./power
+    #./proton
+    #./sddm
+    #./scripts
+    ./security
+    ./seatd
+    ./sound
+    #./stdenv
+    ./systemd
+    #./sysprof
+    ./thunar
+    ./users
+    ./virtualization
+    ./wayland
+    ./xserver
+    #./xwayland
+    ./zram
+    ./zsh
+   ];
+}
+
