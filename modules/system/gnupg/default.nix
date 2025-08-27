@@ -1,6 +1,4 @@
-{ config, pkgs, ... }: 
-
-{
+{pkgs, ...}: {
   programs.gnupg.agent = {
     enable = true;
     #homedir = "${config.home.homeDirectory}/.gnupg";
@@ -11,4 +9,3 @@
     };
   };
 }
-

@@ -1,17 +1,9 @@
-{ pkgs, ... }:
-
-{
+{ pkgs, ... }: {
   services.clamav = {
     package = pkgs.clamav;
     scanner = {
       enable = true;
-      scanDirectories = [
-        "/home"
-        "/var/lib"
-        "/tmp"
-        "/etc"
-        "/var/tmp"
-      ];
+      scanDirectories = [ "/home" "/var/lib" "/tmp" "/etc" "/var/tmp" ];
       interval = "*-*-* 04:00:00";
     };
     updater = {
@@ -32,4 +24,3 @@
     daemon.enable = true;
   };
 }
-

@@ -1,12 +1,11 @@
-{ pkgs, ... }:
-
-{
+{ pkgs, ... }: {
   services = {
-     asusd = {
+    asusd = {
       enable = true;
       enableUserService = true;
     };
     supergfxd.enable = true;
   };
-}
 
+  systemd.services.supergfxd.path = [ pkgs.pciutils ];
+}

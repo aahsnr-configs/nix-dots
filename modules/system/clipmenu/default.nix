@@ -1,6 +1,1 @@
-{ ... }:
-
-{
-  services.clipmenu.enable = true;
-}
-
+{...}: {services.clipmenu.enable = true;}

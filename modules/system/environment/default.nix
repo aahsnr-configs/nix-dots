@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   environment = {
     homeBinInPath = true;
     localBinInPath = true;
@@ -9,8 +7,7 @@
     variables = {
       EDITOR = "nvim";
       BROWSER = "firefox";
-      TERMINAL = "alacritty";
+      TERMINAL = "kitty";
     };
   };
 }
-

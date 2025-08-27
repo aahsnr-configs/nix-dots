@@ -1,6 +1,4 @@
-{ config, pkgs, ... }:
-
-{
+{ pkgs, ... }: {
   fonts = {
     fontconfig = {
       enable = true;
@@ -18,9 +16,9 @@
 
       defaultFonts = {
         monospace = [ "JetBrainsMono Nerd Font" ];
-        sansSerif = ["Geist" "Noto Color Emoji"];
-        serif = ["Noto Serif" "Noto Color Emoji"];
-        emoji = ["Noto Color Emoji"];
+        sansSerif = [ "Geist" "Noto Color Emoji" ];
+        serif = [ "Noto Serif" "Noto Color Emoji" ];
+        emoji = [ "Noto Color Emoji" ];
       };
     };
 
@@ -36,7 +34,7 @@
       dina-font
       fira-code
       fira-code-symbols
-      (google-fonts.override {fonts = ["Inter"];})
+      (google-fonts.override { fonts = [ "Inter" ]; })
       jetbrains-mono
       liberation_ttf
       mplus-outline-fonts.githubRelease
@@ -53,4 +51,3 @@
     ];
   };
 }
-

@@ -1,6 +1,4 @@
-{ pkgs, lib, ... }:
-
-{
+{ pkgs, lib, ... }: {
   programs.regreet = {
     enable = true;
     package = pkgs.greetd.regreet;
@@ -14,31 +12,19 @@
     settings = {
       background = {
         path = "$HOME/nix-dots/modules/system/greetd/greet.jpg";
-        fit = "Contain"; # Available values: "Fill", "Contain", "Cover", "ScaleDown"
+        fit =
+          "Contain"; # Available values: "Fill", "Contain", "Cover", "ScaleDown"
       };
 
-      GTK = {
-        application_prefer_dark_theme = true;
-      };
+      GTK = { application_prefer_dark_theme = true; };
 
       commands = {
-        reboot = [
-          "systemctl"
-          "reboot"
-        ];
-        poweroff = [
-          "systemctl"
-          "poweroff"
-        ];
-        x11_prefix = [
-          "startx"
-          "/usr/bin/env"
-        ];
+        reboot = [ "systemctl" "reboot" ];
+        poweroff = [ "systemctl" "poweroff" ];
+        x11_prefix = [ "startx" "/usr/bin/env" ];
       };
 
-      appearance = {
-        greeting_msg = "Welcome back!";
-      };
+      appearance = { greeting_msg = "Welcome back!"; };
 
       widget = {
         clock = {
@@ -52,12 +38,12 @@
   };
 
   environment.etc."greetd/hyprland.conf".text = ''
-  exec-once = regreet; hyprctl dispatch exit
-  misc {
-    disable_hyprland_logo = true
-    disable_splash_rendering = true
-    disable_hyprland_qtutils_check = true
-  }
+    exec-once = regreet; hyprctl dispatch exit
+    misc {
+      disable_hyprland_logo = true
+      disable_splash_rendering = true
+      disable_hyprland_qtutils_check = true
+    }
   '';
 
   services = {
@@ -73,6 +59,4 @@
       };
     };
   };
-
 }
-

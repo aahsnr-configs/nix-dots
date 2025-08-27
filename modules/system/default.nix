@@ -1,8 +1,6 @@
-{ config, pkgs, inputs, ... }:
-
-{
+{ ... }: {
   imports = [
-    ./adguard
+    #./adguard
     ./asus
     ./bluetooth
     #./build
@@ -45,6 +43,5 @@
     #./xwayland
     ./zram
     ./zsh
-   ];
+  ];
 }
-

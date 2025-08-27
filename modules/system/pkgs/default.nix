@@ -1,10 +1,7 @@
-{ inputs, pkgs, ... }:
-
-{
+{ pkgs, ... }: {
   environment.systemPackages = with pkgs; [
     aide
     appimage-run
-    brave
     bitwarden-desktop
     bleachbit
     btop
@@ -74,4 +71,3 @@
     #inputs.zen-browser.packages."${system}".specific
   ];
 }
-

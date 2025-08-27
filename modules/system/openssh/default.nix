@@ -1,10 +1,8 @@
-{ ... }:
-
-{
+{...}: {
   services.openssh = {
     enable = true;
     allowSFTP = false;
-    ports = [ 47 ];
+    ports = [47];
     settings = {
       PasswordAuthentication = true;
       AllowUsers = ["ahsan"]; # Allows all users by default. Can be [ "user1" "user2" ]
@@ -15,4 +13,3 @@
     };
   };
 }
-

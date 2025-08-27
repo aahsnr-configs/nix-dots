@@ -1,6 +1,10 @@
-{ config, pkgs, lib, inputs, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}: {
   environment = {
     systemPackages = [pkgs.git];
     defaultPackages = [];
@@ -23,7 +27,9 @@
 
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
+    nixPath =
+      lib.mapAttrsToList (key: value: "${key}=${value.to.path}")
+      config.nix.registry;
 
     # Free up to 1GiB whenever there is less than 100MiB left.
     extraOptions = ''
@@ -45,31 +51,31 @@
       cores = 6;
       keep-going = true;
       log-lines = 50;
-     #  system-features = [
-     #    "benchmark"
-     #    "big-parallel"
-     #    "kvm"
-     #    "nixos-test"
-     #    #"gccarch-znver3"
-     #  ];
-     # substituters = [
-     #    "https://cache.nixos.org"
-     #    "https://nix-community.cachix.org"
-     #    "https://nixpkgs-unfree.cachix.org"
-     #    "https://hyprland.cachix.org"
-     #    "https://cuda-maintainers.cachix.org"
-     #    "https://anyrun.cachix.org"
-     #    "https://yazi.cachix.org"
-     #  ];
-     #  trusted-public-keys = [
-     #    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-     #    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-     #    "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
-     #    "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-     #    "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-     #    "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
-     #    "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
-     #  ];
+      system-features = [
+        "benchmark"
+        "big-parallel"
+        "kvm"
+        "nixos-test"
+        #"gccarch-znver3"
+      ];
+      substituters = [
+        "https://cache.nixos.org"
+        "https://nix-community.cachix.org"
+        "https://nixpkgs-unfree.cachix.org"
+        "https://hyprland.cachix.org"
+        "https://cuda-maintainers.cachix.org"
+        "https://anyrun.cachix.org"
+        "https://yazi.cachix.org"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
+        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+        "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
+        "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
+      ];
       extra-experimental-features = ["flakes" "nix-command" "ca-derivations"];
     };
   };
@@ -78,10 +84,7 @@
     config = {
       allowUnfree = true;
       allowBroken = true;
-      permittedInsecurePackages = [
-        "openssl-1.1.1u"
-        "electron-25.9.0"
-      ];
+      permittedInsecurePackages = ["openssl-1.1.1u" "electron-25.9.0"];
     };
 
     overlays = with inputs; [
@@ -97,7 +100,6 @@
       gcc.arch = "znver3";
       gcc.tune = "znver3";
     };
-
   };
 
   documentation = {
@@ -112,4 +114,3 @@
     stateVersion = "25.05";
   };
 }
-

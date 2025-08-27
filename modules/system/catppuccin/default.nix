@@ -1,5 +1,4 @@
-{ config, pkgs, catppuccin, ... }:
-{
+{ ... }: {
   catppuccin = {
     cache.enable = true;
     tty = {

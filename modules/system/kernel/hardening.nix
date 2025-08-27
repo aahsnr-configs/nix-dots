@@ -1,8 +1,6 @@
-{ config, pkgs, lib, ... }:
-
-with lib;
-{
- boot.kernel.sysctl = {
+{lib, ...}:
+with lib; {
+  boot.kernel.sysctl = {
     # Hide kptrs even for processes with CAP_SYSLOG
     "kernel.kptr_restrict" = mkOverride 500 2;
 
@@ -83,4 +81,3 @@ with lib;
     "ufs"
   ];
 }
-

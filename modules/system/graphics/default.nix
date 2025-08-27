@@ -1,27 +1,20 @@
-{ config, lib, pkgs, ...}: let
-  inherit (lib) mkIf mkDefault versionOlder;
+{ config, lib, pkgs, ... }:
+let
+  inherit (lib) versionOlder;
 
   # Use the latest possible nvidia package
   nvStable = config.boot.kernelPackages.nvidiaPackages.stable.version;
   nvBeta = config.boot.kernelPackages.nvidiaPackages.beta.version;
 
-  nvidiaPackage =
-    if (versionOlder nvBeta nvStable)
-    then config.boot.kernelPackages.nvidiaPackages.stable
-    else config.boot.kernelPackages.nvidiaPackages.beta;
-
-  pCfg = config.hardware.nvidia.prime;
-
+  nvidiaPackage = if (versionOlder nvBeta nvStable) then
+    config.boot.kernelPackages.nvidiaPackages.stable
+  else
+    config.boot.kernelPackages.nvidiaPackages.beta;
 in {
   boot = {
-    kernelModules = [
-      "nvidia"
-      "nvidia_modeset"
-      "nvidia_drm"
-      "nvidia_uvm"
-    ];
+    kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_drm" "nvidia_uvm" ];
 
-    blacklistedKernelModules = ["nouveau"];
+    blacklistedKernelModules = [ "nouveau" ];
   };
 
   environment = {
@@ -44,7 +37,7 @@ in {
   };
 
   hardware = {
-    brillo.enable = true;
+    brillo.enable = false;
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -59,4 +52,3 @@ in {
     nvidia-container-toolkit.enable = true;
   };
 }
-

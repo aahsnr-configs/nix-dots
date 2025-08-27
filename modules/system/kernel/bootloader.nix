@@ -1,6 +1,4 @@
-{ config, pkgs, ... }:
-
-{
+{ pkgs, ... }: {
   boot = {
     consoleLogLevel = 5;
 
@@ -9,7 +7,6 @@
       systemd.enable = true;
       #luks.devices."luks-392510c6-7a4d-45fc-b6bd-4f12c5a2e6df".device = "/dev/disk/by-uuid/392510c6-7a4d-45fc-b6bd-4f12c5a2e6df";
     };
-
 
     kernelPackages = pkgs.linuxPackages_zen;
 
@@ -22,9 +19,7 @@
       "security=apparmor"
     ];
 
-
     loader = {
-
       efi = {
         canTouchEfiVariables = true;
         efiSysMountPoint = "/boot";
@@ -58,7 +53,5 @@
       cleanOnBoot = true;
       useTmpfs = false;
     };
-
   };
 }
-

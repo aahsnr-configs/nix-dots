@@ -1,6 +1,4 @@
-{ ... }:
-
-{
+{...}: {
   services = {
     logind = {
       lidSwitch = "suspend";
@@ -16,4 +14,3 @@
     };
   };
 }
-
