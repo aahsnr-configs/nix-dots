@@ -1,7 +1,4 @@
-{ config, pkgs, inputs, ... }:
-
-{
-
+{...}: {
   environment = {
     sessionVariables = {
       _JAVA_AWT_WM_NONEREPARENTING = "1";
@@ -45,4 +42,3 @@
     };
   };
 }
-

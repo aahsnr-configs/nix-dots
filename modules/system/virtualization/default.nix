@@ -1,10 +1,3 @@
-{ ... }:
-
-{
-  imports = [
-    ./podman.nix
-    ./virtualbox.nix
-    ./vm-guest-services.nix
-  ];
+{ ... }: {
+  imports = [ ./podman.nix ./virtualbox.nix ./vm-guest-services.nix ];
 }
-

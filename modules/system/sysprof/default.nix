@@ -1,6 +1,1 @@
-{ ... }:
-
-{
-  services.sysprof.enable = true;
-}
-
+{...}: {services.sysprof.enable = true;}

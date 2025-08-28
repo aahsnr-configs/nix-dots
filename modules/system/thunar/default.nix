@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   programs = {
     thunar = {
       enable = true;
@@ -19,4 +17,3 @@
     gvfs.enable = true;
   };
 }
-

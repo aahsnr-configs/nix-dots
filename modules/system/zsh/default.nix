@@ -1,6 +1,4 @@
-{ lib, pkgs, ... }:
-
-{
+{ ... }: {
   programs = {
     less.enable = true;
 
@@ -39,11 +37,10 @@
       #   # We don't do `compinit -C` here because the GRML zshrc already did it above.
       # fi
       # '';
-      promptInit = '''';
+      promptInit = "";
       enableGlobalCompInit = true;
     };
   };
 
   # users.defaultUserShell = pkgs.zsh;
 }
-

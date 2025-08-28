@@ -1,6 +1,4 @@
-{ config, pkgs, ... }:
-
-{
+{ pkgs, ... }: {
   users.users.root.initialPassword = "changeme";
   users.users.ahsan = {
     isNormalUser = true;
@@ -26,4 +24,3 @@
     packages = with pkgs; [ git ];
   };
 }
-

@@ -1,12 +1,10 @@
-{ ... }:
-
-{
+{ ... }: {
   # rtkit is optional but recommended
   # rtkit is already set in security system module
   services = {
     pipewire = {
       enable = true;
-      alsa  = {
+      alsa = {
         enable = true;
         support32Bit = true;
       };
@@ -16,4 +14,3 @@
     pulseaudio.enable = false;
   };
 }
-

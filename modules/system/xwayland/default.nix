@@ -1,8 +1,1 @@
-{ ... }:
-
-{
-  programs.xwayland = {
-    enable = true;
-  };
-}
-
+{ ... }: { programs.xwayland = { enable = true; }; }

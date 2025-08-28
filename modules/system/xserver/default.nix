@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{ pkgs, ... }: {
   services.xserver = {
     enable = false;
     xkb = {
@@ -64,4 +62,3 @@
     xdg-desktop-portal-gnome
   ];
 }
-
