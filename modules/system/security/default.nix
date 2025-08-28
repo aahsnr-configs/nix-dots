@@ -1,9 +1,5 @@
-{ pkgs, ... }:
-
-{
-  programs = {
-    ssh.startAgent = false;
-  };
+{ pkgs, ... }: {
+  programs = { ssh.startAgent = false; };
 
   hardware.ledger.enable = true;
 
@@ -26,20 +22,20 @@
     polkit = {
       enable = true;
       extraConfig = ''
-      polkit.addRule(function(action, subject) {
-      if (
-        subject.isInGroup("users")
-          && (
-            action.id == "org.freedesktop.login1.reboot" ||
-            action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
-            action.id == "org.freedesktop.login1.power-off" ||
-            action.id == "org.freedesktop.login1.power-off-multiple-sessions"
-          )
-        )
-      {
-        return polkit.Result.YES;
-      }
-    })
+          polkit.addRule(function(action, subject) {
+          if (
+            subject.isInGroup("users")
+              && (
+                action.id == "org.freedesktop.login1.reboot" ||
+                action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
+                action.id == "org.freedesktop.login1.power-off" ||
+                action.id == "org.freedesktop.login1.power-off-multiple-sessions"
+              )
+            )
+          {
+            return polkit.Result.YES;
+          }
+        })
       '';
     };
     rtkit.enable = true;
@@ -68,14 +64,16 @@
     # };
     audit = {
       enable = true;
-      rules  = [ "-a exit,always -F arch=b64 -S execve" ];
+      rules = [ "-a exit,always -F arch=b64 -S execve" ];
       backlogLimit = 32;
       failureMode = "printk";
     };
     auditd.enable = true;
-    pam.loginLimits = [
-      { domain = "*"; item = "core"; type = "hard"; value = "0";}
-    ];
+    pam.loginLimits = [{
+      domain = "*";
+      item = "core";
+      type = "hard";
+      value = "0";
+    }];
   };
 }
-

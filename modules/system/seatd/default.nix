@@ -1,10 +1,5 @@
-{ pkgs, ... }:
-
-{
-  environment.systemPackages = with pkgs; [
-    seatd
-    sdnotify-wrapper
-  ];
+{ pkgs, ... }: {
+  environment.systemPackages = with pkgs; [ seatd sdnotify-wrapper ];
 
   systemd.services = {
     seatd = {
@@ -16,8 +11,7 @@
         Restart = "always";
         RestartSec = "1";
       };
-      wantedBy = ["multi-user.target"];
+      wantedBy = [ "multi-user.target" ];
     };
   };
 }
-
