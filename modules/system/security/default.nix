@@ -57,11 +57,6 @@
         libapparmor
       ];
     };
-    # apparmor = {
-    #   enable = true;
-    #   killUnconfinedConfinables = true;
-    #   packages = [ pkgs.apparmor-profiles ];
-    # };
     audit = {
       enable = true;
       rules = [ "-a exit,always -F arch=b64 -S execve" ];
@@ -69,11 +64,17 @@
       failureMode = "printk";
     };
     auditd.enable = true;
-    pam.loginLimits = [{
-      domain = "*";
-      item = "core";
-      type = "hard";
-      value = "0";
-    }];
+    pam = {
+      loginLimits = [{
+        domain = "*";
+        item = "core";
+        type = "hard";
+        value = "0";
+      }];
+      services = {
+        hyprlock = { };
+        greetd.enableGnomeKeyring = true;
+      };
+    };
   };
 }

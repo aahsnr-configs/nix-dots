@@ -38,16 +38,17 @@
       jetbrains-mono
       liberation_ttf
       mplus-outline-fonts.githubRelease
+      nerd-fonts.jetbrains-mono
       nerd-fonts.ubuntu
       nerd-fonts.ubuntu-mono
-      nerd-fonts.jetbrains-mono
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-emoji
-      proggyfonts
       powerline-fonts
-      vistafonts
+      proggyfonts
+      terminus_font
       ubuntu_font_family
+      vistafonts
     ];
   };
 }

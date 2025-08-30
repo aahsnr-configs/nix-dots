@@ -1,11 +1,9 @@
-{ config, ... }:
-
-{
+{ ... }: {
   wayland.windowManager.hyprland = {
     settings = {
       bind = [
         #--- Terminal --
-        "SUPER, Return, exec, foot"
+        "SUPER, Return, exec, kitty"
 
         #--- Scratchpads
         "SUPERSHIFT, RETURN, exec, pypr toggle term"

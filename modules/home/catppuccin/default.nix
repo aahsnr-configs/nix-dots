@@ -1,10 +1,10 @@
-{ config, pkgs, catppuccin, ... }:
-
-{
+# ~/.config/home-manager/catppuccin/default.nix
+{ ... }: {
   catppuccin = {
-    alacritty = {
+    atuin = {
       enable = true;
       flavor = "macchiato";
+      accent = "flamingo";
     };
 
     bat = {
@@ -17,19 +17,23 @@
       flavor = "macchiato";
     };
 
-    cache.enable = true;
-
     delta = {
       enable = true;
       flavor = "macchiato";
     };
 
-    foot = {
+    fzf = {
+      enable = true;
+      accent = "flamingo";
+      flavor = "macchiato";
+    };
+
+    imv = {
       enable = true;
       flavor = "macchiato";
     };
 
-    fzf = {
+    hyprlock = {
       enable = true;
       accent = "flamingo";
       flavor = "macchiato";
@@ -59,18 +63,22 @@
       flavor = "macchiato";
     };
 
+    tmux = {
+      enable = true;
+      extraConfig = ''
+        set -g @catppuccin_status_modules_right "application session user host date_time"
+      '';
+      flavor = "macchiato";
+    };
+
     starship = {
       enable = true;
       flavor = "macchiato";
     };
 
-    tmux = {
+    yazi = {
       enable = true;
-      extraConfig =
-        ''
-        set -g @catppuccin_status_modules_right "application session user host date_time"
-        ''
-      ;
+      accent = "flamingo";
       flavor = "macchiato";
     };
 
@@ -83,12 +91,5 @@
       enable = true;
       flavor = "macchiato";
     };
-
-    yazi = {
-      enable = true;
-      accent = "flamingo";
-      flavor = "macchiato";
-    };
-
   };
 }

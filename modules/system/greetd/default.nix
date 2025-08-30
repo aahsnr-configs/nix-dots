@@ -2,16 +2,16 @@
   programs.regreet = {
     enable = true;
     package = pkgs.greetd.regreet;
-    theme.name = "Catppuccin-GTK-Orange-Dark-Compact-Macchiato";
+    theme.name = "Colloid-Orange-Dark-Catppuccin";
     font = {
       name = "JetBrainsMono Nerd Font Medium";
       size = 24;
     };
     iconTheme.name = "Papirus-Dark";
-    cursorTheme.name = "catppuccin-macchiato-flamingo-cursors";
+    cursorTheme.name = "Bibata-Modern-Ice";
     settings = {
       background = {
-        path = "$HOME/nix-dots/modules/system/greetd/greet.jpg";
+        path = "./greet.jpg";
         fit =
           "Contain"; # Available values: "Fill", "Contain", "Cover", "ScaleDown"
       };

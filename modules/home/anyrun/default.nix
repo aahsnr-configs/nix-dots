@@ -1,15 +1,12 @@
-{ config, inputs, pkgs, ... }: {
-
-  imports = [
-    inputs.anyrun.homeManagerModules.default
-  ];
+{ inputs, pkgs, ... }: {
+  imports = [ inputs.anyrun.homeManagerModules.default ];
 
   programs.anyrun = {
     enable = true;
     config = {
       x.fraction = 0.5;
-      y.fraction = 0.06;
-      width.fraction = 0.40;
+      y.fraction = 6.0e-2;
+      width.fraction = 0.4;
       hideIcons = false;
       ignoreExclusiveZones = false;
       layer = "overlay";
@@ -23,7 +20,7 @@
         rink
         shell
         stdin
-	      translate
+        translate
         symbols
       ];
     };

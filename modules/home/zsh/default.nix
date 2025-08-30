@@ -1,33 +1,27 @@
-{ config, lib, pkgs, ...}:
-
-{
-  home.sessionVariables.STARSHIP_CACHE = "${config.xdg.cacheHome}/starship";
-
+# ~/.config/home-manager/zsh/default.nix
+{ config, pkgs, ... }: {
   programs.zsh = {
     enable = true;
+    autocd = true;
     autosuggestion = {
       enable = true;
       strategy = [ "history" ];
     };
     enableVteIntegration = true;
     enableCompletion = true;
-    syntaxHighlighting = {
-      enable = true;
-      highlighters = ["brackets"];
+    syntaxHighlighting.enable = true;
+    history = {
+      path = "${config.xdg.dataHome}/zsh/history";
+      save = 50000;
+      size = 50000;
+      share = true;
+      ignoreDups = true;
     };
+    completionInit = "autoload -U compinit && compinit";
     sessionVariables = {
       LC_ALL = "en_US.UTF-8";
       ZSH_AUTOSUGGEST_USE_ASYNC = "true";
     };
-    completionInit = "autoload -U compinit && compinit";
-    history = {
-      save = 2137;
-      size = 2137;
-      expireDuplicatesFirst = true;
-      ignoreDups = false;
-      ignoreSpace = true;
-    };
-
     dirHashes = {
       docs = "$HOME/Documents";
       notes = "$HOME/Documents/Notes";
@@ -37,40 +31,80 @@
       music = "$HOME/Music";
       media = "/run/media/$USER";
     };
-    shellAliases = import ./aliases.nix {inherit pkgs lib config;};
     plugins = [
       {
-        name = "zsh-nix-shell";
-        file = "nix-shell.plugin.zsh";
-        src = pkgs.fetchFromGitHub {
-          owner = "chisui";
-          repo = "zsh-nix-shell";
-          rev = "82ca15e638cc208e6d8368e34a1625ed75e08f90";
-          sha256 = "Rtg8kWVLhXRuD2/Ctbtgz9MQCtKZOLpAIdommZhXKdE=";
-        };
+        name = "zsh-vi-mode";
+        src = pkgs.zsh-vi-mode;
       }
       {
         name = "fzf-tab";
-        file = "fzf-tab.plugin.zsh";
-        src = pkgs.fetchFromGitHub {
-          owner = "Aloxaf";
-          repo = "fzf-tab";
-          rev = "01dad759c4466600b639b442ca24aebd5178e799";
-          sha256 = "q26XVS/LcyZPRqDNwKKA9exgBByE0muyuNb0Bbar2lY=";
-        };
+        src = pkgs.zsh-fzf-tab;
+      }
+      {
+        name = "zsh-autopair";
+        src = pkgs.zsh-autopair;
+      }
+      {
+        name = "zsh-nix-shell";
+        src = pkgs.zsh-nix-shell;
       }
     ];
+    shellAliases = {
+      find = "fd";
+      rmi = "sudo rm -rf";
+      vi = "nvim";
+      du = "dust";
+      grep = "rg";
+      cd = "z";
+      cat = "bat --paging=never";
+      nrs = "sudo nixos-rebuild switch";
+      nrb = "sudo nixos-rebuild boot";
+      nixs = "nix-shell -p";
+      hm-switch = "home-manager switch";
+      sctl = "systemctl";
+      sctle = "sudo systemctl enable";
+      sctls = "sudo systemctl start";
+      gg = "lazygit";
+    };
+    initContent = ''
+      # ===== Zsh Options =====
+      setopt EXTENDED_HISTORY HIST_VERIFY PUSHD_IGNORE_DUPS
+
+      # ===== fzf-tab configuration =====
+      zstyle ':fzf-tab:complete:*' fzf-preview \
+        '[[ -f $realpath ]] && bat --color=always --style=numbers $realpath || eza --tree --level=2 $realpath'
+
+      # ===== zsh-vi-mode configuration =====
+      ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
+
+      # ===== Helper Functions =====
+
+      # Atuin search widget keybindings
+      bindkey -M vicmd '^R' _atuin_search_widget
+      bindkey -M viins '^R' _atuin_search_widget
+
+      # Yazi cd on quit
+      function yy() {
+        local tmp="$ (mktemp -t "yazi-cwd.XXXXXX")"
+        yazi "$@" --cwd-file="$tmp"
+        if cwd="$(< "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+          cd -- "$cwd"
+        fi
+        rm -f -- "$tmp"
+      }
+      compdef yy=yazi
+
+      # Ripgrep with fzf
+      function rgfzf() {
+        rg --color=always --line-number "$@" | fzf --ansi \
+          --preview 'bat --style=numbers --color=always --line-range :500 {1}' \
+          --preview-window 'right:60%:wrap'
+      }
+
+      # tldr with fzf
+      function tldr-fzf() {
+        tldr --list | fzf --preview 'tldr {1}' --preview-window right:70%
+      }
+    '';
   };
-
-  # home = {
-  #   packages = with pkgs; [
-  #     zsh-fzf-tab
-  #     zsh-nix-shell
-  #     zsh-autopair
-  #     nix-zsh-completions
-  #     zsh-history-substring-search
-  #   ];
-  # };
-
-
 }

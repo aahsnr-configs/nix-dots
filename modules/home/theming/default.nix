@@ -1,18 +1,22 @@
-{ config, pkgs, ... }:
-
-{
+{ config, pkgs, ... }: {
   gtk = {
     enable = true;
 
-    theme = {
-      package = pkgs.magnetic-catppuccin-gtk.override {
-        accent = [ "orange" ];
-        size = "compact";
-        tweaks = [ "macchiato" ];
-      };
-      name = "Catppuccin-GTK-Orange-Dark-Compact-Macchiato";
+    cursorTheme = {
+      name = "Bibata-Modern-Ice";
+      size = 32;
+      package = pkgs.bibata-cursors;
     };
 
+    theme = {
+      package = pkgs.colloid-gtk-theme.override {
+        themeVariants = [ "orange" ];
+        colorVariants = [ "dark" ];
+        sizeVariants = [ "standard" ];
+        tweaks = [ "catppuccin" ];
+      };
+      name = "Colloid-Orange-Dark-Catppuccin";
+    };
 
     iconTheme = {
       package = pkgs.papirus-icon-theme;
@@ -20,7 +24,7 @@
     };
 
     font = {
-      name = "JetBrains Mono";
+      name = "JetBrainsMono Nerd Font";
       size = 13;
     };
 
@@ -49,39 +53,13 @@
     };
 
     gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
-
-
-  };
-
-  home = {
-    packages = with pkgs; [
-      qt5.qttools
-      qt6Packages.qtstyleplugin-kvantum
-      libsForQt5.qtstyleplugin-kvantum
-      libsForQt5.qt5ct
-      kdePackages.qt6ct
-    ];
-
-    pointerCursor = {
-      package = pkgs.pkgs.bibata-cursors;
-      name = "Bibata-Modern-Classic";
-      size = 32;
-      gtk.enable = true;
-      #x11.enable = true;
-    };
-
-    sessionVariables = {
-      XCURSOR_SIZE = "32";
-      GTK_USE_PORTAL = "1";
-    };
   };
 
   qt = {
     enable = true;
-    platformTheme.name = "kvantum";
+    platformTheme = "kvantum";
     style.name = "kvantum";
   };
 
-   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
-
+  dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 }

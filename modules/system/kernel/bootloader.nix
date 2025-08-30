@@ -8,16 +8,9 @@
       #luks.devices."luks-392510c6-7a4d-45fc-b6bd-4f12c5a2e6df".device = "/dev/disk/by-uuid/392510c6-7a4d-45fc-b6bd-4f12c5a2e6df";
     };
 
-    kernelPackages = pkgs.linuxPackages_zen;
+    kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
-    kernelParams = [
-      "quiet"
-      "splash"
-      "loglevel=3"
-      "nowatchdog"
-      "apparmor=1"
-      "security=apparmor"
-    ];
+    kernelParams = [ "quiet" "splash" "loglevel=3" "nowatchdog" ];
 
     loader = {
       efi = {

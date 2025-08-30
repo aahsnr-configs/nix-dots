@@ -1,70 +1,71 @@
-{
+{ pkgs, ... }: {
   home = {
     username = "ahsan";
     homeDirectory = "/home/ahsan";
-    stateVersion = "25.05";
-    extraOutputsToInstall = ["doc" "info" "devdoc"];
+    stateVersion = "25.11";
+    extraOutputsToInstall = [ "doc" "info" "devdoc" ];
+
+    # Set default editor and other environment variables
     sessionVariables = {
-      TERMINAL = "foot";
-      BROWSER = "zen";
       EDITOR = "nvim";
+      BROWSER = "zen-browser";
+      VISUAL = "emacsclient -c -a 'emacs'";
+      TERMINAL = "kitty";
+      MANPAGER = "sh -c 'col -bx | bat -l man -p'";
+      PAGER = "bat --paging=always --style=plain";
+      LESS = "-R --use-color -Dd+r -Du+b -DS+s -DE+g";
+      LANG = "en_US.UTF-8";
+      XCURSOR_SIZE = "32";
+      GTK_USE_PORTAL = "1";
     };
 
-    # sessionPath = [
-    #   "$HOME/nix-dots/scripts"
-    # ];
+    pointerCursor = {
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Ice";
+      size = 32;
+      gtk.enable = true;
+      x11.enable = true;
+    };
 
+    shellAliases.vi = "nvim";
   };
 
-  programs.home-manager.enable = true;
+  # Consolidate PATH from export.zsh
+  sessionPath = [
+    "$HOME/.cargo/bin"
+    "$HOME/go/bin"
+    "$HOME/.bun/bin"
+    "$HOME/.local/bin"
+    "$HOME/.local/bin/hypr"
+    "$HOME/.config/emacs/bin"
+    "$HOME/.npm-global/bin"
+    "$HOME/.local/share/flatpak/exports/bin"
+  ];
 
   imports = [
-    #./alacritty
     ./anyrun
+    ./atuin
     ./bat
+    ./btop
     ./catppuccin
-    ./cliphist
     ./dev
-    ./dropbox
     ./emacs
-    ./emoji
     ./eza
-    ./fastfetch
-    ./foot
+    ./fd-find
     ./fzf
     ./git
-    ./hypridle
-    ./hyprland
-    ./hyprlock
-    ./hyprpaper
-    ./hyprpanel
     ./imv
-    ./kitty
-    ./lazygit
+    ./keyring
     ./mpv
-    # ./nwg-dock-hyprland
-    ./nvim
+    ./pay-respects
+    ./pkgs
     ./ripgrep
-    ./starship
-    ./tealdeer
-    ./texlive
-    ./theming
-    ./thefuck
-    ./tmux
-    ./wofi
-    ./xdg
-    ./yazi
+    ./tldr
     ./zathura
-    #./zellij
     ./zoxide
     ./zsh
   ];
 
-  # nixpkgs = {
-  #   config = {
-  #     allowUnfree = true;
-  #     allowBroken = true;
-  #     allowUnfreePredicate = true;
-  #   };
-  # };
+  # Let Home Manager install and manage itself.
+  programs.home-manager.enable = true;
 }

@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   imports = [
     inputs.nixvim.homeManagerModules.nixvim
     ./autocommands.nix
@@ -10,22 +9,15 @@
     ./todo.nix
   ];
 
-  home.shellAliases.vi = "nvim";
-
   programs.nixvim = {
     enable = true;
-    defaultEditor = true;
 
     nixpkgs.useGlobalPackages = true;
 
     performance = {
       combinePlugins = {
         enable = true;
-        standalonePlugins = [
-          "hmts.nvim"
-          "neorg"
-          "nvim-treesitter"
-        ];
+        standalonePlugins = [ "hmts.nvim" "neorg" "nvim-treesitter" ];
       };
       byteCompileLua.enable = true;
     };

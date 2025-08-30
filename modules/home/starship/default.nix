@@ -1,55 +1,91 @@
-{ config, pkgs, ... }:
-
-{
+# ~/.config/home-manager/starship/default.nix
+{ ... }: {
   programs.starship = {
     enable = true;
-    enableTransience = true;
     enableZshIntegration = true;
+    # Theme palette is managed by the catppuccin module.
     settings = {
       add_newline = false;
-      character = {
-        success_symbol = " ";
-        error_symbol = " ";
-        vicmd_symbol = " ";
-      };
-      command_timeout = 1000;
-      directory = {
-        home_symbol = "~ ";
-        style = "cyan";
-      };
-      git_commit.tag_symbol = " tag ";
-      git_branch = {
-        # style = "purple";
-        symbol = " ";
-      };
-      git_metrics = {
-        added_style = "[]bold green";
-        deleted_style = "bold red";
-        disabled = true;
-      };
-      hostname = {
-        ssh_only = true;
-        format = "[$hostname] ";
-        disabled = false;
-      };
-      line_break.disabled = true;
-      scan_timeout = 10000;
-      format = "$directory$git_branch$git_metrics$git_commit$git_state$git_status$all";
+      continuation_prompt = "[>>](bold mauve) ";
+      format = "$character";
+      right_format =
+        "$directory$git_branch$git_status$package$rust$nodejs$python$nix_shell$time";
 
-      bun.symbol = " ";
-      c.symbol = " ";
-      conda.symbol = " ";
-      cmake.symbol = " ";
-      directory.read_only = " ro";
-      docker_context.symbol = " ";
-      lua.symbol = "󰢱 ";
-      memory_usage.symbol = "󰍛 ";
-      nodejs.symbol = " ";
-      package.symbol = " ";
-      perl.symbol = " ";
-      python.symbol = " ";
-      rust.symbol = " ";
-      sudo.symbol = " ";
+      character = {
+        success_symbol = "[◎](bold yellow)";
+        error_symbol = "[○](bold subtext0)";
+        vimcmd_symbol = "[■](bold green)";
+      };
+
+      directory = {
+        use_os_path_sep = true;
+        style = "bold blue";
+        format = "[□ $path]($style) ";
+        truncation_symbol = "…/";
+        home_symbol = "⌂";
+        read_only = " ◈";
+        repo_root_style = "bold blue";
+        repo_root_format =
+          "[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) [△](bold blue)";
+      };
+
+      time = {
+        disabled = false;
+        format = "[⌂ $time]($style) ";
+        time_format = "%R";
+        style = "mauve";
+      };
+
+      git_branch = {
+        format = "[$symbol$branch]($style) ";
+        symbol = "△ ";
+        style = "bold blue";
+      };
+
+      git_status = {
+        style = "bold blue";
+        format = "[|$all_status$ahead_behind|]($style) ";
+        staged = "▪\${count}";
+        modified = "●\${count}";
+        untracked = "○\${count}";
+        deleted = "✕\${count}";
+        conflicted = "[◪◦](italic pink)";
+        ahead = "[▴│[\${count}](bold text)│](italic green)";
+        behind = "[▿│[\${count}](bold text)│](italic red)";
+        diverged =
+          "[◇ ▴┤[\${ahead_count}](regular text)│▿┤[\${behind_count}](regular text)│](italic pink)";
+        stashed = "[◃◈](italic text)";
+      };
+
+      nix_shell = {
+        style = "bold italic dimmed blue";
+        symbol = "✶";
+        format = "[$symbol nix shell]($style)";
+      };
+
+      package = {
+        format = "[pkg $symbol$version]($style) ";
+        symbol = "◨ ";
+        style = "bold yellow";
+      };
+
+      rust = {
+        format = "[rs $symbol$version]($style) ";
+        symbol = "⊃ ";
+        style = "bold red";
+      };
+
+      nodejs = {
+        format = "[node $symbol$version]($style) ";
+        symbol = "◫ ";
+        style = "bold green";
+      };
+
+      python = {
+        format = "[py $symbol$version]($style) ";
+        symbol = "⌊ ";
+        style = "bold yellow";
+      };
     };
   };
 }

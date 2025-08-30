@@ -1,9 +1,0 @@
-#!/bin/bash
-sudo nix-channel --list
-sudo nix-channnel --remove nixos
-sudo nix-channel --update
-sudo nix-channel --add https://nixos.org/channels/nixos-unstable-small nixos 
-sudo nix-channel --update
-nix-channel --add https://nixos.org/channels/nixos-unstable-small nixos
-nix-channel --update
-nix-shell -p neovim wl-clipboard git
