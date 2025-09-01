@@ -1,16 +1,23 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   boot = {
     consoleLogLevel = 5;
 
     initrd = {
       verbose = false;
       systemd.enable = true;
-      #luks.devices."luks-392510c6-7a4d-45fc-b6bd-4f12c5a2e6df".device = "/dev/disk/by-uuid/392510c6-7a4d-45fc-b6bd-4f12c5a2e6df";
+      luks.devices."luks-374fa84a-a386-4666-bd07-6a87c6c853a8".device =
+        "/dev/disk/by-uuid/374fa84a-a386-4666-bd07-6a87c6c853a8";
     };
 
     kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
-    kernelParams = [ "quiet" "splash" "loglevel=3" "nowatchdog" ];
+    kernelParams = [
+      "quiet"
+      "splash"
+      "loglevel=3"
+      "nowatchdog"
+    ];
 
     loader = {
       efi = {
@@ -31,16 +38,6 @@
       enable = true;
       theme = "bgrt";
     };
-
-    # plymouth = {
-    #   enable = true;
-    #   theme = "square_hud";
-    #   themePackages = with pkgs; [
-    #     (adi1090x-plymouth-themes.override {
-    #       selected_themes = [ "square_hud" ];
-    #     })
-    #   ];
-    # };
 
     tmp = {
       cleanOnBoot = true;

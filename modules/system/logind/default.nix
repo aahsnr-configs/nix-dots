@@ -6,11 +6,11 @@
       powerKey = "lock";
       powerKeyLongPress = "poweroff";
       rebootKey = "reboot";
-      extraConfig = ''
-        HandlePowerKey=poweroff
-        HibernateDelaySec=600
-        SuspendState=mem
-      '';
+      settings.Login = {
+        HandlePowerKey = "poweroff";
+        HibernateDelaySec = 600;
+        SuspendState = "mem";
+      };
     };
   };
 }

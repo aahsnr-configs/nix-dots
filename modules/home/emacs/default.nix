@@ -1,10 +1,12 @@
-{ inputs, pkgs, ... }: {
+{ inputs, pkgs, ... }:
+
+{
   imports = [ inputs.nix-doom-emacs-unstraightened.hmModule ];
 
   programs.doom-emacs = {
     enable = true;
     emacs = pkgs.emacs-pgtk;
-    doomDir = ./doom.d;
+    doomDir = ./doom;
     tangleArgs = "--all config.org";
     experimentalFetchTree = true; # Disable if there are fetcher issues
   };

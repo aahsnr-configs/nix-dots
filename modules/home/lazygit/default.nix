@@ -126,8 +126,8 @@
         }
         {
           key = "T";
-          command = ''${pkgs.neovim}/bin/nvim -c "lua require(\"telescope.builtin\").git_files()"''
-            context = "global";
+          command = ''${pkgs.neovim}/bin/nvim -c "lua require(\"telescope.builtin\").git_files()"'';
+          context = "global";
           description = "Open AstroNvim with Telescope git files";
           output = "terminal";
         }

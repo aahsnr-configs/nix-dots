@@ -1,20 +1,6 @@
 [pyprland]
 plugins = ["scratchpads"]
 
-# [scratchpads.terminals]
-# animation = "fromTop"
-# margin = 50
-# size = "75% 60%"
-# max_size = "1920px 100%"
-#
-# [scratchpads.term]
-# command = "foot"
-# class = "foot-float"
-# use = "terminals"
-
-# [pyprland]
-# plugins = [ "scratchpads" ]
-#
 [scratchpads.term]
 command = "kitty --class kitty-float"
 class = "kitty-float"

@@ -1,18 +1,16 @@
 { pkgs, inputs, ... }:
-
 {
   home = {
     packages = with pkgs; [
+      app2unit
+      brightnessctl
+      fuzzel
+      hyprpicker
+      # no flake or nixpkg yet
+      # hyprqt6engine
+      inputs.hyprpicker.packages.${pkgs.system}.hyprpicker
       inputs.pyprland.packages.${pkgs.system}.pyprland
-      inputs.hyprland-contrib.packages.${pkgs.system}.grimblast
-      hyprnome
-      hyprsunset
-      hyprlandPlugins.hyprscroller
     ];
-    #file.".config/hypr/shaders/blue-light-filter.glsl".source  = ./blue-light-filter.glsl;
     file.".config/hypr/pyprland.toml".source = ./pyprland.toml;
   };
-
-  wayland.windowManager.hyprland.portalPackage = inputs.xdg-portal-hyprland.packages.${pkgs.system}.default;
-
 }

@@ -1,9 +1,15 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+
+{
   home = {
     username = "ahsan";
     homeDirectory = "/home/ahsan";
     stateVersion = "25.11";
-    extraOutputsToInstall = [ "doc" "info" "devdoc" ];
+    extraOutputsToInstall = [
+      "doc"
+      "info"
+      "devdoc"
+    ];
 
     # Set default editor and other environment variables
     sessionVariables = {
@@ -28,40 +34,61 @@
     };
 
     shellAliases.vi = "nvim";
+
+    # Consolidate PATH from export.zsh
+    sessionPath = [
+      "$HOME/.cargo/bin"
+      "$HOME/go/bin"
+      "$HOME/.bun/bin"
+      "$HOME/.local/bin"
+      "$HOME/.local/bin/hypr"
+      "$HOME/.config/emacs/bin"
+      "$HOME/.npm-global/bin"
+      "$HOME/.local/share/flatpak/exports/bin"
+    ];
   };
 
-  # Consolidate PATH from export.zsh
-  sessionPath = [
-    "$HOME/.cargo/bin"
-    "$HOME/go/bin"
-    "$HOME/.bun/bin"
-    "$HOME/.local/bin"
-    "$HOME/.local/bin/hypr"
-    "$HOME/.config/emacs/bin"
-    "$HOME/.npm-global/bin"
-    "$HOME/.local/share/flatpak/exports/bin"
-  ];
-
   imports = [
-    ./anyrun
+    #./anyrun
     ./atuin
     ./bat
     ./btop
+    # add caelestia later
+    # ./caelestia
     ./catppuccin
+    ./cliphist
     ./dev
     ./emacs
+    ./emoji
     ./eza
     ./fd-find
     ./fzf
     ./git
+    ./hypridle
+    ./hyprland
+    ./hyprlock
+    ./hyprpaper
+    ./hyprpolkitagent
+    ./hyprsunset
     ./imv
     ./keyring
+    ./kitty
+    ./lazygit
     ./mpv
     ./pay-respects
     ./pkgs
     ./ripgrep
+    ./schizofox
+    ./starship
+    ./texlive
+    ./theming
     ./tldr
+    ./tmux
+    #./vscode
+    ./xdg
+    ./yazi
     ./zathura
+    ./zen-browser
     ./zoxide
     ./zsh
   ];

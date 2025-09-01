@@ -9,14 +9,5 @@
       "italic-text" = "always";
       color = "always";
     };
-    # Restore useful, non-Fedora-specific syntax mappings
-    extraConfig = ''
-      --map-syntax "*.nix:Nix"
-      --map-syntax "/etc/systemd/system/*:SystemD"
-      --map-syntax "/home/*/.config/systemd/user/*:SystemD"
-      --map-syntax "Containerfile:Dockerfile"
-      --map-syntax "*.containerfile:Dockerfile"
-      --map-syntax "*.log:Log"
-    '';
   };
 }

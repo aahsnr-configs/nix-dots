@@ -5,14 +5,12 @@
     # Font Configuration
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 14.0;
-      bold_font = "JetBrainsMono Nerd Font Bold";
-      italic_font = "JetBrainsMono Nerd Font Italic";
-      bold_italic_font = "JetBrainsMono Nerd Font Bold Italic";
+      size = 14;
     };
 
     # Shell Integration
-    shellIntegration.mode = "enabled";
+    shellIntegration.enableZshIntegration = true;
+    enableGitIntegration = true;
 
     settings = {
       # Font Settings

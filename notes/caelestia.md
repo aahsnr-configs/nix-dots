@@ -36,20 +36,15 @@ First, ensure your `flake.nix` includes the `caelestia-shell` flake as an input.
       url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
-    # (Optional) Add the Caelestia wallpapers flake if you want to use them
-    # caelestia-wallpapers = {
-    #   url = "github:caelestia-dots/wallpapers";
-    # };
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: {
     homeConfigurations."your-username" = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      
+
       # CORRECTION: This makes the `inputs` variable available to your modules.
-      extraSpecialArgs = { inherit inputs; }; 
-      
+      extraSpecialArgs = { inherit inputs; };
+
       modules = [
         # ... your other home-manager modules
         ./home-manager/caelestia.nix # Path to the file from Step 2
@@ -99,7 +94,7 @@ Next, create the file `home-manager/caelestia.nix`. This file will now correctly
     # CORRECTION: Point to a user-owned directory. The previous example
     # used a package that does not exist by default.
     paths.wallpaperDir = "~/Pictures/Wallpapers";
-    
+
     # Note: If you added the `caelestia-wallpapers` flake to your inputs,
     # you could use their wallpapers like this:
     # paths.wallpaperDir = "${inputs.caelestia-wallpapers}/share/backgrounds/caelestia";

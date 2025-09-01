@@ -39,12 +39,12 @@
       flavor = "macchiato";
     };
 
-    kvantum = {
-      enable = true;
-      apply = true;
-      accent = "flamingo";
-      flavor = "macchiato";
-    };
+    # kvantum = {
+    #   enable = true;
+    #   apply = true;
+    #   accent = "flamingo";
+    #   flavor = "macchiato";
+    # };
 
     kitty = {
       enable = true;

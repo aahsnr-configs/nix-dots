@@ -1,5 +1,10 @@
-{ pkgs, ... }: {
-  environment.systemPackages = with pkgs; [ seatd sdnotify-wrapper ];
+{ pkgs, ... }:
+
+{
+  environment.systemPackages = with pkgs; [
+    seatd
+    sdnotify-wrapper
+  ];
 
   systemd.services = {
     seatd = {

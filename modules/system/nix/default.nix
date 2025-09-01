@@ -4,10 +4,12 @@
   lib,
   inputs,
   ...
-}: {
+}:
+
+{
   environment = {
-    systemPackages = [pkgs.git];
-    defaultPackages = [];
+    systemPackages = [ pkgs.git ];
+    defaultPackages = [ ];
   };
 
   nix = {
@@ -16,20 +18,17 @@
       dates = "daily";
       options = "--delete-older-than 3d";
     };
-    package = pkgs.nixVersions.git;
 
     # Make builds run with low priority so my system stays responsive
     daemonCPUSchedPolicy = "idle";
     daemonIOSchedClass = "idle";
 
     # pin the registry to avoid downloading and evaling a new nixpkgs version every time
-    registry = lib.mapAttrs (_: v: {flake = v;}) inputs;
+    registry = lib.mapAttrs (_: v: { flake = v; }) inputs;
 
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
-    nixPath =
-      lib.mapAttrsToList (key: value: "${key}=${value.to.path}")
-      config.nix.registry;
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
     # Free up to 1GiB whenever there is less than 100MiB left.
     extraOptions = ''
@@ -44,8 +43,8 @@
       flake-registry = "/etc/nix/registry.json";
       auto-optimise-store = true;
       builders-use-substitutes = false;
-      allowed-users = ["@wheel"];
-      trusted-users = ["@wheel"];
+      allowed-users = [ "@wheel" ];
+      trusted-users = [ "@wheel" ];
       sandbox = true;
       max-jobs = "auto";
       cores = 6;
@@ -76,7 +75,11 @@
         "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
         "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
       ];
-      extra-experimental-features = ["flakes" "nix-command" "ca-derivations"];
+      extra-experimental-features = [
+        "flakes"
+        "nix-command"
+        "ca-derivations"
+      ];
     };
   };
 
@@ -84,22 +87,24 @@
     config = {
       allowUnfree = true;
       allowBroken = true;
-      permittedInsecurePackages = ["openssl-1.1.1u" "electron-25.9.0"];
+      permittedInsecurePackages = [
+        "openssl-1.1.1u"
+        "electron-25.9.0"
+      ];
     };
 
     overlays = with inputs; [
       yazi.overlays.default
       emacs-overlay.overlay
-      hyprpanel.overlay
       nixpkgs-wayland.overlay
       rust-overlay.overlays.default
     ];
 
-    hostPlatform = {
-      system = "x86_64-linux";
-      gcc.arch = "znver3";
-      gcc.tune = "znver3";
-    };
+    # hostPlatform = {
+    #   system = "x86_64-linux";
+    #   gcc.arch = "znver3";
+    #   gcc.tune = "znver3";
+    # };
   };
 
   documentation = {
@@ -111,6 +116,6 @@
 
   system = {
     autoUpgrade.enable = true;
-    stateVersion = "25.05";
+    stateVersion = "25.11";
   };
 }

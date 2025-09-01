@@ -12,6 +12,4 @@
     shells = [ pkgs.zsh ];
     pathsToLink = [ "/share/zsh" ];
   };
-
-  users.defaultUserShell = pkgs.zsh;
 }

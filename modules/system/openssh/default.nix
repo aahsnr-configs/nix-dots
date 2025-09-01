@@ -1,15 +1,24 @@
-{...}: {
+{ ... }:
+
+{
   services.openssh = {
     enable = true;
     allowSFTP = false;
-    ports = [47];
+    ports = [ 47 ];
     settings = {
       PasswordAuthentication = true;
-      AllowUsers = ["ahsan"]; # Allows all users by default. Can be [ "user1" "user2" ]
-      AllowGroups = ["@wheel"];
+      AllowUsers = [ "ahsan" ];
+      AllowGroups = [ "@wheel" ];
       UseDns = false;
       X11Forwarding = false;
-      PermitRootLogin = "prohibit-password"; # "yes", "without-password", "prohibit-password", "forced-commands-only", "no"
+      PermitRootLogin = "prohibit-password";
+      AllowTcpForwarding = false;
+      ClientAliveCountMax = 2;
+      LogLevel = "VERBOSE";
+      MaxAuthTries = 3;
+      MaxSessions = 2;
+      TCPKeepAlive = false;
+      AllowAgentForwarding = false;
     };
   };
 }

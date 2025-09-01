@@ -1,16 +1,16 @@
-{ ... }: {
+{ ... }:
+{
   catppuccin = {
     cache.enable = true;
+
     tty = {
       enable = true;
       flavor = "macchiato";
     };
-    # sddm = {
-    #   enable = true;
-    #   #background = "$HOME/nix-dots/modules/system/sddm/background.png";
-    #   flavor = "macchiato";
-    #   font = "JetBrainsMono Nerd Font";
-    #   fontSize = "13";
-    # };
+
+    plymouth = {
+      enable = true;
+      flavor = "macchiato";
+    };
   };
 }

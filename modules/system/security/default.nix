@@ -1,16 +1,16 @@
-{ pkgs, ... }: {
-  programs = { ssh.startAgent = false; };
+{ pkgs, ... }:
+{
 
   hardware.ledger.enable = true;
 
-  systemd.coredump.enable = true;
+  systemd.coredump.enable = false;
 
   services = {
     jitterentropy-rngd.enable = true;
     haveged.enable = true;
     sysstat.enable = true;
     networkd-dispatcher.enable = true;
-    dbus.apparmor = "enabled";
+    #dbus.apparmor = "enabled";
   };
 
   programs.atop.atopacctService.enable = true;
@@ -53,7 +53,7 @@
         apparmor-profiles
         apparmor-bin-utils
         #apparmor-kernel-patches
-        roddhjav-apparmor-rules
+        #roddhjav-apparmor-rules
         libapparmor
       ];
     };
@@ -65,12 +65,14 @@
     };
     auditd.enable = true;
     pam = {
-      loginLimits = [{
-        domain = "*";
-        item = "core";
-        type = "hard";
-        value = "0";
-      }];
+      loginLimits = [
+        {
+          domain = "*";
+          item = "core";
+          type = "hard";
+          value = "0";
+        }
+      ];
       services = {
         hyprlock = { };
         greetd.enableGnomeKeyring = true;

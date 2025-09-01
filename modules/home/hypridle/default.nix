@@ -1,7 +1,14 @@
-{ pkgs, lib, config, inputs, ... }: {
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+{
   services.hypridle = {
     enable = true;
-    package = inputs.hypridle.packages.${pkgs.system}.hypridle;
+    # replaced by hmModule in hypridle github
+    # package = inputs.hypridle.packages.${pkgs.system}.hypridle;
 
     settings = {
       # Settings for global behavior.

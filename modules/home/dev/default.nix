@@ -1,6 +1,17 @@
 # ~/.config/home-manager/dev/default.nix
-{ pkgs, ... }: {
-  home.packages = with pkgs; [ deadnix statix niv ];
+{ pkgs, ... }:
+{
+  home.packages = with pkgs; [
+    deadnix
+    delta
+    nil
+    nixfmt
+    nixpkgs-fmt
+    nodejs_24
+    lua5_1
+    luarocks
+    statix
+  ];
 
   programs.direnv = {
     enable = true;

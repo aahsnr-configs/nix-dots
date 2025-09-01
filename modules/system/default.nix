@@ -1,47 +1,34 @@
-{ ... }: {
+{ ... }:
+
+{
   imports = [
-    #./adguard
     ./asus
     ./bluetooth
-    #./build
     ./catppuccin
     ./clamav
-    ./clipmenu
-    ./build
-    #./dconf
-    #./environment
+    ./dbus
+    ./environment
     ./fonts
-    ./gnupg
     ./graphics
+    # disable greetd for now
     #./greetd
     ./hyprland
     ./kernel
-    #./lightdm
     ./logind
     ./misc
     ./network
     ./nix
     ./openssh
     ./pkgs
-    #./polkit
     ./portal
-    ./power
-    #./proton
-    #./sddm
-    #./scripts
-    ./security
     ./seatd
+    ./security
+    ./shell
     ./sound
-    #./stdenv
     ./systemd
-    #./sysprof
     ./thunar
     ./users
     ./virtualization
-    ./wayland
-    ./xserver
-    #./xwayland
     ./zram
-    ./zsh
   ];
 }

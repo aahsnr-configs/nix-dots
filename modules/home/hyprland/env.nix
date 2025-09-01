@@ -1,10 +1,13 @@
-{ ... }: {
+{ ... }:
+{
   wayland.windowManager.hyprland.settings = {
     env = [
       "__GLX_VENDOR_LIBRARY_NAME,nvidia"
       "__GL_HDR_METADATA,1"
       "_JAVA_AWT_WM_NONREPARENTING,1"
       "_JAVA_OPTIONS, -Dawt.useSystemAAFontSettings=on"
+      #  app2unit Integration
+      "APP2UNIT_SLICES,'a=app-graphical.slice b=background-graphical.slice s=session-graphical.slice'"
       "BEMENU_BACKEND,wayland"
       "CLUTTER_BACKEND,wayland"
       "CLUTTER_BACKEND,wayland"
