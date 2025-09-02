@@ -1,6 +1,4 @@
-{ ... }:
-
-{
+{...}: {
   imports = [
     ./asus
     ./bluetooth
@@ -10,8 +8,7 @@
     ./environment
     ./fonts
     ./graphics
-    # disable greetd for now
-    #./greetd
+    ./greetd
     ./hyprland
     ./kernel
     ./logind

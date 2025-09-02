@@ -37,6 +37,7 @@
       enable = true;
       accent = "flamingo";
       flavor = "macchiato";
+      useDefaultConfig = true;
     };
 
     # kvantum = {

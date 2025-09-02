@@ -11,7 +11,7 @@
     cursorTheme.name = "Bibata-Modern-Ice";
     settings = {
       background = {
-        path = "./greet.jpg";
+        path = "./wallpapers/wall1.jpg";
         fit =
           "Contain"; # Available values: "Fill", "Contain", "Cover", "ScaleDown"
       };

@@ -37,6 +37,7 @@
       (google-fonts.override {fonts = ["Inter"];})
       jetbrains-mono
       liberation_ttf
+      material-symbols
       mplus-outline-fonts.githubRelease
       nerd-fonts.jetbrains-mono
       nerd-fonts.ubuntu

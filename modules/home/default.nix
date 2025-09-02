@@ -1,15 +1,9 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   home = {
     username = "ahsan";
     homeDirectory = "/home/ahsan";
     stateVersion = "25.11";
-    extraOutputsToInstall = [
-      "doc"
-      "info"
-      "devdoc"
-    ];
+    extraOutputsToInstall = ["doc" "info" "devdoc"];
 
     # Set default editor and other environment variables
     sessionVariables = {
@@ -53,8 +47,7 @@
     ./atuin
     ./bat
     ./btop
-    # add caelestia later
-    # ./caelestia
+    ./caelestia
     ./catppuccin
     ./cliphist
     ./dev
@@ -67,7 +60,6 @@
     ./hypridle
     ./hyprland
     ./hyprlock
-    ./hyprpaper
     ./hyprpolkitagent
     ./hyprsunset
     ./imv
