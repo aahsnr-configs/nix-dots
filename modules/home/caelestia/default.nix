@@ -1,41 +1,58 @@
-{ inputs, ... }:
-
-{
+{ inputs, ... }: {
   imports = [ inputs.caelestia-shell.homeManagerModules.default ];
 
   programs.caelestia = {
     enable = true;
     systemd = {
       enable = true;
-
+      target = "graphical-session.target";
     };
 
     settings = {
       appearance = {
         font.family = {
-          sans = "Inter";
-          mono = "JetBrainsMono Nerd Font";
+          material = "Material Symbols Rounder";
+          mono = "JetBrainMono Nerd Font";
+          sans = "Rubik";
         };
-        rounding.scale = 1.2;
       };
+
+      background.desktopClock = false;
 
       bar = {
         persistent = true;
         workspaces.shown = 10;
       };
 
-      paths.wallpaperDir = "~/Pictures/Wallpapers";
+      cli = {
+        enable = true;
+        settings = { theme.enableGtk = false; };
+      };
+
+      environment = [ ];
+
+      general = {
+        apps = {
+          terminal = "foot";
+          audio = "pavucontrol";
+        };
+      };
+
+      paths = {
+        mediaGif = "./assets/bongocat.git";
+        sessionGif = "./assets/kurukuru.gif";
+        wallpaperDir = "~/Pictures/Wallpapers";
+      };
 
       services = {
-        # For Wayland, this is often not needed.
-        gpuType = "";
-        weatherLocation = "Dhaka"; # Set your city for the weather widget
+        gpuType = ""; # not need to be set for Wayland
+        weatherLocation = "Dhaka";
         useTwelveHourClock = true;
       };
 
       launcher = {
         maxShown = 10;
-        useFuzzy.apps = true; # Enable fuzzy searching for apps
+        useFuzzy.apps = true;
       };
     };
   };
