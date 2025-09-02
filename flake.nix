@@ -33,7 +33,7 @@
     };
 
     hy3 = {
-      url = "github:outfoxxed/hy3";
+      url = "github:aahsnr-configs/hy3";
       inputs.hyprland.follows = "hyprland";
     };
 
@@ -48,7 +48,7 @@
     };
 
     hyprland = {
-      url = "github:hyprwm/Hyprland";
+      url = "git+https://github.com/hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -101,21 +101,13 @@
     };
 
     Hyprspace = {
-      url = "github:KZDKM/Hyprspace";
+      url = "github:aahsnr-configs/Hyprspace";
       inputs.hyprland.follows = "hyprland";
     };
 
     hyprsunset = {
       url = "github:hyprwm/hyprsunset";
       inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    };
-
-    hyprwayland-scanner = {
-      url = "github:hyprwm/hyprwayland-scanner";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems";
-      };
     };
 
     nix-doom-emacs-unstraightened = {
@@ -184,10 +176,15 @@
       nix-doom-emacs-unstraightened,
       pyprland,
       determinate,
+      anyrun,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
+
+      # gcc-overlay = final: prev: {
+      #   gcc = nixpkgs.legacyPackages.${prev.system}.gcc15;
+      # };
     in
     {
       nixosConfigurations = import ./hosts inputs;

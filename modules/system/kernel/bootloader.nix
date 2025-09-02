@@ -10,7 +10,7 @@
         "/dev/disk/by-uuid/374fa84a-a386-4666-bd07-6a87c6c853a8";
     };
 
-    kernelPackages = pkgs.linuxPackages_xanmod_latest;
+    kernelPackages = pkgs.linuxPackages_latest;
 
     kernelParams = [
       "quiet"
@@ -36,7 +36,6 @@
 
     plymouth = {
       enable = true;
-      theme = "bgrt";
     };
 
     tmp = {

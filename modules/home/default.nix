@@ -49,7 +49,7 @@
   };
 
   imports = [
-    #./anyrun
+    ./anyrun
     ./atuin
     ./bat
     ./btop

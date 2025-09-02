@@ -1,13 +1,14 @@
-{...}: {
+{ ... }:
+
+{
   services = {
     logind = {
-      lidSwitch = "suspend";
-      lidSwitchExternalPower = "hibernate";
-      powerKey = "lock";
-      powerKeyLongPress = "poweroff";
-      rebootKey = "reboot";
       settings.Login = {
-        HandlePowerKey = "poweroff";
+        HandleLidSwitch = "suspend";
+        HandleLidSwitchExternalPower = "hibernate";
+        HandleRebootKey = "reboot";
+        HandlePowerKey = "lock";
+        HandlePowerKeyLongPress = "poweroff";
         HibernateDelaySec = 600;
         SuspendState = "mem";
       };

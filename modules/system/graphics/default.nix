@@ -1,19 +1,6 @@
-{ config, lib, pkgs, ... }:
-let
-  inherit (lib) versionOlder;
-
-  # Use the latest possible nvidia package
-  nvStable = config.boot.kernelPackages.nvidiaPackages.stable.version;
-  nvBeta = config.boot.kernelPackages.nvidiaPackages.beta.version;
-
-  nvidiaPackage = if (versionOlder nvBeta nvStable) then
-    config.boot.kernelPackages.nvidiaPackages.stable
-  else
-    config.boot.kernelPackages.nvidiaPackages.beta;
-in {
+{ config, pkgs, ... }:
+{
   boot = {
-    kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_drm" "nvidia_uvm" ];
-
     blacklistedKernelModules = [ "nouveau" ];
   };
 
@@ -43,11 +30,12 @@ in {
       enable32Bit = true;
     };
     nvidia = {
-      package = nvidiaPackage;
+      package = config.boot.kernelPackages.nvidiaPackages.latest;
       open = true;
       powerManagement.enable = true;
       dynamicBoost.enable = true;
       modesetting.enable = true;
+      nvidiaSettings = true;
     };
     nvidia-container-toolkit.enable = true;
   };

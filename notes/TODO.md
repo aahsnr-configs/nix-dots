@@ -1,8 +1,13 @@
-# TODOS
+# Setting Up NixOS
+## Main Goal
+***Main goal is to create a NixOS distribution with the following properties:***
+  - __Make it as stable as possible__
+  - __Make it as optimized as possible__
+  - __Make it security hardened__
 
+## TODOS
 ***
-[Note]: _All wallpaper and background related stuff are in assets_
-
+- [ ] Search through sidoomy-dotfiles to make NixOS stable
 - [x] Add schizofox to home-manager
 - [x] Move fonts to system
 - [x] Generate a kitty hmModule
@@ -17,8 +22,11 @@
 - [x] Make sure to enable uwsm in hyprland
 - [ ] add a background for regreet, caelestia shell and hyprlock
 - [ ] Setup fuzzel as home-manager: possibly borrow from Caelestia
-- [ ] Write systemd user units for `caelestia resizer -d` and `caelestia shell -d`
+- [x] Write systemd user units for `caelestia resizer -d` and `caelestia shell -d`
 - [ ] Re-edit `system/openssh/default.nix` after everything
+- [ ] Apply the gemini gcc15 fix temporarily and print the error output to a different gemini account: Use this method to use from gcc14 to gcc15.
+- [ ] Also try to find out if emacs-overlay uses libgccjit15: if no, introduce your own
+- [ ] Install cachyos-lto kernel from nyx when everything is stable and gcc15 is the default compiler
 
 ## Hyprland Plugins and Tools
 
@@ -30,6 +38,10 @@
 - [ ] [**hyprexpo & hyprscrolling**](https://github.com/hyprwm/hyprland-plugins)
 - [ ] [**pyprland**](https://github.com/hyprland-community/pyprland)
 
+## Doom Emacs TODOS
+- [ ] For python programming, check $HOME/git-repos/work/python-programming/notes/recommended-tools.md
+- [ ] For bash programming, check $HOME/git-repos/work/bash-programming/notes/tools.md
+
 ## Home Modules
 
 ***
@@ -38,6 +50,7 @@
 - [x] atuin
 - [x] bat
 - [x] btop
+- [ ] caelestia
 - [ ] catppuccin
 - [x] cliphist
 - [x] dev
@@ -94,7 +107,7 @@
 - [x] misc
 - [x] network
 - [x] nix
-- [ ] openssh
+- [x] openssh
 - [x] pkgs
 - [x] portal
 - [x] seatd

@@ -34,6 +34,7 @@ in
   # Configure SSH to use different keys for different GitHub accounts.
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
     # Create a Match block for each account to associate a unique host alias
     # with a specific SSH key.
     matchBlocks = lib.mapAttrs' (name: cfg: {

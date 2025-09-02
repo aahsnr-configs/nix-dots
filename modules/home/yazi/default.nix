@@ -28,7 +28,7 @@
         audio = [{ run = ''${pkgs.mpv}/bin/mpv "$@"''; }];
         document = [{ run = ''${pkgs.zathura}/bin/zathura "$@"''; }];
         archive =
-          [{ run = ''${pkgs.gnome.file-roller}/bin/file-roller "$@"''; }];
+          [{ run = ''${pkgs.file-roller}/bin/file-roller "$@"''; }];
         fallback = [{ run = ''${pkgs.xdg-utils}/bin/xdg-open "$@"''; }];
       };
       open.rules = [

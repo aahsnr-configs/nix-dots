@@ -4,7 +4,7 @@
     enable = true;
     enableZshIntegration = true; # Manages aliases
     git = true;
-    icons = true;
+    icons = "auto";
     extraOptions = [ "--group-directories-first" "--header" ];
     # The full, detailed Catppuccin theme is restored
     theme = {

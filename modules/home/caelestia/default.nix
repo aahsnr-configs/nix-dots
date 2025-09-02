@@ -5,8 +5,12 @@
 
   programs.caelestia = {
     enable = true;
+    systemd = {
+      enable = true;
 
-    caelestia.settings = {
+    };
+
+    settings = {
       appearance = {
         font.family = {
           sans = "Inter";

@@ -5,6 +5,7 @@
   chaotic,
   nixos-hardware,
   determinate,
+  #gcc-overlay,
   ...
 }:
 
@@ -62,6 +63,7 @@ in
       laptop
       deterMinate
       { inherit home-manager; }
+      ##{ nixpkgs.overlays = [ gcc-overlay ]; }
     ];
     specialArgs = { inherit inputs; };
   };

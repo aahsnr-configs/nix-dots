@@ -12,9 +12,7 @@
     cmake
     exfatprogs
     fastfetch
-    fd
     ffmpeg
-    file-roller
     gcc15
     glib
     glibc
