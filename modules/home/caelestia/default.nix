@@ -41,7 +41,7 @@
       paths = {
         mediaGif = "./assets/bongocat.git";
         sessionGif = "./assets/kurukuru.gif";
-        wallpaperDir = "~/Pictures/Wallpapers";
+        wallpaperDir = "./wallpapers";
       };
 
       services = {

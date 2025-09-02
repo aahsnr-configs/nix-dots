@@ -1,12 +1,17 @@
 # Setting Up NixOS
+
 ## Main Goal
-***Main goal is to create a NixOS distribution with the following properties:***
-  - __Make it as stable as possible__
-  - __Make it as optimized as possible__
-  - __Make it security hardened__
+
+**_Main goal is to create a NixOS distribution with the following properties:_**
+
+- **Make it as stable as possible**
+- **Make it as optimized as possible**
+- **Make it security hardened**
 
 ## TODOS
-***
+
+---
+
 - [ ] Search through sidoomy-dotfiles to make NixOS stable
 - [x] Add schizofox to home-manager
 - [x] Move fonts to system
@@ -30,7 +35,8 @@
 
 ## Hyprland Plugins and Tools
 
-***
+---
+
 [Note]: _Don't need to use both hyprscroller and hyprscrolling_
 [Note]: _Don't need to use both hyprexpo and Hyprspace_
 
@@ -39,18 +45,19 @@
 - [ ] [**pyprland**](https://github.com/hyprland-community/pyprland)
 
 ## Doom Emacs TODOS
+
 - [ ] For python programming, check $HOME/git-repos/work/python-programming/notes/recommended-tools.md
 - [ ] For bash programming, check $HOME/git-repos/work/bash-programming/notes/tools.md
 
 ## Home Modules
 
-***
+---
 
 - [x] anyrun
 - [x] atuin
 - [x] bat
 - [x] btop
-- [ ] caelestia
+- [x] caelestia
 - [ ] catppuccin
 - [x] cliphist
 - [x] dev
@@ -89,7 +96,7 @@
 
 ## System Modules
 
-***
+---
 
 - [x] asus
 - [x] bluetooth
@@ -120,10 +127,9 @@
 - [x] virtualization
 - [x] zram
 
-
 ## New Flake Inputs
 
-***
+---
 
 - [x] pyprland
 - [x] hyprland-plugins
