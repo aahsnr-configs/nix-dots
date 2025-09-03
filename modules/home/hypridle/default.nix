@@ -3,8 +3,7 @@
   lib,
   config,
   ...
-}:
-{
+}: {
   services.hypridle = {
     enable = true;
     # replaced by hmModule in hypridle github

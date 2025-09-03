@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ ... }: {
   wayland.windowManager.hyprland = {
     settings = {
       exec = [ "hyprctl dispatch submap global" ];
@@ -109,7 +108,6 @@
         "Super, V, exec, pkill fuzzel || caelestia clipboard"
         "Super+Alt, V, exec, pkill fuzzel || caelestia clipboard -d"
         "Super, Period, exec, pkill fuzzel || caelestia emoji -p"
-
       ];
 
       binde = [
@@ -124,12 +122,9 @@
         ## Volume Control
         ", XF86AudioRaiseVolume, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ $volumeStep%+"
         ", XF86AudioLowerVolume, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume @DEFAULT_AUDIO_SINK@ $volumeStep%-"
-
       ];
 
-      bindi = [
-        "Super, Super_L, global, caelestia:launcher"
-      ];
+      bindi = [ "Super, Super_L, global, caelestia:launcher" ];
 
       bindin = [
         "Super, catchall, global, caelestia:launcherInterrupt"
@@ -178,9 +173,7 @@
         "Super_Alt, R, exec, qs -c caelestia kill; caelestia shell -d"
       ];
 
-      bindm = [
-        "Super+Alt, mouse:272, resizewindow"
-      ];
+      bindm = [ "Super+Alt, mouse:272, resizewindow" ];
     };
   };
 }
