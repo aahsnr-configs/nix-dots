@@ -1,4 +1,8 @@
-{ pkgs, lib, ... }: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   programs.regreet = {
     enable = true;
     package = pkgs.greetd.regreet;
@@ -12,19 +16,18 @@
     settings = {
       background = {
         path = "./wallpapers/wall1.jpg";
-        fit =
-          "Contain"; # Available values: "Fill", "Contain", "Cover", "ScaleDown"
+        fit = "Contain"; # Available values: "Fill", "Contain", "Cover", "ScaleDown"
       };
 
-      GTK = { application_prefer_dark_theme = true; };
+      GTK = {application_prefer_dark_theme = true;};
 
       commands = {
-        reboot = [ "systemctl" "reboot" ];
-        poweroff = [ "systemctl" "poweroff" ];
-        x11_prefix = [ "startx" "/usr/bin/env" ];
+        reboot = ["systemctl" "reboot"];
+        poweroff = ["systemctl" "poweroff"];
+        x11_prefix = ["startx" "/usr/bin/env"];
       };
 
-      appearance = { greeting_msg = "Welcome back!"; };
+      appearance = {greeting_msg = "Welcome back!";};
 
       widget = {
         clock = {

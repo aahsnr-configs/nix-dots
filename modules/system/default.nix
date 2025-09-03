@@ -8,7 +8,7 @@
     ./environment
     ./fonts
     ./graphics
-    ./greetd
+    #./greetd
     ./hyprland
     ./kernel
     ./logind
