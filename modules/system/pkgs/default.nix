@@ -34,6 +34,7 @@
     nodejs_24
     openssl
     piper
+    python313
     tealdeer
     terminus_font
     ticktick
