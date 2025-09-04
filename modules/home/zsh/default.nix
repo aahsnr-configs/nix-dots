@@ -2,11 +2,7 @@
 { config, pkgs, ... }: {
   programs.zsh = {
     enable = true;
-    autocd = true;
-    autosuggestion = {
-      enable = true;
-      strategy = [ "history" ];
-    };
+    autosuggestion.enable = true;
     enableVteIntegration = true;
     enableCompletion = true;
     syntaxHighlighting.enable = true;
@@ -50,7 +46,6 @@
       }
     ];
     shellAliases = {
-      find = "fd";
       rmi = "sudo rm -rf";
       vi = "nvim";
       du = "dust";
