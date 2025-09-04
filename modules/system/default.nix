@@ -20,7 +20,7 @@
     ./portal
     ./seatd
     ./security
-    ./shell
+    #./shell
     ./sound
     ./systemd
     ./thunar
