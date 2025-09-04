@@ -45,7 +45,7 @@
     ./catppuccin
     ./cliphist
     ./dev
-    ./emacs
+    #./emacs
     ./emoji
     ./eza
     ./fd-find
@@ -64,7 +64,7 @@
     ./pay-respects
     ./pkgs
     ./ripgrep
-    ./schizofox
+    #./schizofox
     ./starship
     ./texlive
     ./theming
