@@ -61,7 +61,7 @@
     ./kitty
     ./lazygit
     ./mpv
-    ./pay-respects
+    #./pay-respects
     ./pkgs
     ./ripgrep
     #./schizofox
