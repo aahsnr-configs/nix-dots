@@ -55,7 +55,6 @@
       vi = "nvim";
       du = "dust";
       grep = "rg";
-      cd = "z";
       cat = "bat --paging=never";
       nrs = "sudo nixos-rebuild switch";
       nrb = "sudo nixos-rebuild boot";
