@@ -11,12 +11,6 @@
       BROWSER = "zen-browser";
       VISUAL = "emacsclient -c -a 'emacs'";
       TERMINAL = "kitty";
-      MANPAGER = "sh -c 'col -bx | bat -l man -p'";
-      PAGER = "bat --paging=always --style=plain";
-      LESS = "-R --use-color -Dd+r -Du+b -DS+s -DE+g";
-      LANG = "en_US.UTF-8";
-      XCURSOR_SIZE = "32";
-      GTK_USE_PORTAL = "1";
     };
 
     pointerCursor = {
