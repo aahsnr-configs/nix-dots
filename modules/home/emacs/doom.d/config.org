@@ -229,24 +229,6 @@ This section provides a complete IDE experience for Python, including LSP, debug
 #+begin_src emacs-lisp
 #+end_src
 
-** Language: Jupyter
-This configures Org mode's integration with Jupyter notebooks for interactive Python sessions.
-
-#+begin_src emacs-lisp
-(after! jupyter
-  (setq jupyter-python-set-repl-for-current-buffer t
-        jupyter-favorite-kernels '("python3")
-        jupyter-repl-echo-evaluating-p nil
-        jupyter-org-get-client-on-load t)
-  (advice-add 'jupyter-org-interaction-mode :after
-              (lambda () (evil-insert-state))))
-
-(after! ob-jupyter
-  (org-babel-do-load-languages 'org-babel-load-languages '((jupyter . t)))
-  (org-babel-jupyter-override-src-block "python")
-  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images))
-#+end_src
-
 ** Language: LaTeX & Citations
 This configures the scientific writing environment for LaTeX, including the Tectonic compiler, LSP, and a citation system integrated with Org Roam.
 
