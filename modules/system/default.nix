@@ -7,8 +7,8 @@
     ./dbus
     ./environment
     ./fonts
-    ./gdm
     ./graphics
+    ./greetd
     ./hyprland
     ./kernel
     ./logind

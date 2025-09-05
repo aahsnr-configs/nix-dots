@@ -1,10 +1,4 @@
-{ nixpkgs
-, self
-, catppuccin
-, chaotic
-, nixos-hardware
-, ...
-}:
+{ nixpkgs, self, catppuccin, chaotic, nixos-hardware, ... }:
 let
   inputs = self.inputs;
   system = ../modules/system;
@@ -25,8 +19,7 @@ let
       imports = [ (import ../modules/home) catppuccin.homeModules.catppuccin ];
     };
   };
-in
-{
+in {
   #workstation
   workstation = nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";

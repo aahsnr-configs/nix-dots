@@ -164,10 +164,21 @@
     };
   };
 
-  outputs = { self, home-manager, emacs-overlay, nixpkgs, yazi
-    , nix-doom-emacs-unstraightened, pyprland, anyrun, ... }@inputs:
-    let system = "x86_64-linux";
-    in {
+  outputs =
+    { self
+    , home-manager
+    , emacs-overlay
+    , nixpkgs
+    , yazi
+    , nix-doom-emacs-unstraightened
+    , pyprland
+    , anyrun
+    , ...
+    } @ inputs:
+    let
+      system = "x86_64-linux";
+    in
+    {
       nixosConfigurations = import ./hosts inputs;
 
       packages.${system} = {
