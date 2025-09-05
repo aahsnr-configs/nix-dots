@@ -7,6 +7,7 @@
 - [ ] app2unit is not installed
 - [ ] fish is not installed
 - [ ] Hyprland keybindings not working as expected
+- [ ] Caelestia is not loading wallpapers and gifs
 
 ## Main Goal
 
