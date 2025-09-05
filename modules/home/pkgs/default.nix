@@ -4,6 +4,7 @@
     bitwarden
     fastfetch
     ferdium
+    neovim
     nix-index
     nix-prefetch-git
     nix-prefetch-github

@@ -16,8 +16,6 @@
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-
     devshell.url = "github:numtide/devshell";
 
     emacs-overlay = {
@@ -166,27 +164,10 @@
     };
   };
 
-  outputs =
-    {
-      self,
-      home-manager,
-      emacs-overlay,
-      nixpkgs,
-      yazi,
-      nix-doom-emacs-unstraightened,
-      pyprland,
-      determinate,
-      anyrun,
-      ...
-    }@inputs:
-    let
-      system = "x86_64-linux";
-
-      # gcc-overlay = final: prev: {
-      #   gcc = nixpkgs.legacyPackages.${prev.system}.gcc15;
-      # };
-    in
-    {
+  outputs = { self, home-manager, emacs-overlay, nixpkgs, yazi
+    , nix-doom-emacs-unstraightened, pyprland, anyrun, ... }@inputs:
+    let system = "x86_64-linux";
+    in {
       nixosConfigurations = import ./hosts inputs;
 
       packages.${system} = {

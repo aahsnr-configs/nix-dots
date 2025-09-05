@@ -1,5 +1,4 @@
-{ ... }:
-{
+{ ... }: {
   wayland.windowManager.hyprland.settings = {
     layerrule = [
       "animation fade, caelestia-(drawers|background)"
@@ -18,21 +17,21 @@
     windowrule = [
       "center 1, class:foot, title:nmtui"
       "center 1, class:nwg-look"
-      "center 1, class:org\.gnome\.Settings"
-      "center 1, class:org\.pulseaudio\.pavucontrol|yad-icon-browser"
+      "center 1, class:org.gnome.Settings"
+      "center 1, class:org.pulseaudio.pavucontrol|yad-icon-browser"
       "float, class:blueman-manager"
       "float, class:com-atlauncher-App, title:ATLauncher Console"
-      "float, class:com\.github\.GradienceTeam\.Gradience"
+      "float, class:com.github.GradienceTeam.Gradience"
       "float, class:feh"
       "float, class:file-roller"
       "float, class:foot, title:nmtui"
       "float, class:guifetch"
       "float, class:imv"
       "float, class:nwg-look"
-      "float, class:org\.gnome\.FileRoller"
-      "float, class:org\.gnome\.Settings"
-      "float, class:org\.pulseaudio\.pavucontrol|yad-icon-browser"
-      "float, class:org\.quickshell"
+      "float, class:org.gnome.FileRoller"
+      "float, class:org.gnome.Settings"
+      "float, class:org.pulseaudio.pavucontrol|yad-icon-browser"
+      "float, class:org.quickshell"
       "float, class:system-config-printer"
       "float, class:wev"
       "float, class:yad"
@@ -50,7 +49,7 @@
       "immediate, class:steam_app_[0-9]+"
       "keepaspectratio, title:Picture(-| )in(-| )[Pp]icture"
       "move 100%-w-2% 100%-w-3%, title:Picture(-| )in(-| )[Pp]icture"
-      "noblur, title:Fusion360|(Marking Menu), class:fusion360\.exe"
+      "noblur, title:Fusion360|(Marking Menu), class:fusion360.exe"
       "nodim, xwayland:1, title:win[0-9]+"
       "noshadow, xwayland:1, title:win[0-9]+"
       "pin, title:Picture(-| )in(-| )[Pp]icture"
@@ -58,8 +57,8 @@
       "rounding 10, xwayland:1, title:win[0-9]+"
       "size 50% 60%, class:nwg-look"
       "size 60% 70%, class:foot, title:nmtui"
-      "size 60% 70%, class:org\.pulseaudio\.pavucontrol|yad-icon-browser"
-      "size 70% 80%, class:org\.gnome\.Settings"
+      "size 60% 70%, class:org.pulseaudio.pavucontrol|yad-icon-browser"
+      "size 70% 80%, class:org.gnome.Settings"
       "workspace special:communication, class:discord|equibop|vesktop|whatsapp"
       "workspace special:music, class:feishin|Spotify|Supersonic"
       "workspace special:music, initialTitle:Spotify( Free)?"
@@ -133,11 +132,6 @@
       "stayfocused, title:^()$,class:^(steam)$"
       "workspace special silent,class:^(explorer)$"
       "workspace special silent,class:^(foot-float)$"
-    ];
-
-    workspace = [
-      "f[1]s[false], gapsout:$singleWindowGapsOut"
-      "w[tv1]s[false], gapsout:$singleWindowGapsOut"
     ];
   };
 }

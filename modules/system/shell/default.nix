@@ -8,8 +8,8 @@
     };
   };
 
-  environment = {
-    shells = [ pkgs.zsh ];
-    pathsToLink = [ "/share/zsh" ];
-  };
+  # environment = {
+  #   shells = [ pkgs.zsh ];
+  #   pathsToLink = [ "/share/zsh" ];
+  # };
 }

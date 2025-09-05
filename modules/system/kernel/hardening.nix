@@ -1,4 +1,4 @@
-{lib, ...}:
+{ lib, ... }:
 with lib; {
   boot.kernel.sysctl = {
     # Hide kptrs even for processes with CAP_SYSLOG

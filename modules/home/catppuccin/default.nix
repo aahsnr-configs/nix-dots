@@ -88,9 +88,9 @@
       flavor = "macchiato";
     };
 
-    zsh-syntax-highlighting = {
-      enable = true;
-      flavor = "macchiato";
-    };
+    # zsh-syntax-highlighting = {
+    #   enable = true;
+    #   flavor = "macchiato";
+    # };
   };
 }

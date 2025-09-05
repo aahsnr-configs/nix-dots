@@ -1,23 +1,16 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   boot = {
     consoleLogLevel = 5;
 
     initrd = {
       verbose = false;
       systemd.enable = true;
-      luks.devices."luks-374fa84a-a386-4666-bd07-6a87c6c853a8".device =
-        "/dev/disk/by-uuid/374fa84a-a386-4666-bd07-6a87c6c853a8";
+      # luks.devices."luks-374fa84a-a386-4666-bd07-6a87c6c853a8".device = "/dev/disk/by-uuid/374fa84a-a386-4666-bd07-6a87c6c853a8";
     };
 
     kernelPackages = pkgs.linuxPackages_latest;
 
-    kernelParams = [
-      "quiet"
-      "splash"
-      "loglevel=3"
-      "nowatchdog"
-    ];
+    kernelParams = [ "quiet" "splash" "loglevel=3" "nowatchdog" ];
 
     loader = {
       efi = {
@@ -34,9 +27,7 @@
       timeout = 5;
     };
 
-    plymouth = {
-      enable = true;
-    };
+    plymouth = { enable = true; };
 
     tmp = {
       cleanOnBoot = true;

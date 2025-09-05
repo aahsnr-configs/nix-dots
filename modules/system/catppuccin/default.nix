@@ -1,16 +1,15 @@
-{ ... }:
-{
+{ ... }: {
   catppuccin = {
-    cache.enable = true;
+    # cache.enable = true;
 
     tty = {
       enable = true;
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     plymouth = {
       enable = true;
-      flavor = "macchiato";
+      flavor = "mocha";
     };
   };
 }

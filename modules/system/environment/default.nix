@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   environment = {
     homeBinInPath = true;
     localBinInPath = true;

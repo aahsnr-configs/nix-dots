@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   imports = [
     ./asus
     ./bluetooth
@@ -7,8 +7,8 @@
     ./dbus
     ./environment
     ./fonts
+    ./gdm
     ./graphics
-    #./greetd
     ./hyprland
     ./kernel
     ./logind
@@ -20,7 +20,7 @@
     ./portal
     ./seatd
     ./security
-    #./shell
+    ./shell
     ./sound
     ./systemd
     ./thunar

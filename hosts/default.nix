@@ -1,23 +1,17 @@
-{
-  nixpkgs,
-  self,
-  catppuccin,
-  chaotic,
-  nixos-hardware,
-  determinate,
-  #gcc-overlay,
-  ...
+{ nixpkgs
+, self
+, catppuccin
+, chaotic
+, nixos-hardware
+, ...
 }:
-
 let
   inputs = self.inputs;
   system = ../modules/system;
   laptop = nixos-hardware.nixosModules.asus-zephyrus-ga401;
   chaotic_nix = chaotic.homeManagerModules.default;
-  pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
   hmModule = inputs.home-manager.nixosModules.home-manager;
   caTppuccin = catppuccin.nixosModules.catppuccin;
-  deterMinate = determinate.nixosModules.default;
 
   home-manager = {
     useUserPackages = true;
@@ -28,13 +22,9 @@ let
       inherit chaotic_nix;
     };
     users.ahsan = {
-      imports = [
-        (import ../modules/home)
-        catppuccin.homeModules.catppuccin
-      ];
+      imports = [ (import ../modules/home) catppuccin.homeModules.catppuccin ];
     };
   };
-
 in
 {
   #workstation
@@ -61,9 +51,7 @@ in
       hmModule
       caTppuccin
       laptop
-      deterMinate
       { inherit home-manager; }
-      ##{ nixpkgs.overlays = [ gcc-overlay ]; }
     ];
     specialArgs = { inherit inputs; };
   };

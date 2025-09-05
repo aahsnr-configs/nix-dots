@@ -1,9 +1,9 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   home = {
     username = "ahsan";
     homeDirectory = "/home/ahsan";
     stateVersion = "25.11";
-    extraOutputsToInstall = ["doc" "info" "devdoc"];
+    extraOutputsToInstall = [ "doc" "info" "devdoc" ];
 
     # Set default editor and other environment variables
     sessionVariables = {
@@ -21,7 +21,7 @@
       x11.enable = true;
     };
 
-    shellAliases.vi = "nvim";
+    shell.enableZshIntegration = true;
 
     # Consolidate PATH from export.zsh
     sessionPath = [
@@ -45,7 +45,7 @@
     ./catppuccin
     ./cliphist
     ./dev
-    #./emacs
+    ./emacs
     ./emoji
     ./eza
     ./fd-find

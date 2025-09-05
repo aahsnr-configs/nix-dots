@@ -1,5 +1,8 @@
 # ~/.config/home-manager/zsh/default.nix
-{ config, pkgs, ... }: {
+{ config
+, pkgs
+, ...
+}: {
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;

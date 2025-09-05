@@ -31,6 +31,7 @@
     lsd
     lutris
     mu
+    neovim
     nodejs_24
     openssl
     piper
