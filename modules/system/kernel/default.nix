@@ -1,9 +1,1 @@
-{
-  imports = [
-    #./appimage.nix
-    ./bootloader.nix
-    ./hardening.nix
-    #./kernel.nix
-    ./power.nix
-  ];
-}
+{imports = [./bootloader.nix ./hardening.nix ./power.nix];}
