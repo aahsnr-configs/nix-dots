@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   fonts = {
     fontconfig = {
       enable = true;
@@ -15,41 +15,30 @@
       };
 
       defaultFonts = {
-        monospace = ["JetBrainsMono Nerd Font"];
-        sansSerif = ["Geist" "Noto Color Emoji"];
-        serif = ["Noto Serif" "Noto Color Emoji"];
-        emoji = ["Noto Color Emoji"];
+        monospace = [ "JetBrainsMono Nerd Font" ];
+        sansSerif = [ "Rubik Medium" ];
+        serif = [ "Noto Serif" "Noto Color Emoji" ];
+        emoji = [ "Noto Color Emoji" ];
       };
     };
-
-    fontDir = {
-      enable = true;
-      decompressFonts = true;
-    };
-
-    enableDefaultPackages = true;
 
     packages = with pkgs; [
       corefonts
       dina-font
-      fira-code
-      fira-code-symbols
-      (google-fonts.override {fonts = ["Inter"];})
+      (google-fonts.override { fonts = [ "Inter" ]; })
       jetbrains-mono
       liberation_ttf
       material-symbols
       mplus-outline-fonts.githubRelease
       nerd-fonts.jetbrains-mono
-      nerd-fonts.ubuntu
-      nerd-fonts.ubuntu-mono
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-      powerline-fonts
-      proggyfonts
+      nerd-fonts.symbols-only
+      nerd-fonts.caskaydia-mono
+      noto-fonts-color-emoji
       rubik
+      powerline-fonts
       terminus_font
       ubuntu_font_family
+      ubuntu-sans
       vistafonts
     ];
   };

@@ -1,0 +1,2 @@
+- [ ] Fix caelestia hmModule; make it look exactly like json file
+- [ ] Fix hyprland keybindings for caelestia
