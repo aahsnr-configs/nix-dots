@@ -1,3 +1,6 @@
 - [x] Fix caelestia hmModule; make it look exactly like json file
 - [x] Fix hyprland keybindings for caelestia
 - [ ] Setup Apparmor in NixOS according to https://github.com/AaronVerDow/nix/tree/main/common/apparmor
+- [ ] app2unit is not installed
+- [ ] fish is not installed
+- [ ] Hyprland keybindings not working as expected
