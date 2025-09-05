@@ -1,2 +1,3 @@
-- [ ] Fix caelestia hmModule; make it look exactly like json file
-- [ ] Fix hyprland keybindings for caelestia
+- [x] Fix caelestia hmModule; make it look exactly like json file
+- [x] Fix hyprland keybindings for caelestia
+- [ ] Setup Apparmor in NixOS according to https://github.com/AaronVerDow/nix/tree/main/common/apparmor
