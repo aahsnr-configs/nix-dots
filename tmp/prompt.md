@@ -1,1 +1,0 @@
-The following link is my personal github repository containing all the configurations and settings for NixOS: https://github.com/aahsnr-configs/nix-dots . Study all the files inside this repository carefully and find a solution to replace the default gcc compiler from gcc 14 to gcc 15. The new error is assertion '(isBuiltByBootstrapFilesCompiler (prevStage).gcc-unwrapped)' failed
