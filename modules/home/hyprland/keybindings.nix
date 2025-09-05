@@ -4,10 +4,7 @@
       # Binds are actions that are executed on key press
       bind = [
         #--- Applications ---#
-        # Terminal
         "Super, Return, exec, app2unit -- kitty"
-
-        # GUI Apps
         "Super, E, exec, emacsclient -c -a 'emacs'"
         "Super, B, exec, app2unit -- zen"
         "Super, Z, exec, app2unit -- zotero"
@@ -18,7 +15,6 @@
         "Super+Shift, Y, exec, pypr toggle yazi"
 
         #--- Window Actions ---#
-        # Primary Actions
         "Super, Q, killactive,"
         "Super, F, fullscreen, 0"
         "Super, Space, togglefloating,"
@@ -55,7 +51,6 @@
         "Super, L, exec, caelestia:lock"
 
         #--- Workspaces ---#
-        # Go to workspace
         "Super, 1, exec, wsaction workspace 1"
         "Super, 2, exec, wsaction workspace 2"
         "Super, 3, exec, wsaction workspace 3"
@@ -79,14 +74,12 @@
         "Ctrl+Super+Alt, 9, exec, wsaction movetoworkspace 9"
         "Ctrl+Super+Alt, 0, exec, wsaction movetoworkspace 10"
 
-        # Move window to special workspace
+        # Special Workspace Actions
         "Super, C, movetoworkspace, special"
-
-        # Special Workspace Toggles
-        "Super+Alt, S, exec, caelestia toggle specialws" # MOVED from Super, S
+        "Super+Alt, S, exec, caelestia toggle specialws"
         "Ctrl+Shift, Escape, exec, caelestia toggle sysmon"
         "Super, M, exec, caelestia toggle music"
-        "Super+Alt, C, exec, caelestia toggle communication" # MOVED from Super, C
+        "Super+Alt, C, exec, caelestia toggle communication"
         "Super, R, exec, caelestia toggle todo"
 
         #--- Utilities ---#
@@ -108,53 +101,34 @@
 
       # Binds that are repeatable
       binde = [
-        # Go to workspace -1/+1
         "Ctrl+Alt, right, workspace, +1"
         "Ctrl+Alt, left, workspace, -1"
-
-        # Move window to workspace -1/+1
         "Ctrl+Super+Shift, right, movetoworkspace, +1"
         "Ctrl+Super+Shift, left, movetoworkspace, -1"
-
-        # Volume Control
-        ", XF86AudioRaiseVolume, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ $volumeStep%+"
-        ", XF86AudioLowerVolume, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume @DEFAULT_AUDIO_SINK@ $volumeStep%-"
+        ", XF86AudioRaiseVolume, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioLowerVolume, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
       ];
 
       # Binds that are executed on lockscreen
       bindl = [
-        # Clear notifications
         "Ctrl+Alt, C, exec, caelestia:clearNotifs"
-
-        # Re-lock the screen
-        "Super+Alt, L, exec, caelestia shell -d; caelestia:lock" # COMBINED
-
-        # Brightness
+        "Super+Alt, L, exec, caelestia shell -d; caelestia:lock"
         ", XF86MonBrightnessUp, exec, caelestia:brightnessUp"
         ", XF86MonBrightnessDown, exec, caelestia:brightnessDown"
-
-        # Media Controls
-        "Super+Ctrl, Space, exec, caelestia:mediaToggle"
         ", XF86AudioPlay, exec, caelestia:mediaToggle"
         ", XF86AudioPause, exec, caelestia:mediaToggle"
-        "Super+Ctrl, Equal, exec, caelestia:mediaNext"
         ", XF86AudioNext, exec, caelestia:mediaNext"
-        "Super+Ctrl, Minus, exec, caelestia:mediaPrev"
         ", XF86AudioPrev, exec, caelestia:mediaPrev"
         ", XF86AudioStop, exec, caelestia:mediaStop"
-
-        # Volume Mute
         ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-
-        # Screenshot
         ", Print, exec, caelestia screenshot"
+        ", switch:on:lid, exec, disable-lid"
       ];
 
       # Binds that are executed on key release
       bindr = [
-        # Kill/restart Caelestia
         "Super+Ctrl+Shift, R, exec, qs -c caelestia kill"
-        "Super+Ctrl+Alt, R, exec, qs -c caelestia kill; caelestia shell -d" # MOVED from Super+Alt, R
+        "Super+Ctrl+Alt, R, exec, qs -c caelestia kill; caelestia shell -d"
       ];
 
       # Mouse binds
@@ -162,4 +136,3 @@
     };
   };
 }
-
