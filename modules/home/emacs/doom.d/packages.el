@@ -81,16 +81,6 @@
 ;;(package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
 ;;(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
 
-;; --- Markdown ---
-;; (package! md-roam :recipe (:host github :repo "nobiot/md-roam") :pin 1113a568138c1e1084a3cd41a04a9cff2ff14a72 )
-(package! imenu-list)
-
-;; --- Version Control ---
-(package! magit-todos)
-(package! git-timemachine)
-(package! git-gutter)
-(package! embark-vc)
-
 ;; --- Development & System ---
 (package! feature-mode)
 (package! dired-open)
@@ -99,4 +89,4 @@
 
 ;; --- Ignored Packages ---
 (package! helm-bibtex :ignore t)
-(package! hydra :ignore t)
+;; (package! hydra :ignore t)

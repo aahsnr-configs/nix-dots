@@ -1,0 +1,1 @@
+- [ ] Before adding the simplified org setup, test org-mode with the default settings provided by the emacs packages.

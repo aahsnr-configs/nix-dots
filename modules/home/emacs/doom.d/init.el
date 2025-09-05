@@ -38,7 +38,7 @@
        (smooth-scroll
         +interpolate)     ; So smooth you won't believe it's not butter
        ;;tabs
-       treemacs
+       (treemacs +lsp)
        ;;unicode           ; extended unicode support for various languages
        (vc-gutter +pretty) ; vcs diff in the fringe
        ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -80,7 +80,6 @@
 
        :checkers
        (syntax
-        +flymake
         +icons)
        ;;grammar           ; tasing grammar mistake every you make
 
@@ -97,8 +96,7 @@
        lookup             ; navigate your code and its documentation
        ;;llm               ; when I said you needed friends, I didn't mean...
        (lsp
-        +eglot
-        +booster)
+         +peek)
        (magit
         +forge)
        ;;make              ; run make tasks from Emacs
@@ -175,6 +173,7 @@
        ;;graphviz            ; diagrams for confusing yourself even more
        ;;purescript        ; javascript, but functional
        (python
+        +pyright
         +tree-sitter
         +lsp)
        ;;qt                ; the 'cutest' gui framework ever
@@ -209,5 +208,5 @@
        ;;(rss +org)        ; emacs as an RSS reader
 
        :config
-       ;;literate
+       literate
        (default +bindings +smartparens))
