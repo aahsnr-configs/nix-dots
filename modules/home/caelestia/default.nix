@@ -1,28 +1,98 @@
-{
-  inputs,
-  pkgs,
-  ...
-}: {
+{ inputs, pkgs, ... }: {
   home.packages = with pkgs; [
     app2unit
     aubio
     brightnessctl
     cava
+    dart-sass
     ddcutil
     fish
     fuzzel
+    grim
     libcalculate
+    libnotify
+    libpulseaudio
     lm_sensors
     qt6
     quickshell.packages.x86_64-linux.default
+    slurp
     swappy
+    wf-recorder
+    wl-screenrec
     xkeyboard-config
   ];
 
-  imports = [inputs.caelestia-shell.homeManagerModules.default];
+  imports = [ inputs.caelestia-shell.homeManagerModules.default ];
 
   programs.caelestia = {
     enable = true;
+    cli = {
+      enable = true;
+      settings = {
+        theme = {
+          enableTerm = true;
+          enableHypr = true;
+          enableDiscord = true;
+          enableSpicetify = true;
+          enableFuzzel = true;
+          enableBtop = true;
+          enableGtk = true;
+          enableQt = true;
+        };
+        toggles = {
+          communication = {
+            discord = {
+              enable = true;
+              match = [{ class = "discord"; }];
+              command = [ "discord" ];
+              move = true;
+            };
+            whatsapp = {
+              enable = true;
+              match = [{ class = "whatsapp"; }];
+              move = true;
+            };
+          };
+          music = {
+            spotify = {
+              enable = true;
+              match = [
+                { class = "Spotify"; }
+                { initialTitle = "Spotify"; }
+                { initialTitle = "Spotify Free"; }
+              ];
+              command = [ "spicetify" "watch" "-s" ];
+              move = true;
+            };
+            feishin = {
+              enable = true;
+              match = [{ class = "feishin"; }];
+              move = true;
+            };
+          };
+          sysmon = {
+            btop = {
+              enable = true;
+              match = [{
+                class = "btop";
+                title = "btop";
+                workspace = { name = "special:sysmon"; };
+              }];
+              command =
+                [ "foot" "-a" "btop" "-T" "btop" "fish" "-C" "exec btop" ];
+            };
+          };
+          todo = {
+            todoist = {
+              enable = true;
+              match = [{ class = "Todoist"; }];
+              command = [ "todoist" ];
+              move = true;
+            };
+          };
+        };
+      };
+    };
     settings = {
       appearance = {
         anim.durations.scale = 1;
@@ -45,8 +115,8 @@
       };
       general = {
         apps = {
-          terminal = ["kitty"];
-          audio = ["pavucontrol"];
+          terminal = [ "kitty" ];
+          audio = [ "pavucontrol" ];
         };
       };
       background = {
@@ -157,7 +227,7 @@
         };
         showOnHover = false;
       };
-      lock = {recolourLogo = false;};
+      lock = { recolourLogo = false; };
       notifs = {
         actionOnClick = false;
         clearThreshold = 0.3;
@@ -180,12 +250,10 @@
         audioIncrement = 0.1;
         defaultPlayer = "Spotify";
         gpuType = "";
-        playerAliases = [
-          {
-            from = "com.github.th_ch.youtube_music";
-            to = "YT Music";
-          }
-        ];
+        playerAliases = [{
+          from = "com.github.th_ch.youtube_music";
+          to = "YT Music";
+        }];
         weatherLocation = "";
         useFahrenheit = false;
         useTwelveHourClock = false;
@@ -196,10 +264,10 @@
         dragThreshold = 30;
         vimKeybinds = false;
         commands = {
-          logout = ["loginctl" "terminate-user" ""];
-          shutdown = ["systemctl" "poweroff"];
-          hibernate = ["systemctl" "hibernate"];
-          reboot = ["systemctl" "reboot"];
+          logout = [ "loginctl" "terminate-user" "" ];
+          shutdown = [ "systemctl" "poweroff" ];
+          hibernate = [ "systemctl" "hibernate" ];
+          reboot = [ "systemctl" "reboot" ];
         };
       };
     };
