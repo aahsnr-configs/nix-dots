@@ -2,6 +2,9 @@
 # This module packages custom Python scripts for Hyprland and adds them to the
 # user's environment.
 {pkgs, ...}: let
+  ##----------------------------------------------------------------##
+  ##-------------------------- wsaction ----------------------------##
+  ##----------------------------------------------------------------##
   # Packages the wsaction Python script into an executable file.
   # pkgs.writeScriptBin automatically handles patching the shebang to point to the
   # correct Python 3 interpreter provided by Nix.
@@ -79,6 +82,10 @@
     if __name__ == "__main__":
         main()
   '';
+
+  ##----------------------------------------------------------------##
+  ##------------------------ disable-lid ---------------------------##
+  ##----------------------------------------------------------------##
 
   # Packages the disable-lid Python script into an executable file.
   disable-lid-script = pkgs.writeScriptBin "disable-lid" ''

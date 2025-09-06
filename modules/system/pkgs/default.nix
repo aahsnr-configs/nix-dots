@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   environment.systemPackages = with pkgs; [
     aide
     appimage-run
@@ -27,8 +26,6 @@
     killall
     libratbag
     linux-firmware
-    lm_sensors
-    lsd
     lutris
     mu
     neovim
@@ -36,9 +33,6 @@
     openssl
     piper
     python313
-    tealdeer
-    terminus_font
-    ticktick
     tree
     typescript
     unzip

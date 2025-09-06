@@ -1,5 +1,25 @@
-{ inputs, ... }: {
-  imports = [ inputs.caelestia-shell.homeManagerModules.default ];
+{
+  inputs,
+  pkgs,
+  ...
+}: {
+  home.packages = with pkgs; [
+    app2unit
+    aubio
+    brightnessctl
+    cava
+    ddcutil
+    fish
+    fuzzel
+    libcalculate
+    lm_sensors
+    qt6
+    quickshell.packages.x86_64-linux.default
+    swappy
+    xkeyboard-config
+  ];
+
+  imports = [inputs.caelestia-shell.homeManagerModules.default];
 
   programs.caelestia = {
     enable = true;
@@ -25,8 +45,8 @@
       };
       general = {
         apps = {
-          terminal = [ "kitty" ];
-          audio = [ "pavucontrol" ];
+          terminal = ["kitty"];
+          audio = ["pavucontrol"];
         };
       };
       background = {
@@ -137,7 +157,7 @@
         };
         showOnHover = false;
       };
-      lock = { recolourLogo = false; };
+      lock = {recolourLogo = false;};
       notifs = {
         actionOnClick = false;
         clearThreshold = 0.3;
@@ -160,10 +180,12 @@
         audioIncrement = 0.1;
         defaultPlayer = "Spotify";
         gpuType = "";
-        playerAliases = [{
-          from = "com.github.th_ch.youtube_music";
-          to = "YT Music";
-        }];
+        playerAliases = [
+          {
+            from = "com.github.th_ch.youtube_music";
+            to = "YT Music";
+          }
+        ];
         weatherLocation = "";
         useFahrenheit = false;
         useTwelveHourClock = false;
@@ -174,10 +196,10 @@
         dragThreshold = 30;
         vimKeybinds = false;
         commands = {
-          logout = [ "loginctl" "terminate-user" "" ];
-          shutdown = [ "systemctl" "poweroff" ];
-          hibernate = [ "systemctl" "hibernate" ];
-          reboot = [ "systemctl" "reboot" ];
+          logout = ["loginctl" "terminate-user" ""];
+          shutdown = ["systemctl" "poweroff"];
+          hibernate = ["systemctl" "hibernate"];
+          reboot = ["systemctl" "reboot"];
         };
       };
     };

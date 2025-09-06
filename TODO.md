@@ -4,10 +4,10 @@
 - [x] Fix caelestia hmModule; make it look exactly like json file
 - [x] Fix hyprland keybindings for caelestia
 - [ ] Setup Apparmor in NixOS according to https://github.com/AaronVerDow/nix/tree/main/common/apparmor
-- [ ] app2unit is not installed
-- [ ] fish is not installed
-- [ ] Hyprland keybindings not working as expected
-- [ ] Caelestia is not loading wallpapers and gifs
+- [x] app2unit is not installed
+- [x] fish is not installed
+- [x] Hyprland keybindings not working as expected
+- [x] Caelestia is not loading wallpapers and gifs
 
 ## Main Goal
 
@@ -32,14 +32,12 @@
 - [x] Add determinate nix flake
 - [x] Adapt the git.nix module for NixOS
 - [x] Check with Hyprland NixOS wiki if some env variables are necessary
-- [ ] Make sure all modules, both home and system, use catppuccin nix
+- [x] Make sure all modules, both home and system, use catppuccin nix
 - [x] Make sure to enable uwsm in hyprland
-- [ ] add a background for regreet, caelestia shell and hyprlock
-- [ ] Setup fuzzel as home-manager: possibly borrow from Caelestia
+- [x] Setup fuzzel as home-manager: possibly borrow from Caelestia
 - [x] Write systemd user units for `caelestia resizer -d` and `caelestia shell -d`
-- [ ] Re-edit `system/openssh/default.nix` after everything
-- [ ] Apply the gemini gcc15 fix temporarily and print the error output to a different gemini account: Use this method to use from gcc14 to gcc15.
-- [ ] Also try to find out if emacs-overlay uses libgccjit15: if no, introduce your own
+- [x] Re-edit `system/openssh/default.nix` after everything
+- [x] Also try to find out if emacs-overlay uses libgccjit15: if no, introduce your own
 - [ ] Install cachyos-lto kernel from nyx when everything is stable and gcc15 is the default compiler
 
 ## Hyprland Plugins and Tools
@@ -67,7 +65,7 @@
 - [x] bat
 - [x] btop
 - [x] caelestia
-- [ ] catppuccin
+- [x] catppuccin
 - [x] cliphist
 - [x] dev
 - [x] emacs
@@ -85,7 +83,7 @@
 - [x] imv
 - [x] keyring
 - [x] kitty
-- [ ] lazygit
+- [x] lazygit
 - [x] mpv
 - [x] pay-respects
 - [x] pkgs

@@ -7,6 +7,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    app2unit-overlay.url = "path:/home/ahsan/nix-dots/overlays/app2unit";
+
+    caelestia-cli = {
+      url = "github:caelestia-dots/cli";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.caelestia-shell.follows = "";
+    };
+
     caelestia-shell = {
       url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -139,6 +147,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -164,29 +177,28 @@
     };
   };
 
-  outputs =
-    { self
-    , home-manager
-    , emacs-overlay
-    , nixpkgs
-    , yazi
-    , nix-doom-emacs-unstraightened
-    , pyprland
-    , anyrun
-    , ...
-    } @ inputs:
-    let
-      system = "x86_64-linux";
-    in
-    {
-      nixosConfigurations = import ./hosts inputs;
+  outputs = {
+    self,
+    home-manager,
+    emacs-overlay,
+    nixpkgs,
+    yazi,
+    nix-doom-emacs-unstraightened,
+    pyprland,
+    anyrun,
+    app2unit-overlay,
+    ...
+  } @ inputs: let
+    system = "x86_64-linux";
+  in {
+    nixosConfigurations = import ./hosts inputs;
 
-      packages.${system} = {
-        #catppuccin-folders = pkgs.callPackage ./pkgs/catppuccin-folders.nix {};
-        #catppuccin-gtk = pkgs.callPackage ./pkgs/catppuccin-gtk.nix {};
-        #catppuccin-cursors = pkgs.callPackage ./pkgs/catppuccin-cursors.nix {};
-        #onlyoffice-deb = pkgs.callPackage ./pkgs/onlyoffice-bin.nix {};
-        #insync-deb = pkgs.callPackage ./pkgs/insync-deb.nix {};
-      };
+    packages.${system} = {
+      #catppuccin-folders = pkgs.callPackage ./pkgs/catppuccin-folders.nix {};
+      #catppuccin-gtk = pkgs.callPackage ./pkgs/catppuccin-gtk.nix {};
+      #catppuccin-cursors = pkgs.callPackage ./pkgs/catppuccin-cursors.nix {};
+      #onlyoffice-deb = pkgs.callPackage ./pkgs/onlyoffice-bin.nix {};
+      #insync-deb = pkgs.callPackage ./pkgs/insync-deb.nix {};
     };
+  };
 }
