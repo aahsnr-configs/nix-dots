@@ -240,9 +240,9 @@
         hideDelay = 2000;
       };
       paths = {
-        mediaGif = "./assets/bongocat.gif";
-        sessionGif = "./assets/kurukuru.gif";
-        wallpaperDir = "./assets/wallpapers";
+        mediaGif = "~/nix-dots/assets/bongocat.gif";
+        sessionGif = "~/nix-dots/assets/kurukuru.gif";
+        wallpaperDir = "~/nix-dots/assets/wallpapers";
       };
       services = {
         audioIncrement = 0.1;
