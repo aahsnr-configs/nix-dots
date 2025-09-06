@@ -9,12 +9,10 @@
     fish
     fuzzel
     grim
-    libcalculate
     libnotify
     libpulseaudio
     lm_sensors
     qt6
-    quickshell.packages.x86_64-linux.default
     slurp
     swappy
     wf-recorder
