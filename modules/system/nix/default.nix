@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, app2unit-overlay, ... }: {
+{ config, pkgs, lib, inputs, ... }: {
   environment = {
     systemPackages = [ pkgs.git ];
     defaultPackages = [ ];
@@ -83,12 +83,11 @@
       permittedInsecurePackages = [ "openssl-1.1.1u" "electron-25.9.0" ];
     };
 
-    overlays = [
-      inputs.yazi.overlays.default
-      inputs.emacs-overlay.overlay
-      inputs.nixpkgs-wayland.overlay
-      inputs.rust-overlay.overlays.default
-      app2unit-overlay.overlays.default
+    overlays = with inputs; [
+      yazi.overlays.default
+      emacs-overlay.overlay
+      nixpkgs-wayland.overlay
+      rust-overlay.overlays.default
     ];
 
     # hostPlatform = {
