@@ -1,9 +1,9 @@
-{ ... }: {
+{...}: {
   imports = [
     ./asus
     ./bluetooth
     ./catppuccin
-    ./clamav
+    #./clamav
     ./dbus
     ./environment
     ./fonts
