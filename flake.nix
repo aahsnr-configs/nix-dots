@@ -56,6 +56,11 @@
       };
     };
 
+    hyprkool = {
+      url = "github:thrombe/hyprkool";
+      inputs.hyprland.follows = "hyprland";
+    };
+
     hyprland = {
       url = "git+https://github.com/hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";

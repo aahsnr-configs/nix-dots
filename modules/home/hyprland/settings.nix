@@ -1,7 +1,7 @@
-{ ... }: {
+{...}: {
   wayland.windowManager.hyprland.settings = {
     general = {
-      layout = "hy3";
+      layout = "dwindle";
       allow_tearing = false;
       gaps_workspaces = 12;
       gaps_in = 7;

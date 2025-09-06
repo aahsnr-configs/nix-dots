@@ -1,9 +1,8 @@
-{ inputs, pkgs, ... }:
-
-{
+{ inputs, pkgs, ... }: {
   wayland.windowManager.hyprland = {
     plugins = with inputs; [
       hyprland-plugins.packages.${pkgs.system}.hyprexpo
+      hyprland-plugins.packages.${pkgs.system}.hyprscrolling
       hy3.packages.${pkgs.system}.hy3
       Hyprspace.packages.${pkgs.system}.Hyprspace
     ];
