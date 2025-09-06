@@ -2,12 +2,14 @@
   description = "NixOS configuration of Ahsanur Rahman";
 
   inputs = {
-    app2unit.url = "github:Vladimir-csp/app2unit";
-    flake = false;
-
     anyrun = {
       url = "github:anyrun-org/anyrun";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    app2unit = {
+      url = "github:Vladimir-csp/app2unit";
+      flake = false;
     };
 
     caelestia-cli = {
