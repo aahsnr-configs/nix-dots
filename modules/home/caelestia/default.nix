@@ -9,10 +9,11 @@
     fish
     fuzzel
     grim
+    kdePackages.qtdeclarative
+    kdePackages.qtbase
     libnotify
     libpulseaudio
     lm_sensors
-    qt6
     slurp
     swappy
     wf-recorder
