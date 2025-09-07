@@ -4,10 +4,7 @@
     package =
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     xwayland.enable = true;
-    systemd = {
-      enable = true;
-      variables = [ "--all" ];
-    };
+    systemd.enable = false; # messes with uwsm
   };
 
   imports = [

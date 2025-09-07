@@ -1,8 +1,5 @@
 # ~/.config/home-manager/zsh/default.nix
-{ config
-, pkgs
-, ...
-}: {
+{ config, pkgs, ... }: {
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
@@ -64,44 +61,48 @@
       gg = "lazygit";
     };
     initContent = ''
-      # ===== Zsh Options =====
-      setopt EXTENDED_HISTORY HIST_VERIFY PUSHD_IGNORE_DUPS
+            # ===== Zsh Options =====
+            setopt EXTENDED_HISTORY HIST_VERIFY PUSHD_IGNORE_DUPS
 
-      # ===== fzf-tab configuration =====
-      zstyle ':fzf-tab:complete:*' fzf-preview \
-        '[[ -f $realpath ]] && bat --color=always --style=numbers $realpath || eza --tree --level=2 $realpath'
+            # ===== fzf-tab configuration =====
+            zstyle ':fzf-tab:complete:*' fzf-preview \
+              '[[ -f $realpath ]] && bat --color=always --style=numbers $realpath || eza --tree --level=2 $realpath'
 
-      # ===== zsh-vi-mode configuration =====
-      ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
+            # ===== zsh-vi-mode configuration =====
+            ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
 
-      # ===== Helper Functions =====
+            # ===== Helper Functions =====
 
-      # Atuin search widget keybindings
-      bindkey -M vicmd '^R' _atuin_search_widget
-      bindkey -M viins '^R' _atuin_search_widget
+            # Atuin search widget keybindings
+            bindkey -M vicmd '^R' _atuin_search_widget
+            bindkey -M viins '^R' _atuin_search_widget
 
-      # Yazi cd on quit
-      function yy() {
-        local tmp="$ (mktemp -t "yazi-cwd.XXXXXX")"
-        yazi "$@" --cwd-file="$tmp"
-        if cwd="$(< "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-          cd -- "$cwd"
-        fi
-        rm -f -- "$tmp"
-      }
-      compdef yy=yazi
+            # Yazi cd on quit
+            function yy() {
+              local tmp="$ (mktemp -t "yazi-cwd.XXXXXX")"
+              yazi "$@" --cwd-file="$tmp"
+              if cwd="$(< "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+                cd -- "$cwd"
+              fi
+              rm -f -- "$tmp"
+            }
+            compdef yy=yazi
 
-      # Ripgrep with fzf
-      function rgfzf() {
-        rg --color=always --line-number "$@" | fzf --ansi \
-          --preview 'bat --style=numbers --color=always --line-range :500 {1}' \
-          --preview-window 'right:60%:wrap'
-      }
+            # Ripgrep with fzf
+            function rgfzf() {
+              rg --color=always --line-number "$@" | fzf --ansi \
+                --preview 'bat --style=numbers --color=always --line-range :500 {1}' \
+                --preview-window 'right:60%:wrap'
+            }
 
-      # tldr with fzf
-      function tldr-fzf() {
-        tldr --list | fzf --preview 'tldr {1}' --preview-window right:70%
-      }
+            # tldr with fzf
+            function tldr-fzf() {
+              tldr --list | fzf --preview 'tldr {1}' --preview-window right:70%
+            }
+
+      if uwsm check may-start && uwsm select; then
+      	exec uwsm start default
+      fi
     '';
   };
 }
