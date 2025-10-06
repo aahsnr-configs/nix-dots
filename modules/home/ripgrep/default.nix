@@ -1,5 +1,6 @@
-# ~/.config/home-manager/ripgrep/default.nix
-{ ... }: {
+# ~/nix-dots/modules/home/ripgrep/default.nix
+{ ... }:
+{
   programs.ripgrep = {
     enable = true;
     arguments = [

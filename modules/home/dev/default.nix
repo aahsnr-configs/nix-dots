@@ -1,5 +1,6 @@
 # ~/.config/home-manager/dev/default.nix
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     deadnix
     delta
@@ -17,7 +18,8 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
-    enableZshIntegration = true;
+    # not needed
+    #enableFishIntegration = true;
     config.global.hide_env_diff = true;
   };
 }

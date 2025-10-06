@@ -1,9 +1,14 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home = {
     username = "ahsan";
     homeDirectory = "/home/ahsan";
     stateVersion = "25.11";
-    extraOutputsToInstall = [ "doc" "info" "devdoc" ];
+    extraOutputsToInstall = [
+      "doc"
+      "info"
+      "devdoc"
+    ];
 
     # Set default editor and other environment variables
     sessionVariables = {
@@ -45,7 +50,7 @@
     ./catppuccin
     ./cliphist
     ./dev
-    ./emacs
+    #./emacs
     ./emoji
     ./eza
     ./fd-find
@@ -61,22 +66,19 @@
     ./kitty
     ./lazygit
     ./mpv
-    #./pay-respects
+    ./pay-respects
     ./pkgs
     ./ripgrep
-    #./schizofox
     ./starship
     ./texlive
-    ./theming
     ./tldr
     ./tmux
-    #./vscode
     ./xdg
     ./yazi
     ./zathura
     ./zen-browser
     ./zoxide
-    ./zsh
+    #./zsh
   ];
 
   # Let Home Manager install and manage itself.

@@ -1,5 +1,6 @@
 # ~/.config/home-manager/catppuccin/default.nix
-{ ... }: {
+{ ... }:
+{
   catppuccin = {
     atuin = {
       enable = true;
@@ -22,6 +23,11 @@
       flavor = "macchiato";
     };
 
+    fish = {
+      enable = true;
+      flavor = "macchiato";
+    };
+
     fzf = {
       enable = true;
       accent = "flamingo";
@@ -32,20 +38,6 @@
       enable = true;
       flavor = "macchiato";
     };
-
-    hyprlock = {
-      enable = true;
-      accent = "flamingo";
-      flavor = "macchiato";
-      useDefaultConfig = true;
-    };
-
-    # kvantum = {
-    #   enable = true;
-    #   apply = true;
-    #   accent = "flamingo";
-    #   flavor = "macchiato";
-    # };
 
     kitty = {
       enable = true;
@@ -87,10 +79,5 @@
       enable = true;
       flavor = "macchiato";
     };
-
-    # zsh-syntax-highlighting = {
-    #   enable = true;
-    #   flavor = "macchiato";
-    # };
   };
 }

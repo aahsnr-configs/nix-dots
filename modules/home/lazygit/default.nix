@@ -1,5 +1,6 @@
-# ~/.config/home-manager/lazygit/default.nix
-{ pkgs, ... }: {
+# ~/nix-dots/modules/home/lazygit/default.nix
+{ pkgs, ... }:
+{
   programs.lazygit = {
     enable = true;
     settings = {
@@ -142,12 +143,14 @@
           command = ''git stash push -m "{{.Form.Message}}"'';
           context = "files";
           description = "Stash with custom message";
-          prompts = [{
-            type = "input";
-            key = "Message";
-            title = "Stash Message";
-            initialValue = "WIP: ";
-          }];
+          prompts = [
+            {
+              type = "input";
+              key = "Message";
+              title = "Stash Message";
+              initialValue = "WIP: ";
+            }
+          ];
         }
         {
           key = "o";
@@ -161,12 +164,14 @@
           command = "git checkout -b {{.Form.BranchName}}";
           context = "localBranches";
           description = "Create new branch";
-          prompts = [{
-            type = "input";
-            key = "BranchName";
-            title = "Branch Name";
-            initialValue = "feature/";
-          }];
+          prompts = [
+            {
+              type = "input";
+              key = "BranchName";
+              title = "Branch Name";
+              initialValue = "feature/";
+            }
+          ];
         }
       ];
     };
