@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   catppuccin = {
     # cache.enable = true;
 

@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   systemd.user.services = {
     turnoffdisplay = {
       enable = true;

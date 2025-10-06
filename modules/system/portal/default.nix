@@ -8,13 +8,17 @@
       common.default = [ "gtk" ];
       hyprland = {
         default = [
-          "gtk"
+          "kde"
           "hyprland"
+          "gtk"
         ];
         "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
       };
     };
 
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.kdePackages.xdg-desktop-portal-kde
+    ];
   };
 }

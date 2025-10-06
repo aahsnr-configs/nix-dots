@@ -1,4 +1,11 @@
-{ config, pkgs, lib, inputs, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
+{
   environment = {
     systemPackages = [ pkgs.git ];
     defaultPackages = [ ];
@@ -20,8 +27,7 @@
 
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}")
-      config.nix.registry;
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
     # Free up to 1GiB whenever there is less than 100MiB left.
     extraOptions = ''
@@ -72,7 +78,11 @@
         "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
         "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
       ];
-      extra-experimental-features = [ "flakes" "nix-command" "ca-derivations" ];
+      extra-experimental-features = [
+        "flakes"
+        "nix-command"
+        "ca-derivations"
+      ];
     };
   };
 
@@ -80,7 +90,10 @@
     config = {
       allowUnfree = true;
       allowBroken = true;
-      permittedInsecurePackages = [ "openssl-1.1.1u" "electron-25.9.0" ];
+      permittedInsecurePackages = [
+        "openssl-1.1.1u"
+        "electron-25.9.0"
+      ];
     };
 
     overlays = with inputs; [

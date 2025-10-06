@@ -73,10 +73,10 @@
           value = "0";
         }
       ];
-      services = {
-        hyprlock = { };
-        greetd.enableGnomeKeyring = true;
-      };
+      # services = {
+      #   # hyprlock = { };
+      #   greetd.enableGnomeKeyring = true;
+      # };
     };
   };
 }

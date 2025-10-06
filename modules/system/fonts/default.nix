@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   fonts = {
     fontconfig = {
       enable = true;
@@ -17,7 +18,10 @@
       defaultFonts = {
         monospace = [ "JetBrainsMono Nerd Font" ];
         sansSerif = [ "Rubik Medium" ];
-        serif = [ "Noto Serif" "Noto Color Emoji" ];
+        serif = [
+          "Noto Serif"
+          "Noto Color Emoji"
+        ];
         emoji = [ "Noto Color Emoji" ];
       };
     };

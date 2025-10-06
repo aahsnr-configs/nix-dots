@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   users.users.root.initialPassword = "changeme";
   users.users.ahsan = {
     isNormalUser = true;
@@ -19,7 +20,7 @@
       "git"
     ];
     useDefaultShell = true;
-    shell = pkgs.zsh;
+    shell = pkgs.fish;
     initialPassword = "changeme";
     packages = with pkgs; [ git ];
   };

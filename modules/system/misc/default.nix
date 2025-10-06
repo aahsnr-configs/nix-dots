@@ -25,14 +25,31 @@
     };
   };
 
+  environment = {
+    homeBinInPath = true;
+    localBinInPath = true;
+    shells = [ pkgs.fish ];
+    # pathsToLink = [ "/share/zsh" ];
+    variables = {
+      EDITOR = "nvim";
+      BROWSER = "firefox";
+      TERMINAL = "kitty";
+    };
+  };
+
   programs = {
     dconf.enable = true;
     fuse.userAllowOther = true;
-    uwsm.enable = true;
     xwayland.enable = true;
   };
 
   services = {
+    dbus = {
+      enable = true;
+      implementation = "broker";
+      brokerPackage = pkgs.dbus-broker;
+      dbusPackage = pkgs.dbus;
+    };
     flatpak.enable = true;
     fstrim.enable = true;
     gnome = {

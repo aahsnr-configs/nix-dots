@@ -2,8 +2,11 @@
   config,
   pkgs,
   ...
-}: {
-  boot = {blacklistedKernelModules = ["nouveau"];};
+}:
+{
+  boot = {
+    blacklistedKernelModules = [ "nouveau" ];
+  };
 
   environment = {
     sessionVariables = {
