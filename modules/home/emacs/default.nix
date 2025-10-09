@@ -1,5 +1,4 @@
 {
-  inputs,
   pkgs,
   ...
 }:
@@ -7,7 +6,7 @@
 let
   # The emacs-overlay provides a function to parse your emacs config
   # and install the declared packages.
-  emacs = pkgs.emacsWithPackagesFromUsePackage {
+  emacs-config = pkgs.emacsWithPackagesFromUsePackage {
     config = ./init.el;
     # You can choose your preferred emacs version.
     package = pkgs.emacs30-pgtk;
@@ -19,21 +18,14 @@ let
     alwaysTangle = false;
     # You can also add extra packages that are not in your config file.
     extraEmacsPackages = epkgs: [
-      epkgs.vterm
+      epkgs.no-littering
     ];
   };
 
 in
 {
-  imports = [ inputs.nix-doom-emacs-unstraightened.hmModule ];
-
-  programs.doom-emacs = {
-    enable = true;
-    emacs = pkgs.emacs30-pgtk;
-    doomDir = ./doom.d;
-    tangleArgs = "--all config.org";
-    experimentalFetchTree = true; # Disable if there are fetcher issues
-  };
+  # early-init.el is not needed since all files are managed by nix
+  home.packages = emacs-config;
 
   services.emacs = {
     enable = true;
