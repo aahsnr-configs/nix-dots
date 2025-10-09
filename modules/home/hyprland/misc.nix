@@ -1,11 +1,11 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, inputs, ... }:
+{
   home = {
     packages = with pkgs; [
-      #app2unit
       brightnessctl
       fuzzel
-      # no flake or nixpkg yet
-      # hyprqt6engine
+      cliphist
+      ydotool
       inputs.hyprpicker.packages.${pkgs.system}.hyprpicker
       inputs.pyprland.packages.${pkgs.system}.pyprland
     ];
