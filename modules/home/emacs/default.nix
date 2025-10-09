@@ -9,7 +9,7 @@ let
   emacs-config = pkgs.emacsWithPackagesFromUsePackage {
     config = ./init.el;
     # You can choose your preferred emacs version.
-    package = pkgs.emacs30-pgtk;
+    package = pkgs.emacs-pgtk;
     # `alwaysEnsure` is equivalent to setting `use-package-always-ensure` to `t`.
     alwaysEnsure = true;
     # `alwaysTangle` will tangle all code blocks that do not have a `:tangle`
