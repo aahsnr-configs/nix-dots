@@ -26,7 +26,7 @@
       x11.enable = true;
     };
 
-    shell.enableZshIntegration = true;
+    shell.enableFishIntegration = true;
 
     # Consolidate PATH from export.zsh
     sessionPath = [
@@ -42,7 +42,7 @@
   };
 
   imports = [
-    ./anyrun
+    #./anyrun
     ./atuin
     ./bat
     ./btop
@@ -54,11 +54,10 @@
     ./emoji
     ./eza
     ./fd-find
+    ./fish
     ./fzf
     ./git
-    ./hypridle
     ./hyprland
-    ./hyprlock
     ./hyprpolkitagent
     ./hyprsunset
     ./imv
@@ -71,6 +70,7 @@
     ./ripgrep
     ./starship
     ./texlive
+    #./theming
     ./tldr
     ./tmux
     ./xdg

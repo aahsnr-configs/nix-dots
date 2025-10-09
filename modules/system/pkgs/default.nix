@@ -2,21 +2,13 @@
 {
   environment.systemPackages = with pkgs; [
     aide
-    appimage-run
     bleachbit
     btop
     cached-nix-shell
     cachix
-    cargo
-    chkrootkit
-    cmake
     exfatprogs
     fastfetch
     ffmpeg
-    gcc15
-    glib
-    glibc
-    glibcLocales
     gnumake
     gst_all_1.gst-plugins-base
     gst_all_1.gst-plugins-good
@@ -25,9 +17,7 @@
     imagemagick
     jq
     killall
-    libratbag
     linux-firmware
-    lutris
     mu
     neovim
     nodejs_24

@@ -24,4 +24,5 @@
     initialPassword = "changeme";
     packages = with pkgs; [ git ];
   };
+   programs.fish.enable = true;
 }

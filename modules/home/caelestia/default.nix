@@ -1,16 +1,12 @@
 { inputs, pkgs, ... }: {
   home.packages = with pkgs; [
-    app2unit
     aubio
     brightnessctl
     cava
     dart-sass
     ddcutil
-    fish
     fuzzel
     grim
-    kdePackages.qtdeclarative
-    kdePackages.qtbase
     libnotify
     libpulseaudio
     lm_sensors

@@ -21,7 +21,6 @@
       vulkan-validation-layers
       vulkan-tools
       vaapiVdpau
-      libvdpau-va-gl
       xwayland
       nvidia-vaapi-driver
     ];
