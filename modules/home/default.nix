@@ -50,7 +50,6 @@
     ./catppuccin
     ./cliphist
     ./dev
-    ./emacs
     ./emoji
     ./eza
     ./fd-find

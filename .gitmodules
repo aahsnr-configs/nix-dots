@@ -1,0 +1,3 @@
+[submodule "modules/home/emacs/emacs"]
+	path = modules/home/emacs/emacs
+	url = https://github.com/aahsnr-configs/emacs.git
