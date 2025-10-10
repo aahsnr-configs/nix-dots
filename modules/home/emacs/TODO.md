@@ -1,0 +1,1 @@
+- [ ] To use the applied emacs jupyter fix, change the corfu autocompletion so that the left and right arrow keys are used instead of Tab, and then pressing enter prints the selected candidate.
