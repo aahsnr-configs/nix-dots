@@ -8,12 +8,12 @@
       profile = [
         {
           time = "7:30";
-          temperature = 5350;
+          temperature = 5700;
           gamma = 1.0;
         }
         {
           time = "21:00";
-          temperature = 5350;
+          temperature = 5700;
           gamma = 1.0;
         }
       ];

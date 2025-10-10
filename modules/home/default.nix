@@ -54,6 +54,7 @@
     ./eza
     ./fd-find
     ./fish
+    ./foot
     ./fzf
     ./git
     ./hyprland
