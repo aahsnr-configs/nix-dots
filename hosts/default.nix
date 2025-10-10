@@ -1,4 +1,11 @@
-{ nixpkgs, self, catppuccin, chaotic, nixos-hardware, ... }:
+{
+  nixpkgs,
+  self,
+  catppuccin,
+  chaotic,
+  nixos-hardware,
+  ...
+}:
 let
   inputs = self.inputs;
   system = ../modules/system;
@@ -16,10 +23,14 @@ let
       inherit chaotic_nix;
     };
     users.ahsan = {
-      imports = [ (import ../modules/home) catppuccin.homeModules.catppuccin ];
+      imports = [
+        (import ../modules/home)
+        catppuccin.homeModules.catppuccin
+      ];
     };
   };
-in {
+in
+{
   #workstation
   workstation = nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
