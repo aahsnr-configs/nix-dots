@@ -123,16 +123,10 @@
     package = config.programs.emacs.finalPackage;
   };
 
-  # Set Emacs as the default editor
-  home.sessionVariables = {
-    EDITOR = "emacsclient -t -a ''";
-    VISUAL = "emacsclient -c -a ''";
-  };
-
-  home.shellAliases = {
-    e = "emacsclient -t"; # Terminal Emacs
-    ec = "emacsclient -c"; # GUI Emacs
-    emacs = "emacsclient -c -a emacs"; # Fallback to standalone if daemon isn't running
-  };
+  # home.shellAliases = {
+  #   e = "emacsclient -t"; # Terminal Emacs
+  #   ec = "emacsclient -c"; # GUI Emacs
+  #   emacs = "emacsclient -c -a emacs"; # Fallback to standalone if daemon isn't running
+  # };
 
 }
