@@ -22,9 +22,9 @@
 ---
 
 - [x] Use config files for all hyprland files; make sure the `conf` folder is created by home-manager if not detected
-- [ ] Make sure foot with server hmModule is setup
-- [ ] Make sure udiskie is setup
-- [ ] Make sure hyprsunset hmModule is setup
+- [x] Make sure foot with server hmModule is setup
+- [x] Make sure udiskie is setup
+- [x] Make sure hyprsunset hmModule is setup
 - [x] Use caeletia conf file as well
 
 - [ ] Search through sidoomy-dotfiles to make NixOS stable

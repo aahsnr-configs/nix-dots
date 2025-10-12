@@ -73,6 +73,7 @@
     #./theming
     ./tldr
     ./tmux
+    ./udiskie
     ./xdg
     ./yazi
     ./zathura
