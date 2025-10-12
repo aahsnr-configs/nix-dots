@@ -12,10 +12,10 @@
 
     # Set default editor and other environment variables
     sessionVariables = {
-      EDITOR = "nvim";
       BROWSER = "zen-browser";
+      TERMINAL = "footclient";
+      EDITOR = "emacsclient -t -a 'emacs'";
       VISUAL = "emacsclient -c -a 'emacs'";
-      TERMINAL = "kitty";
     };
 
     pointerCursor = {
@@ -50,7 +50,6 @@
     ./catppuccin
     ./cliphist
     ./dev
-    ./emoji
     ./eza
     ./fd-find
     ./fish
@@ -70,7 +69,6 @@
     ./ripgrep
     ./starship
     ./texlive
-    #./theming
     ./tldr
     ./tmux
     ./udiskie
@@ -79,7 +77,6 @@
     ./zathura
     ./zen-browser
     ./zoxide
-    #./zsh
   ];
 
   # Let Home Manager install and manage itself.
