@@ -6,7 +6,7 @@
     initrd = {
       verbose = false;
       systemd.enable = true;
-      luks.devices."luks-69192390-b487-4dda-bdd1-59b7e9be1ef1".device = "/dev/disk/by-uuid/69192390-b487-4dda-bdd1-59b7e9be1ef1";
+      luks.devices."luks-c931ab4a-8d18-4092-ae17-4cc82a7f9d14".device = "/dev/disk/by-uuid/c931ab4a-8d18-4092-ae17-4cc82a7f9d14";
     };
 
     kernelPackages = pkgs.linuxPackages_xanmod_latest;
