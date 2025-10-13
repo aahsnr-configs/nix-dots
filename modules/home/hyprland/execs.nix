@@ -1,12 +1,14 @@
 { ... }:
 {
-  wayland.windowManager.hyprland.settings = {
-    exec-once = [
-      "pypr"
-      "mpris-proxy"
-      "caelestia resizer -d"
-      "caelestia shell -d"
-    ];
+  wayland.windowManager.hyprland = {
+    settings = {
+      exec-once = [
+        "pypr"
+        "mpris-proxy"
+        "caelestia resizer -d"
+        "caelestia shell -d"
+      ];
+    };
     extraConfig = ''
       exec = cp -L --no-preserve=mode --update=none $HOME/.config/hypr/scheme/default.conf $HOME/.config/hypr/scheme/current.conf
       source = $HOME/.config/hypr/scheme/current.conf
