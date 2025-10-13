@@ -409,9 +409,10 @@
     ydotool
   ];
 
-  home = {
-    file.".config/caelestia/hypr-user.conf".source = ./hypr-user.conf;
-    file.".config/caelestia/hypr-vars.conf".source = ./hypr-vars.conf;
-  };
+  ## cannot be sourced; need to be writable and created by Hyprland
+  # home = {
+  #   file.".config/caelestia/hypr-user.conf".source = ./hypr-user.conf;
+  #   file.".config/caelestia/hypr-vars.conf".source = ./hypr-vars.conf;
+  # };
 
 }

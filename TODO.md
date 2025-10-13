@@ -21,6 +21,11 @@
 
 ---
 
+- [ ] Use claude opus to compare and contrast the config files in both the home-manager modules and the default hyprland config files
+- [x] Port hyprland.conf settings to the execs.nix
+- [x] Make sure scheme/default.conf is sourced by hyprland but also writable
+- [x] **hypr-user.conf** and **hypr-vars.conf** are need to **sourced** by Hyprland itself.
+
 - [x] Use config files for all hyprland files; make sure the `conf` folder is created by home-manager if not detected
 - [x] Make sure foot with server hmModule is setup
 - [x] Make sure udiskie is setup

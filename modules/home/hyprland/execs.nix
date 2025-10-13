@@ -7,5 +7,15 @@
       "caelestia resizer -d"
       "caelestia shell -d"
     ];
+    extraConfig = ''
+      exec = cp -L --no-preserve=mode --update=none $HOME/.config/hypr/scheme/default.conf $HOME/.config/hypr/scheme/current.conf
+      source = $HOME/.config/hypr/scheme/current.conf
+
+      exec = touch -a $HOME/.config/caelestia/hypr-vars.conf
+      source = $cConf/hypr-vars.conf
+
+      exec = touch -a $HOME/.config/caelestia/hypr-user.conf
+      source = $HOME/.config/hypr/hypr-user.conf
+    '';
   };
 }

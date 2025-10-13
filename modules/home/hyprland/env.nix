@@ -12,7 +12,7 @@
       "DXVK_HDR,1"
       "ECORE_EVAS_ENGINE,wayland_egl"
       "EGL_PLATFORM,wayland"
-      "ELECTRON_OZONE_PLATFORM,wayland"
+      "ELECTRON_OZONE_PLATFORM_HINT,auto"
       "ELM_ACCEL,opengl"
       "ELM_DISPLAY,wl"
       "ELM_ENGINE,wayland_egl"

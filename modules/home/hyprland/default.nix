@@ -14,5 +14,6 @@
     ./plugins.nix
     ./rules.nix
     ./execs.nix
+    ./keybindings.nix
   ];
 }
