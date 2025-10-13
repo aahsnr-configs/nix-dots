@@ -15,5 +15,6 @@
     ./rules.nix
     ./execs.nix
     ./keybindings.nix
+    ./colors.nix
   ];
 }

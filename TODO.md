@@ -21,7 +21,8 @@
 
 ---
 
-- [ ] Use claude opus to compare and contrast the config files in both the home-manager modules and the default hyprland config files
+- [ ] temporarily set the scheme color variables directly as hyprland home-manager modules in extraConfig option
+- [x] Use claude opus to compare and contrast the config files in both the home-manager modules and the default hyprland config files
 - [x] Port hyprland.conf settings to the execs.nix
 - [x] Make sure scheme/default.conf is sourced by hyprland but also writable
 - [x] **hypr-user.conf** and **hypr-vars.conf** are need to **sourced** by Hyprland itself.
