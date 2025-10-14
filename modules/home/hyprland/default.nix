@@ -9,12 +9,13 @@
 
   imports = [
     ./monitor.nix
+    ./colors.nix
+    ./keybindings.nix
     ./settings.nix
     ./misc.nix
-    ./plugins.nix
+    ./env.nix
     ./rules.nix
+    ./plugins.nix
     ./execs.nix
-    ./keybindings.nix
-    ./colors.nix
   ];
 }
