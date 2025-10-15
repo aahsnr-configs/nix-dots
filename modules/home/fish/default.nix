@@ -57,10 +57,10 @@
     interactiveShellInit = ''
       set fish_greeting
       # Set VI keybindings
-      set -g fish_key_bindings fish_vi_key_bindings
+      # set -g fish_key_bindings fish_vi_key_bindings
 
       # Bind 'jk' to escape insert mode
-      bind -M insert jk 'set fish_bind_mode default; commandline -f repaint'
+      # bind -M insert jk 'set fish_bind_mode default; commandline -f repaint'
 
       # Configure fzf previews for files (bat) and directories (eza)
       set -x FZF_PREVIEW_COMMAND '

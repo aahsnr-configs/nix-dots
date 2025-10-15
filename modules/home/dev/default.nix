@@ -13,6 +13,7 @@
     luarocks
     ripgrep
     statix
+    marksman
   ];
 
   programs.direnv = {

@@ -4,56 +4,61 @@
   catppuccin = {
     atuin = {
       enable = true;
-      flavor = "macchiato";
+      flavor = "mocha";
       accent = "flamingo";
     };
 
     bat = {
       enable = true;
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     btop = {
       enable = true;
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     delta = {
       enable = true;
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     fish = {
       enable = true;
-      flavor = "macchiato";
+      flavor = "mocha";
+    };
+
+    foot = {
+      enable = true;
+      flavor = "mocha";
     };
 
     fzf = {
       enable = true;
       accent = "flamingo";
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     imv = {
       enable = true;
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     kitty = {
       enable = true;
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     lazygit = {
       enable = true;
       accent = "flamingo";
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     mpv = {
       enable = true;
       accent = "flamingo";
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     tmux = {
@@ -61,23 +66,23 @@
       extraConfig = ''
         set -g @catppuccin_status_modules_right "application session user host date_time"
       '';
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     starship = {
       enable = true;
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     yazi = {
       enable = true;
       accent = "flamingo";
-      flavor = "macchiato";
+      flavor = "mocha";
     };
 
     zathura = {
       enable = true;
-      flavor = "macchiato";
+      flavor = "mocha";
     };
   };
 }

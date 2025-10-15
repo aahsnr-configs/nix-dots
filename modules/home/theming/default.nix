@@ -8,15 +8,10 @@
       package = pkgs.bibata-cursors;
     };
 
-    # theme = {
-    #   package = pkgs.colloid-gtk-theme.override {
-    #     themeVariants = [ "orange" ];
-    #     colorVariants = [ "dark" ];
-    #     sizeVariants = [ "standard" ];
-    #     tweaks = [ "catppuccin" ];
-    #   };
-    #   name = "Colloid-Orange-Dark-Catppuccin";
-    # };
+    theme = {
+      package = pkgs.adw-gtk3;
+      name = "adw-gtk3"; 
+    };
 
     iconTheme = {
       package = pkgs.papirus-icon-theme;

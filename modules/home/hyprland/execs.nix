@@ -5,8 +5,6 @@
       exec-once = [
         "pypr"
         "mpris-proxy"
-        "caelestia resizer -d"
-        "caelestia shell -d"
         "foot --server"
       ];
     };

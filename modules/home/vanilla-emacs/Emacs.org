@@ -234,20 +234,6 @@ Automatically tangle our Emacs.org config file when we save it.
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
 #+end_src
 
-** Automatic Package Updates
-#+begin_src emacs-lisp
-(use-package auto-package-update
-  :custom
-  (auto-package-update-interval 4)
-  (auto-package-update-hide-results t)
-  (auto-package-update-delete-old-versions t)
-  :config
-  ;; Run package updates automatically at startup, but only if the configured
-  ;; interval has elapsed.
-  (auto-package-update-maybe)
-  (auto-package-update-at-time "10:00"))
-#+end_src
-
 * General Keybindings
 #+begin_src emacs-lisp
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -382,7 +368,7 @@ Enable line numbers for some modes
 #+begin_src emacs-lisp
 (use-package dashboard
   :after nerd-icons
-  :init (dashboard-setup-startup-hook)
+  :config (dashboard-setup-startup-hook)
   :custom
   (initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
   (dashboard-center-content t)
@@ -641,17 +627,6 @@ appear, ensuring a consistent and predictable windowing layout.
 #+end_src
 
 ** Combobulate
-#+begin_src emacs-lisp
-(use-package combobulate
-   :custom
-   ;; You can customize Combobulate's key prefix here.
-   ;; Note that you may have to restart Emacs for this to take effect!
-   (combobulate-key-prefix "C-c o")
-   :hook ((prog-mode . combobulate-mode))
-   ;; Amend this to the directory where you keep Combobulate's source
-   ;; code.
-   :load-path ("~/.config/emacs/lisp/combobulate"))
-#+end_src
 ** Helpful
 *helpful* is an alternative to the built-in Emacs help that provides much more contextual information.
 #+begin_src emacs-lisp

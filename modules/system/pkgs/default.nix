@@ -24,7 +24,7 @@
     openssl
     piper
     python313
-    killall
+    busyboc
     tree
     typescript
     unzip

@@ -196,17 +196,6 @@
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
 
-(use-package auto-package-update
-  :custom
-  (auto-package-update-interval 4)
-  (auto-package-update-hide-results t)
-  (auto-package-update-delete-old-versions t)
-  :config
-  ;; Run package updates automatically at startup, but only if the configured
-  ;; interval has elapsed.
-  (auto-package-update-maybe)
-  (auto-package-update-at-time "10:00"))
-
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (use-package general
@@ -315,7 +304,7 @@
 
 (use-package dashboard
   :after nerd-icons
-  :init (dashboard-setup-startup-hook)
+  :config (dashboard-setup-startup-hook)
   :custom
   (initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
   (dashboard-center-content t)
@@ -525,16 +514,6 @@ or compilation buffers where the modeline provides useful info."
      ("\\`\\*dap-breakpoints" :align right :size 0.4)
      ("\\`\\*dap-sessions" :align right :size 0.4))
    shackle-inhibit-window-quit-on-same-buffer t))
-
-(use-package combobulate
-   :custom
-   ;; You can customize Combobulate's key prefix here.
-   ;; Note that you may have to restart Emacs for this to take effect!
-   (combobulate-key-prefix "C-c o")
-   :hook ((prog-mode . combobulate-mode))
-   ;; Amend this to the directory where you keep Combobulate's source
-   ;; code.
-   :load-path ("~/.config/emacs/lisp/combobulate"))
 
 (use-package helpful
   :commands (helpful-callable

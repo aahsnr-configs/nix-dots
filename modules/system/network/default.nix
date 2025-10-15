@@ -1,16 +1,10 @@
 { ... }:
 {
+
   networking = {
-    # dns
-    networkmanager = {
+    networkmanager = { 
       enable = true;
-      unmanaged = [
-        "docker0"
-        "rndis0"
-      ];
-      wifi = {
-        macAddress = "random";
-      };
+      wifi.powersave = true;
     };
     firewall = {
       enable = true;

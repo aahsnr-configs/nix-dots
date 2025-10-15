@@ -20,7 +20,6 @@
       vulkan-loader
       vulkan-validation-layers
       vulkan-tools
-      vaapiVdpau
       xwayland
       nvidia-vaapi-driver
     ];
@@ -40,6 +39,5 @@
       modesetting.enable = true;
       nvidiaSettings = true;
     };
-    nvidia-container-toolkit.enable = true;
   };
 }

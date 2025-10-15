@@ -12,6 +12,7 @@
     # All Emacs packages are managed here, not in init.el
     extraPackages =
       epkgs: with epkgs; [
+        no-littering
         use-package
         gcmh
         general
@@ -114,8 +115,8 @@
       ];
   };
 
-  home.file.".config/emacs/init.el".source = ./init.el;
-  home.file.".config/emacs/early-init.el".source = ./early-init.el;
+  home.file.".emacs.d/init.el".source = ./init.el;
+  home.file.".emacs.d/early-init.el".source = ./early-init.el;
 
   services.emacs = {
     enable = true;

@@ -5,10 +5,12 @@
     fastfetch
     ferdium
     neovim
+    nwg-look
     nix-index
     nix-prefetch-git
     nix-prefetch-github
     zotero
     inputs.quickshell.packages.${pkgs.system}.default
+    upscayl
   ];
 }

@@ -21,7 +21,7 @@
     pointerCursor = {
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Ice";
-      size = 32;
+      size = 24;
       gtk.enable = true;
       x11.enable = true;
     };
@@ -42,7 +42,7 @@
   };
 
   imports = [
-    #./anyrun
+    ./anyrun
     ./atuin
     ./bat
     ./btop
@@ -50,7 +50,7 @@
     ./catppuccin
     ./cliphist
     ./dev
-    ./emacs
+    ./doom-emacs
     ./eza
     ./fd-find
     ./fish
@@ -70,6 +70,7 @@
     ./ripgrep
     ./starship
     ./texlive
+    ./theming
     ./tldr
     ./tmux
     ./udiskie

@@ -14,9 +14,16 @@
     enable = true;
 
     systemd = {
-      enable = false;
+      enable = true;
       target = "graphical-session.target";
       environment = [ ];
+    };
+
+    cli = {
+      enable = true;
+      settings = {
+        theme.enableGtk = true;
+      };
     };
 
     settings = {
@@ -48,7 +55,7 @@
         };
         transparency = {
           enabled = false;
-          base = 0.85;
+          base = 0.90;
           layers = 0.4;
         };
       };
@@ -89,16 +96,16 @@
           inhibitWhenAudio = true;
           timeouts = [
             {
-              timeout = 180;
+              timeout = 1800;
               idleAction = "lock";
             }
             {
-              timeout = 300;
+              timeout = 3000;
               idleAction = "dpms off";
               returnAction = "dpms on";
             }
             {
-              timeout = 600;
+              timeout = 6000;
               idleAction = [
                 "systemctl"
                 "suspend-then-hibernate"
@@ -110,7 +117,7 @@
 
       background = {
         desktopClock = {
-          enabled = false;
+          enabled = true;
         };
         enabled = true;
         visualiser = {
@@ -172,19 +179,19 @@
         };
         showOnHover = true;
         status = {
-          showAudio = false;
+          showAudio = true;
           showBattery = true;
           showBluetooth = true;
-          showKbLayout = false;
+          showKbLayout = true;
           showMicrophone = false;
           showNetwork = true;
           showLockStatus = true;
         };
         tray = {
-          background = false;
-          compact = false;
+          background = true;
+          compact = true;
           iconSubs = [ ];
-          recolour = false;
+          recolour = true;
         };
         workspaces = {
           activeIndicator = true;
@@ -194,14 +201,14 @@
           occupiedBg = false;
           occupiedLabel = "󰮯";
           perMonitorWorkspaces = true;
-          showWindows = true;
-          shown = 5;
+          showWindows = false;
+          shown = 8;
         };
       };
 
       border = {
-        rounding = 25;
-        thickness = 10;
+        rounding = 12;
+        thickness = 6;
       };
 
       dashboard = {
@@ -361,13 +368,13 @@
           }
         ];
         dragThreshold = 50;
-        vimKeybinds = false;
+        vimKeybinds = true;
         enableDangerousActions = false;
         maxShown = 7;
         maxWallpapers = 9;
         specialPrefix = "@";
         useFuzzy = {
-          apps = false;
+          apps = true;
           actions = false;
           schemes = false;
           variants = false;
@@ -378,7 +385,7 @@
       };
 
       lock = {
-        recolourLogo = false;
+        recolourLogo = true;
       };
 
       notifs = {
@@ -386,7 +393,7 @@
         clearThreshold = 0.3;
         defaultExpireTimeout = 5000;
         expandThreshold = 20;
-        expire = false;
+        expire = true;
       };
 
       osd = {
@@ -414,7 +421,7 @@
         ];
         weatherLocation = "";
         useFahrenheit = false;
-        useTwelveHourClock = false;
+        useTwelveHourClock = true;
         smartScheme = true;
         visualiserBars = 45;
       };
