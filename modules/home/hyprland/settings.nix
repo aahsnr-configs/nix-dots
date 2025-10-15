@@ -8,8 +8,8 @@
       gaps_in = 4;
       gaps_out = 7;
       border_size = 3;
-      "col.active_border" = "rgba($primarye6)";
-      "col.inactive_border" = "rgba($onSurfaceVariant11)";
+      "col.active_border" = "rgba(7aa2f7e6)"; # Tokyo Night Blue
+      "col.inactive_border" = "rgba(3b4261aa)"; # Tokyo Night Dark Gray
     };
 
     dwindle = {
@@ -37,7 +37,7 @@
         enabled = false;
         range = 10;
         render_power = 2;
-        color = "rgba($surfaced4)";
+        color = "rgba(1a1b26d4)"; # Tokyo Night Background
       };
     };
 
@@ -97,10 +97,10 @@
     ];
 
     group = {
-      "col.border_active" = "rgba($primarye6)";
-      "col.border_inactive" = "rgba($onSurfaceVariant11)";
-      "col.border_locked_active" = "rgba($primarye6)";
-      "col.border_locked_inactive" = "rgba($onSurfaceVariant11)";
+      "col.border_active" = "rgba(7aa2f7e6)"; # Tokyo Night Blue
+      "col.border_inactive" = "rgba(3b4261aa)"; # Tokyo Night Dark Gray
+      "col.border_locked_active" = "rgba(7aa2f7e6)"; # Tokyo Night Blue
+      "col.border_locked_inactive" = "rgba(3b4261aa)"; # Tokyo Night Dark Gray
       groupbar = {
         font_family = "JetBrainsMono Nerd Font";
         font_size = 15;
@@ -112,11 +112,11 @@
         gaps_in = 3;
         gaps_out = 3;
 
-        text_color = "rgb($onPrimary)";
-        "col.active" = "rgba($primaryd4)";
-        "col.inactive" = "rgba($outlined4)";
-        "col.locked_active" = "rgba($primaryd4)";
-        "col.locked_inactive" = "rgba($secondaryd4)";
+        text_color = "rgb(c0caf5)"; # Tokyo Night Foreground
+        "col.active" = "rgba(7aa2f7d4)"; # Tokyo Night Blue
+        "col.inactive" = "rgba(565f89d4)"; # Tokyo Night Comment
+        "col.locked_active" = "rgba(7aa2f7d4)"; # Tokyo Night Blue
+        "col.locked_inactive" = "rgba(bb9af7d4)"; # Tokyo Night Purple
       };
     };
 
@@ -135,7 +135,7 @@
       mouse_move_enables_dpms = true;
       key_press_enables_dpms = true;
       font_family = "JetBrainsMono Nerd Font";
-      background_color = "rgb($surfaceContainer)";
+      background_color = "rgb(24283b)"; # Tokyo Night Background Highlight
       enable_swallow = true;
       swallow_regex = "^(Alacritty|kitty|footclient)$";
     };

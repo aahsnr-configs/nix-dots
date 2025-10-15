@@ -19,13 +19,6 @@
       environment = [ ];
     };
 
-    cli = {
-      enable = true;
-      settings = {
-        theme.enableGtk = true;
-      };
-    };
-
     settings = {
       appearance = {
         anim = {
