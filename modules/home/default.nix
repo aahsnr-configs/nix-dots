@@ -69,6 +69,7 @@
     ./pkgs
     ./ripgrep
     ./starship
+    ./scripts
     ./texlive
     ./theming
     ./tldr
