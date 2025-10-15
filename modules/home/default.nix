@@ -12,7 +12,7 @@
 
     # Set default editor and other environment variables
     sessionVariables = {
-      BROWSER = "zen-browser";
+      BROWSER = "zen";
       TERMINAL = "footclient";
       EDITOR = "emacsclient -t -a 'emacs'";
       VISUAL = "emacsclient -c -a 'emacs'";
