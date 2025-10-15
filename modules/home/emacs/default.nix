@@ -68,7 +68,6 @@
         evil-org
         fd-dired
         dired-open
-        dired-x
         dired-git-info
         nerd-icons-dired
         dired-ranger

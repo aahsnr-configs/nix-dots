@@ -50,6 +50,7 @@
     ./catppuccin
     ./cliphist
     ./dev
+    ./emacs
     ./eza
     ./fd-find
     ./fish

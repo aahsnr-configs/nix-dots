@@ -24,6 +24,7 @@
     openssl
     piper
     python313
+    killall
     tree
     typescript
     unzip
