@@ -23,7 +23,7 @@
     nodejs_24
     openssl
     piper
-    busybox
+    killall
     tree
     typescript
     unzip

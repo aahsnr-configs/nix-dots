@@ -22,6 +22,7 @@
     ./systemd
     ./thunar
     ./users
+    ./virtualization
     ./zram
   ];
 }
