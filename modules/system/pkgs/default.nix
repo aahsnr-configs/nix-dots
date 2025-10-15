@@ -23,8 +23,7 @@
     nodejs_24
     openssl
     piper
-    python313
-    busyboc
+    busybox
     tree
     typescript
     unzip

@@ -14,7 +14,7 @@
     ./network
     ./nix
     ./openssh
-    #./pkgs
+    ./pkgs
     ./portal
     ./seatd
     ./security
