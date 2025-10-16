@@ -32,5 +32,6 @@
     unzip
     wget
     wl-clipboard
+    kdePackages.dolphin
   ];
 }

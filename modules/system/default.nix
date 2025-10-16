@@ -13,14 +13,12 @@
     ./network
     ./nix
     ./openssh
-    ./optimized
     ./pkgs
     ./portal
     ./seatd
     ./security
     ./sound
     ./systemd
-    ./thunar
     ./users
     ./zram
   ];

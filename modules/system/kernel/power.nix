@@ -2,6 +2,6 @@
 {
   powerManagement = {
     enable = true;
-    cpuFreqGovernor = "ondemand";
+    cpuFreqGovernor = "performance";
   };
 }

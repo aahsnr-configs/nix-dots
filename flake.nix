@@ -199,6 +199,7 @@
     nix-doom-emacs-unstraightened,
     pyprland,
     anyrun,
+    chaotic,
     ...
   } @ inputs: let
     system = "x86_64-linux";
