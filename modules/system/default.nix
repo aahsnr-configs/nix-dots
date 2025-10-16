@@ -4,7 +4,6 @@
     ./asus
     ./bluetooth
     ./catppuccin
-    ./fonts
     ./graphics
     ./hyprland
     ./kernel
@@ -14,6 +13,7 @@
     ./network
     ./nix
     ./openssh
+    ./optimized
     ./pkgs
     ./portal
     ./seatd
@@ -22,7 +22,6 @@
     ./systemd
     ./thunar
     ./users
-    ./virtualization
     ./zram
   ];
 }

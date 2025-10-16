@@ -23,8 +23,11 @@
     nodejs_24
     openssl
     piper
+    python313 
+    gcc15
     killall
     tree
+    transmission_4-qt6
     typescript
     unzip
     wget

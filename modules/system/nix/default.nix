@@ -46,7 +46,7 @@
       trusted-users = [ "@wheel" ];
       sandbox = true;
       max-jobs = 1;
-      cores = 6;
+      cores = 8;
       keep-going = true;
       # Increase download buffer size
       download-buffer-size = 524288000;
@@ -56,7 +56,7 @@
         "big-parallel"
         "kvm"
         "nixos-test"
-        #"gccarch-znver3"
+        "gccarch-znver3"
       ];
       substituters = [
         "https://cache.nixos.org"

@@ -32,8 +32,8 @@
     # pathsToLink = [ "/share/zsh" ];
     variables = {
       EDITOR = "nvim";
-      BROWSER = "firefox";
-      TERMINAL = "kitty";
+      BROWSER = "zen";
+      TERMINAL = "footclient";
     };
   };
 
@@ -51,17 +51,17 @@
       dbusPackage = pkgs.dbus;
     };
     flatpak.enable = true;
-    fstrim.enable = true;
+    #fstrim.enable = true;
     gnome = {
       glib-networking.enable = true;
       gnome-keyring.enable = true;
     };
     sysprof.enable = true;
     udisks2.enable = true;
-    acpid.enable = true;
-    thermald.enable = true;
+    #acpid.enable = true;
+    #thermald.enable = true;
     upower.enable = true;
-    power-profiles-daemon.enable = true;
+    #power-profiles-daemon.enable = true;
   };
 
   time = {
