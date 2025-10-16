@@ -4,7 +4,7 @@
 
     cursorTheme = {
       name = "Bibata-Modern-Ice";
-      size = 32;
+      size = 24;
       package = pkgs.bibata-cursors;
     };
 
@@ -19,7 +19,7 @@
     };
 
     font = {
-      name = "JetBrainsMono Nerd Font";
+      name = "JetBrains Mono";
       size = 13;
     };
 
@@ -49,6 +49,42 @@
 
     gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
+
+  fonts.fontconfig = {
+    enable = true;
+    defaultFonts = {
+      emoji = [ "Noto Color Emoji" ];
+      monospace = [ "JetBrains Mono" ];
+      sansSerif = [ "Rubik Medium"];
+      serif = [
+        "Noto Serif" 
+        "Noto Color Emoji"
+      ];
+    };
+    hinting = "slight";
+    subpixelRendering = "rgb";
+    antialiasing = true;
+  };
+    
+  home.packages = with pkgs; [
+    corefonts
+    dina-font
+    (google-fonts.override { fonts = [ "Inter" ]; })
+    jetbrains-mono
+    liberation_ttf
+    material-symbols
+    mplus-outline-fonts.githubRelease
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.symbols-only
+    nerd-fonts.caskaydia-mono
+    noto-fonts-color-emoji
+    rubik
+    powerline-fonts
+    terminus_font
+    ubuntu_font_family
+    ubuntu-sans
+    vistafonts
+  ];
 
   # qt = {
   #   enable = true;

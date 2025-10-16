@@ -35,23 +35,23 @@
         };
         font = {
           family = {
-            clock = "Rubik";
+            clock = "Rubik Medium";
             material = "Material Symbols Rounded";
             mono = "JetBrains Mono";
-            sans = "Rubik";
+            sans = "Rubik Medium";
           };
           size = {
             scale = 1;
           };
         };
         padding = {
-          scale = 1;
+          scale = 0.7;
         };
         rounding = {
           scale = 1;
         };
         spacing = {
-          scale = 1;
+          scale = 0.7;
         };
         transparency = {
           enabled = false;

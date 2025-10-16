@@ -6,7 +6,6 @@
       "QT_QPA_PLATFORM,wayland"
       "QT_QPA_PLATFORM,wayland;xcb"
       "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
-      "QT_QPA_PLATFORMTHEME,qt6ct"
 
       "AQ_DRM_DEVICES=,/dev/dri/card1:/dev/dri/card0"
 

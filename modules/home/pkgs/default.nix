@@ -11,6 +11,7 @@
     nix-prefetch-github
     zotero
     inputs.quickshell.packages.${pkgs.system}.default
+    inputs.hyprsunset.packages.${pkgs.system}.hyprsunset
     upscayl
   ];
 }

@@ -55,6 +55,7 @@ in
       hmModule
       caTppuccin
       laptop
+      chaotic_nix
       { inherit home-manager; }
     ];
     specialArgs = { inherit inputs; };

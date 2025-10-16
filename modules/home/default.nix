@@ -59,7 +59,6 @@
     ./git
     ./hyprland
     ./hyprpolkitagent
-    ./hyprsunset
     ./imv
     ./keyring
     ./kitty

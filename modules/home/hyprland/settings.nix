@@ -34,7 +34,7 @@
       };
       # disable if costing perf
       shadow = {
-        enabled = false;
+        enabled = true;
         range = 10;
         render_power = 2;
         color = "rgba(1a1b26d4)"; # Tokyo Night Background
