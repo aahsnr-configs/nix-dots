@@ -1,10 +1,9 @@
 { ... }:
 {
-
   networking = {
     networkmanager = { 
       enable = true;
-      wifi.powersave = true;
+      wifi.powersave = false;
     };
     firewall = {
       enable = true;

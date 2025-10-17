@@ -4,7 +4,6 @@
     bitwarden
     fastfetch
     ferdium
-    neovim
     nwg-look
     nix-index
     nix-prefetch-git
@@ -13,5 +12,6 @@
     inputs.quickshell.packages.${pkgs.system}.default
     inputs.hyprsunset.packages.${pkgs.system}.hyprsunset
     upscayl
+    qt6ct
   ];
 }

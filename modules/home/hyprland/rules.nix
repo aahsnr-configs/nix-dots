@@ -143,7 +143,7 @@
       "opacity 0.80 0.80,class:^(kitty-float)$" # Added for scratchpad
       "opacity 0.90 0.90,class:^(Thunar)$"
       "opacity 0.90 0.90,class:^(thunar)$" # Added for scratchpad
-      "opacity 0.90 0.90,class:^(emacs)$"
+      # "opacity 0.90 0.90,class:^(emacs)$"
       "opacity 0.95 0.95,class:^(Code)$"
 
       # Size Rules

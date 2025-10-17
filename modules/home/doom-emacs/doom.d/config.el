@@ -153,31 +153,21 @@
 (add-hook! 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode)
 
 ;;; Jupyter Configuration
-(after! org
-  (setq org-babel-jupyter-override-src-block "python"
-        jupyter-repl-echo-eval-p nil))
+;; (after! org
+;;   (setq org-babel-jupyter-override-src-block "python"
+;;         jupyter-repl-echo-eval-p nil))
+
+(after! jupyter
+  (setq-hook! 'jupyter-org-interaction-mode-hook
+    corfu-auto nil))
+
+;; Line Numbers
+(add-hook! '(prog-mode-hook conf-mode-hook)
+  (display-line-numbers-mode t))
 
 ;;; Org Mode Configuration
 (defvar my/org-directory "~/org/" "The root directory for Org files.")
 (defvar my/org-roam-directory (expand-file-name "roam/" my/org-directory) "The directory for Org Roam files.")
-
-(after! org
-  (setq org-directory my/org-directory
-        org-agenda-files (list (expand-file-name "inbox.org" my/org-directory)
-                               (expand-file-name "projects.org" my/org-directory)
-                               (expand-file-name "habits.org" my/org-directory))
-        org-default-notes-file (expand-file-name "inbox.org" my/org-directory)
-        org-src-fontify-natively t
-        org-src-window-setup 'current-window
-        org-confirm-babel-evaluate nil
-        org-startup-with-inline-images t
-        org-image-actual-width 600
-        org-hide-emphasis-markers t
-        org-pretty-entities t
-        org-archive-location (concat my/org-directory "archive/%s_archive::")
-        org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCEL(c@)")
-          (sequence "PLAN(P)" "ACTIVE(A)" "PAUSED(x)" "|" "ACHIEVED(a)" "DROPPED(D)"))))
 
 ;; Org-roam configuration
 (after! org-roam

@@ -6,7 +6,7 @@
         "pypr"
         "mpris-proxy"
         "foot --server"
-        "hyprsunset --temperature 4500"
+        "hyprsunset --temperature 4500K"
       ];
     };
     extraConfig = ''

@@ -144,10 +144,9 @@
       nvidia_anti_flicker = true;
     };
 
-    # trying if changes brave fonts issues
-    # xwayland {
-    #   force_zero_scaling = true
-    # }
+    xwayland = {
+      force_zero_scaling = true;
+    };
 
     binds = {
       scroll_event_delay = 0;

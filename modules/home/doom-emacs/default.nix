@@ -11,7 +11,7 @@
 
   programs.doom-emacs = {
     enable = true;
-    emacs = pkgs.emacs-pgtk;
+    emacs = pkgs.emacs-unstable-pgtk;
     doomDir = ./doom.d;
     experimentalFetchTree = true;
   };

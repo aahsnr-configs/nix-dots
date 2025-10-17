@@ -20,7 +20,7 @@
        modeline
        ophints
        (popup +all +defaults)
-       (smooth-scroll +interpolate)
+       ;;(smooth-scroll +interpolate)
        treemacs
        (vc-gutter +pretty)
        workspaces          

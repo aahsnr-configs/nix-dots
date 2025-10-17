@@ -9,13 +9,6 @@
   };
 
   environment = {
-    sessionVariables = {
-      GBM_BACKEND = "nvidia-drm";
-      LIBVA_DRIVER_NAME = "nvidia";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      NVD_BACKEND = "direct";
-    };
-
     systemPackages = with pkgs; [
       vulkan-loader
       vulkan-validation-layers
@@ -34,8 +27,9 @@
     nvidia = {
       package = config.boot.kernelPackages.nvidiaPackages.latest;
       open = true;
-      powerManagement.enable = false;
-      dynamicBoost.enable = false;
+      # testing if the following 2 options fix cpu temp stuck at 82
+      powerManagement.enable = true;
+      dynamicBoost.enable = true;
       modesetting.enable = true;
       nvidiaSettings = true;
     };

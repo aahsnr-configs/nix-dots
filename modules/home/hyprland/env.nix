@@ -5,6 +5,7 @@
       "QT_AUTO_SCREEN_SCALE_FACTOR,1"
       "QT_QPA_PLATFORM,wayland"
       "QT_QPA_PLATFORM,wayland;xcb"
+      "QT_QPA_PLATFORM_THEME,qt6ct"
       "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
 
       "AQ_DRM_DEVICES=,/dev/dri/card1:/dev/dri/card0"
@@ -16,6 +17,9 @@
       "GBM_BACKEND,nvidia-drm"
       "__GLX_VENDOR_LIBRARY_NAME,nvidia"
       "LIBVA_DRIVER_NAME,nvidia"
+
+      "ELECTRON_OZONE_PLATFORM_HINT,auto"
+      "_JAVA_AWT_WM_NONREPARENTING, 1"
 
       "XDG_CURRENT_DESKTOP,Hyprland"
       "XDG_SESSION_DESKTOP,Hyprland"

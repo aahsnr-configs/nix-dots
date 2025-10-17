@@ -19,10 +19,10 @@
     killall
     linux-firmware
     mu
-    neovim
     nodejs_24
     openssl
     piper
+    protonvpn-gui 
     python313 
     gcc15
     killall

@@ -1,7 +1,7 @@
 {
   imports = [
     ./bootloader.nix
-    ./hardening.nix
     ./power.nix
+    # ./hardening.nix
   ];
 }
