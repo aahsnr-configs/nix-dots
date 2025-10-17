@@ -35,12 +35,12 @@
       doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 26))
 
 ;; Modeline configuration
-(after! doom-modeline
-  (setq doom-modeline-height 28
-        doom-modeline-bar-width 3
-        doom-modeline-buffer-file-name-style 'relative-from-project
-        doom-modeline-major-mode-icon t
-        doom-modeline-vcs-max-length 12))
+;; (after! doom-modeline
+;;   (setq doom-modeline-height 28
+;;         doom-modeline-bar-width 3
+;;         doom-modeline-buffer-file-name-style 'relative-from-project
+;;         doom-modeline-major-mode-icon t
+;;         doom-modeline-vcs-max-length 12))
 
 ;; Which-key
 (setq which-key-idle-delay 0.3)
@@ -161,9 +161,48 @@
   (setq-hook! 'jupyter-org-interaction-mode-hook
     corfu-auto nil))
 
+(add-hook! 'org-babel-edit-prep-hook #'eglot-ensure)
+
+;; 2. Define the function to connect the edit buffer to the live Jupyter kernel
+(defun ar/connect-org-edit-buffer-to-jupyter (&rest _)
+  "Connect the special org-edit buffer to a live Jupyter kernel.
+Information is fetched from the *original* Org buffer."
+  (let* ((src-info (org-babel-get-src-block-info '(" ")))
+         (lang (nth 0 src-info))
+         (header-args (nth 2 src-info))
+         (session (cdr (assoc :session header-args))))
+    
+    ;; Only proceed if we are in a jupyter-python block with a session
+    (when (and (string-equal lang "python") session)
+      ;; Switch context to the newly created special edit buffer
+      (with-current-buffer (org-babel-get-special-edit-buffer)
+        ;; Find the running kernel associated with the session name
+        (when-let ((kernel (jupyter-get-running-kernel-from-session session)))
+          ;; Connect this buffer to that kernel
+          (jupyter-connect-to-kernel kernel)
+          
+          ;; Most importantly, add Jupyter's live completion function to this
+          ;; buffer's list of completion providers
+          (add-to-list 'completion-at-point-functions #'jupyter-completion-at-point nil t))))))
+
+;; 3. Use `advice-add' to run our function *after* `org-edit-special' has finished
+;;    This is the robust and correct way to implement this feature
+(advice-add 'org-edit-special :after #'ar/connect-org-edit-buffer-to-jupyter)
+
 ;; Line Numbers
-(add-hook! '(prog-mode-hook conf-mode-hook)
-  (display-line-numbers-mode t))
+;; Explicitly disable line numbers in certain modes
+(add-hook! '(org-mode-hook
+             markdown-mode-hook
+             text-mode-hook
+             dired-mode-hook
+             pdf-view-mode-hook
+             treemacs-mode-hook
+             vterm-mode-hook
+             eshell-mode-hook
+             term-mode-hook
+             shell-mode-hook)
+  (defun +disable-line-numbers-h ()
+    (display-line-numbers-mode -1)))
 
 ;;; Org Mode Configuration
 (defvar my/org-directory "~/org/" "The root directory for Org files.")
