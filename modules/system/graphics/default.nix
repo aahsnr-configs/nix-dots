@@ -22,7 +22,15 @@
     brillo.enable = false;
     graphics = {
       enable = true;
-      enable32Bit = true;
+      extraPackages = with pkgs; [       
+        vulkan-loader
+        vulkan-validation-layers
+        vulkan-tools
+        xwayland
+        nvidia-vaapi-driver 
+        mesa
+      ];
+      # enable32Bit = true;
     };
     nvidia = {
       package = config.boot.kernelPackages.nvidiaPackages.latest;

@@ -15,5 +15,6 @@
     qt6ct
     emacs-lsp-booster
     tectonic
+    trash-cli
   ];
 }
