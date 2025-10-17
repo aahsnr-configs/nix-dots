@@ -201,8 +201,8 @@
           occupiedBg = false;
           occupiedLabel = "󰮯";
           perMonitorWorkspaces = true;
-          showWindows = false;
-          shown = 8;
+          showWindows = true;
+          shown = 5;
         };
       };
 

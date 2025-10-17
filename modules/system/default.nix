@@ -16,6 +16,7 @@
     ./pkgs
     ./portal
     ./seatd
+    ./services
     ./security
     ./sound
     ./systemd
