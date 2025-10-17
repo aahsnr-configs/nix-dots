@@ -30,17 +30,20 @@
 
 ;;; UI & Theming
 (setq doom-theme 'doom-tokyo-night
-      doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5 :weight 'medium)
-      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5)
-      doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 26))
+      doom-font (font-spec :family "JetBrains Mono" :size 14.0 :weight 'medium)
+      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 14.0)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 26))
 
 ;; Modeline configuration
-;; (after! doom-modeline
-;;   (setq doom-modeline-height 28
-;;         doom-modeline-bar-width 3
-;;         doom-modeline-buffer-file-name-style 'relative-from-project
-;;         doom-modeline-major-mode-icon t
-;;         doom-modeline-vcs-max-length 12))
+(after! doom-modeline
+  (setq doom-modeline-height 28
+        doom-modeline-bar-width 3
+        doom-modeline-time nil
+        doom-modeline-buffer-file-name-style 'auto
+        doom-modeline-column-zero-based nil
+        doom-modeline-major-mode-icon t
+        doom-modeline-window-width-limit nil
+        doom-modeline-vcs-max-length 12))
 
 ;; Which-key
 (setq which-key-idle-delay 0.3)
@@ -341,3 +344,4 @@ Information is fetched from the *original* Org buffer."
   (rainbow-delimiters-depth-7-face ((t (:foreground "#ff9e64"))))  ; Orange
   (rainbow-delimiters-depth-8-face ((t (:foreground "#c0caf5"))))  ; Foreground
   (rainbow-delimiters-depth-9-face ((t (:foreground "#a9b1d6"))))) ; Sub-Foreground
+
