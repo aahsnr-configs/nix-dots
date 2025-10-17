@@ -13,5 +13,7 @@
     inputs.hyprsunset.packages.${pkgs.system}.hyprsunset
     upscayl
     qt6ct
+    emacs-lsp-booster
+    tectonic
   ];
 }

@@ -2,7 +2,7 @@
 {
   wayland.windowManager.hyprland.settings = {
     general = {
-      layout = "dwindle";
+      layout = "scrolling";
       allow_tearing = false;
       gaps_workspaces = 8;
       gaps_in = 4;
@@ -155,5 +155,13 @@
     cursor = {
       hotspot_padding = 1;
     };
+
+    plugin = {
+      hyprscrolling = {
+        column_width = 0.6;
+        fullscreen_on_one_column = false;
+      };
+    };
+
   };
 }

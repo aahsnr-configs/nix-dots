@@ -115,9 +115,9 @@
     binde = Alt, Tab, cyclenext, prev, activewindow
     binde = Ctrl+Alt, Tab, changegroupactive, f
     binde = Ctrl+Shift+Alt, Tab, changegroupactive, b
-    bind = Super, Comma, togglegroup
+    # bind = Super, Comma, togglegroup
     bind = Super, U, moveoutofgroup
-    bind = Super+Shift, Comma, lockactivegroup, toggle
+    # bind = Super+Shift, Comma, lockactivegroup, toggle
 
     # bind = Super+Shift, Tab, cyclenext,
     # bind = Super+Shift, Tab, bringactivetotop,
@@ -194,6 +194,14 @@
     bindle = , XF86AudioLowerVolume, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume @DEFAULT_AUDIO_SINK@ 10-
 
     # Plugins
+    bind = Super, period, layoutmsg, move +col
+    bind = Super, comma, layoutmsg, move -col
+    bind = Super+Ctrl, period, layoutmsg, colresize +0.1
+    bind = Super+Ctrl, comma, layoutmsg, colresize -0.1
+    bind = Super+Shift, period, layoutmsg, swapcol r
+    bind = Super+Shift, comma, layoutmsg, swapcol l
+    bind = Super+Ctrl+Shift, period, layoutmsg, movewindowto r
+    bind = Super+Ctrl+Shift, comma, layoutmsg, movewindowto l
 
     #--- Sleep --
     bind = Super+Shift, L, exec, systemctl suspend-then-hibernate
@@ -201,7 +209,7 @@
     # Clipboard and emoji picker
     bind = Super, V, exec, pkill fuzzel || caelestia clipboard
     bind = Super+Alt, V, exec, pkill fuzzel || caelestia clipboard -d
-    bind = Super, Period, exec, pkill fuzzel || caelestia emoji -p
+    # bind = Super, Period, exec, pkill fuzzel || caelestia emoji -p
     bindl = Ctrl+Shift+Alt, V, exec, sleep 0.5s && ydotool type -d 1 "$(cliphist list | head -1 | cliphist decode)"  # Alternate paste
   '';
 }
