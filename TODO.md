@@ -21,7 +21,9 @@
 
 ---
 
-- [ ] **Switch to AGS-based, preferably Matshell completely**
+- [ ] kickstart-nvim setup to port all my necessary Astronvim configurations slowly
+- [ ] scripts creation
+- [ ] gammastep home-manager configuration; remove hyprsunset
 - [x] temporarily set the scheme color variables directly as hyprland home-manager modules in extraConfig option
 - [x] Use claude opus to compare and contrast the config files in both the home-manager modules and the default hyprland config files
 - [x] Port hyprland.conf settings to the execs.nix

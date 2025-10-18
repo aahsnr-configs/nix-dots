@@ -355,7 +355,7 @@ Information is fetched from the *original* Org buffer."
 ;; providing features like completion, diagnostics, and go-to-definition.
 (after! eglot
   (add-to-list 'eglot-server-programs
-               '((nix-ts-mode) . ("nil"))))
+               '((nix-mode) . ("nil"))))
 
 ;; 2. Code Formatting with apheleia
 ;; This configures `apheleia` to use `alejandra` for automatically

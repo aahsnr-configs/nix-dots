@@ -15,6 +15,7 @@
     gst_all_1.gst-plugins-ugly
     gst_all_1.gst-plugins-bad
     imagemagick
+    go
     jq
     file
     killall
