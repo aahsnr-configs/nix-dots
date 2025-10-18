@@ -158,7 +158,7 @@
 
     plugin = {
       hyprscrolling = {
-        column_width = 0.6;
+        column_width = 0.45;
         fullscreen_on_one_column = false;
       };
     };

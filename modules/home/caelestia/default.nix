@@ -14,7 +14,7 @@
     enable = true;
 
     systemd = {
-      enable = true;
+      enable = false;
       target = "graphical-session.target";
       environment = [ ];
     };
