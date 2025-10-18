@@ -68,10 +68,12 @@
       "workspace special:todo, class:Todoist"
 
       # Pyprland scratchpad rules
-      "float, class:^(kitty-float)$"
-      "workspace special silent, class:^(kitty-float)$"
+      "float, class:^(foot-float)$"
+      "workspace special silent, class:^(foot-float)$"
       "float, class:^(explorer)$"
       "workspace special silent, class:^(explorer)$"
+      "float, class:^(lazygit)$"
+      "workspace special silent, class:^(lazygit)$"
       "float, class:^(thunar)$"
       "workspace special silent, class:^(thunar)$"
     ];
@@ -79,8 +81,8 @@
     windowrulev2 = [
       # Animation Rules
       "animation slide down, class:^(explorer)$"
+      "animation slide down, class:^(lazygit)$"
       "animation slide up, class:^(foot-float)$"
-      "animation slide up, class:^(kitty-float)$"
 
       # Dim Around Rules
       "dimaround, class:^(gcr-prompter)$"
@@ -109,6 +111,7 @@
       "float,title:^(Confirm to replace files)"
       "float,title:^(File Operation Progress)"
       "float,title:^(Open File)$"
+
 
       # Idle Inhibit Rules
       "idleinhibit focus, class:^(brave)$, title:^(.*YouTube.*)$"
@@ -140,7 +143,7 @@
       "opacity 0.80 0.80,class:^(footclient)$"
       "opacity 0.80 0.80,class:^(foot)$"
       "opacity 0.80 0.80,class:^(kitty)$"
-      "opacity 0.80 0.80,class:^(kitty-float)$" # Added for scratchpad
+      "opacity 0.80 0.80,class:^(kitty-float)$"      
       "opacity 0.90 0.90,class:^(Thunar)$"
       "opacity 0.90 0.90,class:^(thunar)$" # Added for scratchpad
       # "opacity 0.90 0.90,class:^(emacs)$"

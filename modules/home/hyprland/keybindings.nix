@@ -109,7 +109,6 @@
     bind = Ctrl+Super+Alt, down, movetoworkspace, e+0
     bind = Super+Alt, S, movetoworkspace, special:special
 
-
     #--- Window groups ---
     binde = Alt, Tab, cyclenext, activewindow
     binde = Alt, Tab, cyclenext, prev, activewindow
@@ -118,9 +117,6 @@
     # bind = Super, Comma, togglegroup
     bind = Super, U, moveoutofgroup
     # bind = Super+Shift, Comma, lockactivegroup, toggle
-
-    # bind = Super+Shift, Tab, cyclenext,
-    # bind = Super+Shift, Tab, bringactivetotop,
 
     #--- Window Actions ---
     ## Change Focus
@@ -174,7 +170,7 @@
 
     ## GUI Apps
     bind = Super, E, exec, emacsclient -c -a 'emacs' 
-    bind = Super, B, exec, zen-browser            
+    bind = Super, B, exec, zen            
     bind = Super, Z, exec, zotero         
     bind = Super, T, exec, thunar         
 

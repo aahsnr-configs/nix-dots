@@ -2,24 +2,32 @@
 plugins = ["scratchpads"]
 
 [scratchpads.term]
-command = "kitty --class kitty-float"
-class = "kitty-float"
+command = "foot --app-id=foot-float"
+class = "foot-float"
 size = "70% 70%"
 margin = 50
 animation = "fromTop"
 unfocus = "hide"
 
-[scratchpads.yazi]
-command = "kitty --class explorer -e yazi"
+[scratchpads.tuifm]
+command = "foot --app-id=explorer -e yazi"
 class = "explorer"
 size = "90% 90%"
 margin = 50
 animation = "fromBottom"
 unfocus = "hide"
 
-[scratchpads.filemanager]
+[scratchpads.tuigit]
+command = "foot --app-id=lazygit -e lazygit"
+class = "lazygit"
+size = "90% 90%"
+margin = 50
 animation = "fromBottom"
-command = "thunar"
-class = "thunar"
-size = "80% 80%"
-skip_windowrules = ["aspect", "workspace"]
+unfocus = "hide"
+
+# [scratchpads.explorer]
+# animation = "fromBottom"
+# command = "thunar"
+# class = "thunar"
+# size = "80% 80%"
+# skip_windowrules = ["aspect", "workspace"]

@@ -14,10 +14,10 @@
     };
     mimeApps =
       let
-        imageViewer = [ "org.gnome.Loupe" ];
-        audioPlayer = [ "io.bassi.Amberol" ];
-        videoPlayer = [ "io.github.celluloid_player.Celluloid" ];
-        webBrowser = [ "brave-browser" ];
+        imageViewer = [ "imv" ];
+        audioPlayer = [ "mpv" ];
+        videoPlayer = [ "mpv" ];
+        webBrowser = [ "zen" ];
 
         xdgAssociations =
           type: program: list:

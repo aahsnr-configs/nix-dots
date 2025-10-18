@@ -1,0 +1,1 @@
+- [ ] check back about needed packages for latex and org-mode

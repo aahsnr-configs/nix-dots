@@ -16,13 +16,16 @@
     gst_all_1.gst-plugins-bad
     imagemagick
     jq
+    file
     killall
     linux-firmware
     mu
     nodejs_24
     openssl
     piper
-    protonvpn-gui 
+    protonvpn-gui
+    poppler
+    resvg
     python313 
     gcc15
     killall
@@ -33,5 +36,6 @@
     wget
     wl-clipboard
     kdePackages.dolphin
+    wpa_supplicant_gui
   ];
 }

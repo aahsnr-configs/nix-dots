@@ -29,7 +29,7 @@
         " - Doom Emacs"))
 
 ;;; UI & Theming
-(setq doom-theme 'doom-tokyo-night
+(setq doom-theme 'doom-material-dark
       doom-font (font-spec :family "JetBrains Mono" :size 14.0 :weight 'medium)
       doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 14.0)
       doom-big-font (font-spec :family "JetBrains Mono" :size 26))
@@ -192,6 +192,8 @@ Information is fetched from the *original* Org buffer."
 ;;    This is the robust and correct way to implement this feature
 (advice-add 'org-edit-special :after #'ar/connect-org-edit-buffer-to-jupyter)
 
+(setq +python-jupyter-repl-args '("--simple-prompt"))
+
 ;; Line Numbers
 ;; Explicitly disable line numbers in certain modes
 (add-hook! '(org-mode-hook
@@ -345,3 +347,49 @@ Information is fetched from the *original* Org buffer."
   (rainbow-delimiters-depth-8-face ((t (:foreground "#c0caf5"))))  ; Foreground
   (rainbow-delimiters-depth-9-face ((t (:foreground "#a9b1d6"))))) ; Sub-Foreground
 
+
+
+;;; Nix Development Configuration
+;; 1. LSP Configuration with eglot & nil
+;; This sets up `nil` (Nix IDE) as the language server for `nix-mode`,
+;; providing features like completion, diagnostics, and go-to-definition.
+(after! eglot
+  (add-to-list 'eglot-server-programs
+               '((nix-ts-mode) . ("nil"))))
+
+;; 2. Code Formatting with apheleia
+;; This configures `apheleia` to use `alejandra` for automatically
+;; formatting Nix files on save.
+(after! apheleia
+  (setf (alist-get 'alejandra apheleia-formatters)
+        '("alejandra" "--quiet")
+        (alist-get 'nix-mode apheleia-mode-alist)
+        'alejandra))
+
+;; 3. Syntax Checking with flymake
+(after! flymake
+  (defun +nix/flymake-statix ()
+    "Flymake backend for statix."
+    (flymake-proc-simple-cleanup)
+    (let ((buffer-file (buffer-file-name)))
+      (when buffer-file
+        (flymake-proc-compile-make-diagnostic-matcher
+         `("statix" "check" ,buffer-file)
+         :rx (rx line-start (group (+ (not (any ":")))) ":" (group (+ digit)) ":" (group (+ digit)) ": " (group (* nonl)))
+         :severity :warning))))
+
+  (defun +nix/flymake-deadnix ()
+    "Flymake backend for deadnix."
+    (flymake-proc-simple-cleanup)
+    (let ((buffer-file (buffer-file-name)))
+      (when buffer-file
+        (flymake-proc-compile-make-diagnostic-matcher
+         `("deadnix" ,buffer-file)
+         :rx (rx line-start "in file " (group (+ (not (any ":")))) " on line " (group (+ digit)) ", column " (group (+ digit)) ": " (group (* nonl)))
+         :severity :note))))
+
+  (add-hook! 'nix-mode-hook
+    (defun +nix/setup-flymake-h ()
+      ;; NOTE: `nil` already provides excellent linting. These are supplementary.
+      (add-hook 'flymake-diagnostic-functions #'+nix/flymake-statix nil t)
+      (add-hook 'flymake-diagnostic-functions #'+nix/flymake-deadnix nil t))))
