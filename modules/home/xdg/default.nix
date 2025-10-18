@@ -8,6 +8,7 @@
       createDirectories = true;
       extraConfig = {
         XDG_DEV_DIR = "${config.home.homeDirectory}/Dev";
+        XDG_TMP_DIR = "${config.home.homeDirectory}/Tmp";
         XDG_SCREENSHOTS_DIR = "${config.xdg.userDirs.pictures}/Screenshots";
         XDG_WALLPAPERS_DIR = "${config.xdg.userDirs.pictures}/Wallpapers";
       };

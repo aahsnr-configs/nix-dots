@@ -16,5 +16,7 @@
     chafa
     trash-cli
     obsidian
+    bottom
+    brave
   ];
 }

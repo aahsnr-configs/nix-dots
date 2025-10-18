@@ -5,6 +5,7 @@
 (package! rainbow-delimiters)
 (package! buffer-terminator)
 (package! nerd-icons-ibuffer)
+(package! catppuccin-theme)
 
 ;;; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ;;; Evil

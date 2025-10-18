@@ -29,7 +29,7 @@
         " - Doom Emacs"))
 
 ;;; UI & Theming
-(setq doom-theme 'doom-material-dark
+(setq doom-theme 'catppuccin
       doom-font (font-spec :family "JetBrains Mono" :size 14.0 :weight 'medium)
       doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 14.0)
       doom-big-font (font-spec :family "JetBrains Mono" :size 26))

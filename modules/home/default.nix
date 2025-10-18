@@ -45,6 +45,7 @@
     ./anyrun
     ./atuin
     ./bat
+    ./brave
     ./btop
     ./caelestia
     ./catppuccin
@@ -60,7 +61,7 @@
     ./hyprland
     ./hyprpolkitagent
     ./imv
-    ./keyring
+    #./keyring
     ./kitty
     ./lazygit
     ./mpv

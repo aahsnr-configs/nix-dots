@@ -13,6 +13,16 @@
       flavor = "mocha";
     };
 
+    bottom = {
+      enable = true;
+      flavor = "mocha";
+    };
+
+    brave = {
+      enable = true;
+      flavor = "mocha";
+    };
+
     btop = {
       enable = true;
       flavor = "mocha";
