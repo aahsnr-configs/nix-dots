@@ -36,7 +36,7 @@
     unzip
     wget
     wl-clipboard
-    kdePackages.dolphin
-    wpa_supplicant_gui
+    libvterm
+    cmake
   ];
 }

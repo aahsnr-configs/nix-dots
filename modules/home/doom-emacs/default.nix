@@ -8,7 +8,7 @@
 
   programs.doom-emacs = {
     enable = true;
-    emacs = pkgs.emacs-pgtk;
+    emacs = pkgs.emacs-unstable-pgtk;
     extraPackages = epkgs: [
       (epkgs.treesit-grammars.with-grammars (grammars: with grammars; [ 
         tree-sitter-bash
@@ -18,6 +18,7 @@
       ]))
     ];
     doomDir = ./doom.d;
+    tangleArgs = "--all config.org";
     experimentalFetchTree = true;
   };
 }

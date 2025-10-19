@@ -22,6 +22,9 @@
     bind = Super, K, global, caelestia:showall
     bindl = Ctrl+Alt, C, global, caelestia:clearNotifs
 
+    ## Anyrun
+    bind = Super+Shift, D, exec, pkill anyrun || anyrun
+  
     ## Restore lock
     bindl = Super+Alt, L, exec, caelestia shell -d
     bindl = Super+Alt, L, global, caelestia:lock

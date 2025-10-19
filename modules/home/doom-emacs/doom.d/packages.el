@@ -41,8 +41,8 @@
 (package! evil-textobj-tree-sitter)
 (package! dired-open)
 (package! dired-ranger)
-(package! sideline-flymake)
 (package! jinx)
+(package! flymake-collection)
 
 ;;; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ;;; Python Development
@@ -54,3 +54,4 @@
 ;;; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 (package! helm-bibtex :ignore t)
 (package! hydra :ignore t)
+

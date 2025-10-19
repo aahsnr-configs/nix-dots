@@ -15,7 +15,6 @@
       maxEntries = 15;
       plugins = with inputs.anyrun.packages.${pkgs.system}; [
         applications
-        kidex
         rink
         shell
         stdin

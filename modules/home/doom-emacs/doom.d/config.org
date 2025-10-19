@@ -1,0 +1,466 @@
+#+title: My Doom Emacs Config
+#+author: Ahsanur Rahman
+
+This is my personal Doom Emacs configuration, organized in a literate programming style using Org mode. This file is the single source of truth; the actual `config.el` is generated ("tangled") from the source blocks herein.
+
+* Personal Information
+This section sets my personal details, which are used by various Emacs packages (e.g., for sending emails or creating file headers).
+
+#+begin_src emacs-lisp
+;; User Information
+(setq user-full-name "Ahsanur Rahman"
+      user-mail-address "ahsanur041@proton.me")
+#+end_src
+
+* Core Emacs Settings
+These are fundamental settings that control the basic behavior of Emacs, such as scrolling, indentation, and window management. They are set first to establish a consistent foundation for the rest of the configuration.
+
+** Scrolling and Display
+These settings provide a smoother and more predictable scrolling experience.
+#+begin_src emacs-lisp
+(setq-default scroll-conservatively 101
+              scroll-margin 0
+              scroll-preserve-screen-position t)
+#+end_src
+
+** Indentation and Text
+We enforce spaces over tabs and a standard line width of 80 characters. A small amount of line spacing is added for readability.
+#+begin_src emacs-lisp
+(setq-default ;; Indentation
+              indent-tabs-mode nil
+              tab-width 2
+              fill-column 80
+
+              ;; Line spacing
+              line-spacing 0.02)
+#+end_src
+
+** Window Management
+This configuration dictates how Emacs splits windows, preferring vertical splits for wider screens.
+#+begin_src emacs-lisp
+(setq split-width-threshold 170
+      split-height-threshold nil)
+#+end_src
+
+** Frame Title
+This customizes the title bar of the Emacs window to show the current buffer name and system name for easy identification.
+#+begin_src emacs-lisp
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))
+        " - Doom Emacs"))
+#+end_src
+
+* UI & Theming
+This section covers the visual appearance of Emacs, including themes, fonts, the modeline, and other aesthetic elements.
+
+** Theme and Fonts
+We use the `doom-tokyo-night` theme and `JetBrainsMono Nerd Font` for a modern and consistent look across different text styles.
+#+begin_src emacs-lisp
+(setq doom-theme 'doom-tokyo-night
+      doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5 :weight 'medium)
+      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5)
+      doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 26))
+#+end_src
+
+** Frame Padding
+A small internal border is added around the frame to create visual breathing room between the text and the window edge.
+#+begin_src emacs-lisp
+(setq-default internal-border-width 5)
+(add-to-list 'default-frame-alist '(internal-border-width . 5))
+#+end_src
+
+** Modeline
+The modeline is the information bar at the bottom of each window. We use `doom-modeline` and customize its appearance for better readability and information density.
+#+begin_src emacs-lisp
+(after! doom-modeline
+  (setq doom-modeline-height 28
+        doom-modeline-bar-width 3
+        doom-modeline-buffer-file-name-style 'relative-from-project
+        doom-modeline-major-mode-icon t
+        doom-modeline-vcs-max-length 12))
+#+end_src
+
+** Line Numbers
+Line numbers are enabled globally by default, which is useful for programming. We then selectively disable them in modes where they are distracting, such as Org, Dired, and Magit.
+#+begin_src emacs-lisp
+;; Enable absolute line numbers globally by default.
+(setq display-line-numbers-type t)
+
+;; Disable line numbers in modes where they aren't useful.
+(add-hook! '(org-mode-hook
+             dired-mode-hook
+             magit-status-mode-hook
+             eshell-mode-hook
+             vterm-mode-hook
+             help-mode-hook
+             doom-dashboard-mode-hook)
+           #'(lambda () (display-line-numbers-mode -1)))
+#+end_src
+
+** Which-key
+`which-key` displays available keybindings after a prefix key is pressed. We configure a short delay for responsiveness.
+#+begin_src emacs-lisp
+(setq which-key-idle-delay 0.3)
+#+end_src
+
+** Rainbow Delimiters
+This package colorizes parentheses, brackets, and braces according to their nesting level, which greatly improves code readability. The colors are customized for better contrast with the `doom-tokyo-night` theme, and the hook is extended to work with Tree-sitter modes.
+#+begin_src emacs-lisp
+(use-package! rainbow-delimiters
+  :hook ((prog-mode . rainbow-delimiters-mode)
+         (org-src-mode . rainbow-delimiters-mode)
+         (treesit-auto-mode-hook . rainbow-delimiters-mode))
+
+  ;; A more vibrant and high-contrast set of colors for doom-tokyo-night.
+  :custom-face
+  (rainbow-delimiters-depth-1-face ((t (:foreground "#e0af68"))))  ; Yellow
+  (rainbow-delimiters-depth-2-face ((t (:foreground "#7aa2f7"))))  ; Blue
+  (rainbow-delimiters-depth-3-face ((t (:foreground "#9ece6a"))))  ; Green
+  (rainbow-delimiters-depth-4-face ((t (:foreground "#bb9af7"))))  ; Magenta
+  (rainbow-delimiters-depth-5-face ((t (:foreground "#73daca"))))  ; Cyan
+  (rainbow-delimiters-depth-6-face ((t (:foreground "#ff9e64"))))  ; Orange
+  (rainbow-delimiters-depth-7-face ((t (:foreground "#f7768e"))))) ; Red
+#+end_src
+
+** Markdown Styling
+We customize the faces for Markdown headers to make them larger and more distinct. A helper function is also defined to easily toggle between the raw Markdown and a rendered preview.
+#+begin_src emacs-lisp
+;; Headers
+(custom-set-faces
+ '(markdown-header-face ((t (:inherit font-lock-function-name-face :weight bold :family "variable-pitch"))))
+ '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.6))))
+ '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.5))))
+ '(markdown-header-face-3 ((t (:inherit markdown-header-face :height 1.4))))
+ '(markdown-header-face-4 ((t (:inherit markdown-header-face :height 1.3))))
+ '(markdown-header-face-5 ((t (:inherit markdown-header-face :height 1.2))))
+ '(markdown-header-face-6 ((t (:inherit markdown-header-face :height 1.1)))))
+
+;; Toggle Markdown View
+(defun dt/toggle-markdown-view-mode ()
+  "Toggle between `markdown-mode' and `markdown-view-mode'."
+  (interactive)
+  (if (eq major-mode 'markdown-view-mode)
+      (markdown-mode)
+    (markdown-view-mode)))
+#+end_src
+
+* Evil Mode
+This section configures `evil-mode`, the Vim emulation layer that provides modal editing capabilities within Emacs.
+
+#+begin_src emacs-lisp
+(after! evil
+  (setq evil-want-fine-undo t
+        evil-vsplit-window-right t
+        evil-split-window-below t
+        evil-move-beyond-eol t))
+
+(after! evil-escape
+  (setq evil-escape-key-sequence "jk"
+        evil-escape-delay 0.2))
+
+;; Use visual line navigation, which is more intuitive when working with wrapped lines.
+(map! :nv "j" #'evil-next-visual-line
+      :nv "k" #'evil-previous-visual-line)
+#+end_src
+
+* Completion Framework
+This configures the packages responsible for in-buffer completion (`corfu`) and minibuffer completion (`vertico`), creating a modern and powerful interactive experience.
+
+** Corfu
+`corfu` provides a clean, pop-up completion UI for text being typed directly in a buffer.
+#+begin_src emacs-lisp
+(after! corfu
+  (setq corfu-auto t
+        corfu-auto-delay 0.1
+        corfu-auto-prefix 2))
+#+end_src
+
+** Vertico
+`vertico` provides a vertical, interactive list for minibuffer commands like `find-file` and `M-x`.
+#+begin_src emacs-lisp
+(after! vertico
+  (setq vertico-count 10))
+#+end_src
+
+* Project & File Management
+Settings related to managing projects and navigating the file system.
+
+** Projectile
+`projectile` is a project interaction library for Emacs. We tell it where to look for our projects.
+#+begin_src emacs-lisp
+(after! projectile
+  (setq projectile-project-search-path '("~/projects/" "~/org/")))
+#+end_src
+
+** Dired (Directory Editor)
+Configuration for Emacs's built-in file manager, `dired`. We set custom listing switches and configure it to use the system trash. We also use `dired-open` to specify external applications for certain file types.
+#+begin_src emacs-lisp
+(after! dired
+  (setq dired-listing-switches "-agho --group-directories-first"
+        delete-by-moving-to-trash t
+        dired-dwim-target t))
+
+(use-package! dired-open
+  :after dired
+  :config
+  (setq dired-open-extensions '(("png" . "imv")
+                                ("mp4" . "mpv"))))
+#+end_src
+
+* Version Control (Magit)
+Configuration for `magit`, the powerful Git client inside Emacs.
+
+#+begin_src emacs-lisp
+(after! magit
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+(use-package! magit-todos
+  :after magit
+  :config (magit-todos-mode 1))
+
+(setq forge-owned-accounts '(("aahsnr")))
+#+end_src
+
+* Programming
+This section contains all configurations related to software development, including language-specific setups for Python and LaTeX.
+
+** General Tools
+These are tools that apply to most programming languages, such as the LSP client, debugger, and syntax checkers.
+
+*** Flymake Collection
+`flymake-collection` provides a convenient way to set up syntax checkers (`linters`) for various languages without extensive manual configuration.
+#+begin_src emacs-lisp
+(use-package! flymake-collection
+  :after flymake
+  :config
+  (flymake-collection-hook-setup))
+#+end_src
+
+*** Eglot (LSP Client)
+We enable `eldoc-box` to show documentation in a pop-up box whenever an LSP server is active.
+#+begin_src emacs-lisp
+(add-hook! 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode)
+#+end_src
+
+*** Snippets (YASnippet)
+We use `yasnippet-capf` to integrate snippet expansion with the Corfu completion framework.
+#+begin_src emacs-lisp
+(use-package! yasnippet-capf
+  :after cape
+  :config (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+#+end_src
+
+** Python
+This provides a complete Python development environment using Tree-sitter for syntax highlighting, `basedpyright` for LSP features, `ruff` for formatting and linting, and `debugpy` for debugging.
+
+*** LSP Configuration
+We tell `eglot` to use the `basedpyright-langserver` for Python files that are in `python-ts-mode`.
+#+begin_src emacs-lisp
+(after! eglot
+  (add-to-list 'eglot-server-programs
+               '((python-ts-mode) . ("basedpyright-langserver" "--stdio"))))
+#+end_src
+
+*** Code Formatting (Apheleia)
+We configure `apheleia` to use a combination of `isort` and `ruff` to automatically format Python code on save.
+#+begin_src emacs-lisp
+(after! apheleia
+  (setf (alist-get 'isort apheleia-formatters)
+        '("isort" "--stdout" "-")
+        (alist-get 'ruff apheleia-formatters)
+        '("ruff" "format" "--stdin-filename" filepath "-")
+        (alist-get 'ruff-isort apheleia-formatters)
+        '("sh" "-c" "isort --stdout - | ruff format --stdin-filename " filepath " -"))
+  (setf (alist-get 'python-ts-mode apheleia-mode-alist) 'ruff-isort))
+#+end_src
+
+*** Syntax Checking (Flymake)
+Using `flymake-collection`, we enable `ruff` as a high-performance linter and `mypy` for static type checking.
+#+begin_src emacs-lisp
+(after! python-ts-mode
+  (setq-default flymake-collection-python-pylint-executable "ruff")
+  (setq-default flymake-collection-python-mypy-executable "mypy")
+  (flymake-collection-add-for-major-mode
+   'python-ts-mode
+   'flymake-collection-python-pylint ; This will use ruff as defined above
+   'flymake-collection-python-mypy))
+#+end_src
+
+*** Debugging (DAPE)
+We configure `dape` to use `debugpy` as the debug adapter for Python, enabling full debugging capabilities inside Emacs.
+#+begin_src emacs-lisp
+(after! dape
+  (add-to-list 'dape-configs
+               `(debugpy modes (python-ts-mode) command "python" command-args ("-m" "debugpy.adapter")
+                 :type "executable" :request "launch" :cwd dape-cwd-fn :program dape-find-file-buffer-default))
+  (add-to-list 'dape-configs
+               `(debugpy-module modes (python-ts-mode) command "python" command-args ("-m" "debugpy.adapter")
+                 :type "executable" :request "launch" :module (read-string "Module: ") :cwd dape-cwd-fn))
+  (add-to-list 'dape-configs
+               `(debugpy-attach modes (python-ts-mode) command "python" command-args ("-m" "debugpy.adapter")
+                 :type "executable" :request "attach" :connect (:host "localhost" :port (read-number "Port: " 5678))
+                 :pathMappings [(:localRoot dape-cwd-fn :remoteRoot dape-cwd-fn)])))
+#+end_src
+
+** LaTeX
+Configuration for writing LaTeX documents, including PDF viewing and citation management.
+#+begin_src emacs-lisp
+(after! latex
+  (setq TeX-engine 'xetex
+        TeX-view-program-selection '((output-pdf "PDF Tools"))
+        TeX-source-correlate-mode t))
+
+(add-hook! 'LaTeX-mode-hook #'laas-mode)
+
+;; Citar integration with Org Roam for managing literature notes.
+(use-package! citar-org-roam
+  :after (citar org-roam)
+  :config (citar-org-roam-mode))
+#+end_src
+
+* Org Mode
+This is the central hub for my personal knowledge management, task tracking, and literate programming.
+
+** Core Setup
+We define custom directories and set foundational Org mode behaviors. This includes defining agenda files, enabling native fontification of source blocks, and setting custom TODO keywords. We also add a hook to enable parenthesis highlighting in source edit buffers.
+#+begin_src emacs-lisp
+(defvar my/org-directory "~/org/" "The root directory for Org files.")
+(defvar my/org-roam-directory (expand-file-name "roam/" my/org-directory) "The directory for Org Roam files.")
+
+(after! org
+  (setq org-directory my/org-directory
+        org-agenda-files (list (expand-file-name "inbox.org" my/org-directory)
+                               (expand-file-name "projects.org" my/org-directory)
+                               (expand-file-name "habits.org" my/org-directory))
+        org-default-notes-file (expand-file-name "inbox.org" my/org-directory)
+        org-src-fontify-natively t
+        org-src-window-setup 'current-window
+        org-confirm-babel-evaluate nil
+        org-startup-with-inline-images t
+        org-image-actual-width 600
+        org-hide-emphasis-markers t
+        org-pretty-entities t
+        org-archive-location (concat my/org-directory "archive/%s_archive::")
+        org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCEL(c@)")
+          (sequence "PLAN(P)" "ACTIVE(A)" "PAUSED(x)" "|" "ACHIEVED(a)" "DROPPED(D)")))
+  (add-hook 'org-src-mode-hook #'show-paren-mode))
+#+end_src
+
+** Jupyter Integration (Org Babel)
+This configures Org Babel to work with Jupyter kernels, enabling interactive Python programming directly within Org documents. The fix for the "Need a valid session" error is included here.
+#+begin_src emacs-lisp
+(after! org
+  (require 'ob-jupyter)
+  (org-babel-jupyter-override-src-block "python")
+  (setq jupyter-repl-echo-eval-p nil)
+  (add-hook 'org-mode-hook #'org-babel-jupyter-aliases-from-kernelspecs))
+#+end_src
+
+** Org Roam
+`org-roam` is a powerful note-taking tool for building a personal knowledge graph, inspired by the Zettelkasten method. We also enable `org-roam-ui` for a visual graph interface.
+#+begin_src emacs-lisp
+(after! org-roam
+  (setq org-roam-directory my/org-roam-directory
+        org-roam-db-gc-threshold most-positive-fixnum
+        org-roam-completion-everywhere t))
+
+(use-package! org-roam-ui
+  :after org-roam
+  :config (setq org-roam-ui-sync-theme t
+                org-roam-ui-follow t
+                org-roam-ui-update-on-save t))
+
+(use-package! consult-org-roam
+  :after org-roam
+  :init (consult-org-roam-mode 1))
+#+end_src
+
+** UI Enhancements
+These packages improve the visual presentation of Org mode. `org-super-agenda` provides powerful grouping for agenda views, while `org-fragtog` and `org-appear` enhance the display of LaTeX fragments and emphasis markers.
+#+begin_src emacs-lisp
+(use-package! org-super-agenda
+  :after org-agenda
+  :hook (org-agenda-mode-hook . org-super-agenda-mode))
+
+(add-hook! 'org-mode-hook #'org-fragtog-mode)
+
+(after! org-appear
+  (setq org-appear-autoemphasis t
+        org-appear-autolinks t
+        org-appear-autosubmarkers t))
+#+end_src
+
+* Keybindings
+This section defines my custom keybindings, primarily using the leader key (`SPC`).
+
+** General Toggles and Actions
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix ("t" . "toggle")
+       :desc "Toggle eshell split"            "e" #'+eshell/toggle
+       :desc "Toggle line highlight in frame" "h" #'hl-line-mode
+       :desc "Toggle line highlight globally" "H" #'global-hl-line-mode
+       :desc "Toggle line numbers"            "l" #'doom/toggle-line-numbers
+       :desc "Toggle markdown-view-mode"      "m" #'dt/toggle-markdown-view-mode
+       :desc "Toggle truncate lines"          "t" #'toggle-truncate-lines
+       :desc "Toggle treemacs"                "T" #'+treemacs/toggle
+       :desc "Toggle vterm split"             "v" #'+vterm/toggle))
+
+(map! :leader
+      (:prefix ("o" . "open here")
+       :desc "Open eshell here"    "e" #'+eshell/here
+       :desc "Open vterm here"     "v" #'+vterm/here))
+
+(map! :leader
+      :desc "M-x" "SPC" #'execute-extended-command)
+#+end_src
+
+** Literate Programming (Org Babel)
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix ("l" . "literate")
+       :desc "Tangle file" "t" #'org-babel-tangle
+       :desc "Execute buffer" "x" #'org-babel-execute-buffer))
+#+end_src
+
+** Debugging (DAPE)
+Global keybindings for the Debug Adapter Protocol client.
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix ("d" . "debug/dape")
+       :desc "Debug" "d" #'dape
+       :desc "Toggle breakpoint" "b" #'dape-breakpoint-toggle
+       :desc "Continue" "c" #'dape-continue
+       :desc "Next" "n" #'dape-next
+       :desc "Step in" "i" #'dape-step-in
+       :desc "Step out" "o" #'dape-step-out
+       :desc "Restart" "r" #'dape-restart
+       :desc "Kill debug session" "k" #'dape-kill
+       :desc "Debug REPL" "R" #'dape-repl))
+#+end_src
+
+* Miscellaneous
+A place for settings that don't fit neatly into the other categories.
+
+** PDF Tools
+Default settings for viewing PDF files inside Emacs.
+#+begin_src emacs-lisp
+(setq-default pdf-view-display-size 'fit-page)
+(add-hook! 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode)
+#+end_src
+
+** Default Shell
+We set `fish` as the default shell for terminal emulators like `vterm`.
+#+begin_src emacs-lisp
+(setq-default vterm-shell "/usr/bin/fish"
+              explicit-shell-file-name "/usr/bin/fish")
+#+end_src
+
+** Quit Confirmation
+Disable the "Are you sure you want to quit Emacs?" prompt.
+#+begin_src emacs-lisp
+(setq confirm-kill-emacs nil)
+#+end_src
