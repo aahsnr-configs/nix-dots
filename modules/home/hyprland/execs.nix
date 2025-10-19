@@ -6,7 +6,6 @@
         "pypr"
         "mpris-proxy"
         "foot --server"
-        "hyprsunset --temperature 4500K"
         "emacs --daemon"
         "caelestia resizer -d"
         "caelestia shell -d"

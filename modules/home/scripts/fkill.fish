@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 set pid (ps -ef | sed 1d | grep -v "$0" | fzf --height "40%" --layout "reverse" --no-multi | awk '{print $2}')
 
 if test -n "$pid"

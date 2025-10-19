@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 set selected (fd --type f --hidden --follow --exclude .git . | fzf \
     --height "80%" --layout "reverse" --info "inline" --border "rounded" \
     --preview 'bat --style=numbers --color=always --line-range :500 {}' \

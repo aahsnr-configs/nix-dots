@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 if test (count $argv) -eq 0
     echo "Usage: (status filename) \"command1\" [\"command2 with-args\" ...]" >&2
     exit 1

@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 set -l NVIM_DIRS \
     "$HOME/.config/nvim" \
     "$HOME/.local/state/nvim" \

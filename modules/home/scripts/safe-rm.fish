@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 set -l TRASH_DIR "$HOME/.local/share/trash/files"
 
 function main

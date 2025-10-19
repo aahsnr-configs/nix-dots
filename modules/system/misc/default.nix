@@ -52,10 +52,10 @@
     };
     flatpak.enable = true;
     fstrim.enable = true;
-    gnome = {
-      # glib-networking.enable = true;
-      gnome-keyring.enable = true;
-    };
+    # gnome = {
+    #   # glib-networking.enable = true;
+    #   gnome-keyring.enable = true;
+    # };
     sysprof.enable = true;
     udisks2.enable = true;
     acpid.enable = true;

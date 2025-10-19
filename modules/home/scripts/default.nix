@@ -2,11 +2,26 @@
 
 let
   # A helper function to create a Fish script as a Nix package.
+  # Uses writeTextFile instead of writeShellApplication since Fish isn't bash-compatible
   mkFishScript = { name, text, runtimeInputs ? [ ] }:
-    pkgs.writeShellApplication {
-      inherit name text;
-      interpreter = "${pkgs.fish}/bin/fish";
-      inherit runtimeInputs;
+    let
+      # Create the wrapped script with proper PATH setup
+      wrappedText = ''
+        #!${pkgs.fish}/bin/fish
+        ${pkgs.lib.optionalString (runtimeInputs != [ ]) ''
+          set -gx PATH ${pkgs.lib.makeBinPath runtimeInputs} $PATH
+        ''}
+        ${text}
+      '';
+    in
+    pkgs.writeTextFile {
+      inherit name;
+      text = wrappedText;
+      executable = true;
+      destination = "/bin/${name}";
+      checkPhase = ''
+        ${pkgs.fish}/bin/fish -n $out/bin/${name}
+      '';
     };
 
   # All scripts are defined here, reading their content from the ./scripts directory.

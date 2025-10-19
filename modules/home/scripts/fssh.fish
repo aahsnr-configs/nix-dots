@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 if not test -f "$HOME/.ssh/config"
     echo "SSH config file not found at ~/.ssh/config"
     exit 1

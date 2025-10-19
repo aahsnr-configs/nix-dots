@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 if not set -q argv[1]
     echo "Usage: se <search_pattern>"
     exit 1

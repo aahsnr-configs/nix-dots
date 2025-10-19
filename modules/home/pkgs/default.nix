@@ -18,5 +18,6 @@
     obsidian
     bottom
     brave
+    geoclue2 
   ];
 }

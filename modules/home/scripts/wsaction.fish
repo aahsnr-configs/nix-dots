@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 if test "$argv[1]" = '-g'
  set group
  set -e $argv[1]

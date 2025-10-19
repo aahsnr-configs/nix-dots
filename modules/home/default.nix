@@ -57,10 +57,12 @@
     ./fish
     ./foot
     ./fzf
+    ./gammastep
     ./git
     ./hyprland
     ./hyprpolkitagent
     ./imv
+    ./keyring
     ./kitty
     ./lazygit
     ./mpv
@@ -68,7 +70,7 @@
     ./pkgs
     ./ripgrep
     ./starship
-    #./scripts
+    ./scripts
     ./texlive
     ./theming
     ./tldr

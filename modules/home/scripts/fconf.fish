@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 set config_dirs "$HOME" "$HOME/.config"
 
 set selected (fd --type f --hidden . $config_dirs | fzf \

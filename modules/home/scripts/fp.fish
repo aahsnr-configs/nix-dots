@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 fd --hidden --follow --exclude .git | fzf --height "80%" --layout "reverse" --border "rounded" \
     --preview-window "right:50%:wrap" \
     --preview '

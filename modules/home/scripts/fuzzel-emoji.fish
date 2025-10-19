@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 set -l MODE $argv[1]
 if test -z "$MODE"
     set MODE "type"
