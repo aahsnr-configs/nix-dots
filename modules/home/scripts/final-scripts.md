@@ -398,6 +398,7 @@ end
 #### `~/nix-config/home-manager/scripts/wsaction.fish`
 
 ```fish
+#!/usr/bin/env fish
 if test "$argv[1]" = '-g'
  set group
  set -e $argv[1]
@@ -424,6 +425,7 @@ end
 #### `~/nix-config/home-manager/scripts/fe.fish`
 
 ```fish
+#!/usr/bin/env fish
 set selected (fd --type f --hidden --follow --exclude .git . | fzf \
     --height "80%" --layout "reverse" --info "inline" --border "rounded" \
     --preview 'bat --style=numbers --color=always --line-range :500 {}' \
@@ -439,6 +441,7 @@ end
 #### `~/nix-config/home-manager/scripts/se.fish`
 
 ```fish
+#!/usr/bin/env fish
 if not set -q argv[1]
     echo "Usage: se <search_pattern>"
     exit 1
@@ -462,6 +465,7 @@ end
 #### `~/nix-config/home-manager/scripts/fkill.fish`
 
 ```fish
+#!/usr/bin/env fish
 set pid (ps -ef | sed 1d | grep -v "$0" | fzf --height "40%" --layout "reverse" --no-multi | awk '{print $2}')
 
 if test -n "$pid"
@@ -482,6 +486,7 @@ end
 #### `~/nix-config/home-manager/scripts/fconf.fish`
 
 ```fish
+#!/usr/bin/env fish
 set config_dirs "$HOME" "$HOME/.config"
 
 set selected (fd --type f --hidden . $config_dirs | fzf \
@@ -499,6 +504,7 @@ end
 #### `~/nix-config/home-manager/scripts/fp.fish`
 
 ```fish
+#!/usr/bin/env fish
 fd --hidden --follow --exclude .git | fzf --height "80%" --layout "reverse" --border "rounded" \
     --preview-window "right:50%:wrap" \
     --preview '
@@ -520,6 +526,7 @@ fd --hidden --follow --exclude .git | fzf --height "80%" --layout "reverse" --bo
 #### `~/nix-config/home-manager/scripts/fssh.fish`
 
 ```fish
+#!/usr/bin/env fish
 if not test -f "$HOME/.ssh/config"
     echo "SSH config file not found at ~/.ssh/config"
     exit 1
@@ -558,70 +565,70 @@ let
   scripts = {
     safe-rm = mkFishScript {
       name = "safe-rm";
-      text = builtins.readFile ./scripts/safe-rm.fish;
+      text = builtins.readFile ./safe-rm.fish;
     };
 
     nuke-nvim = mkFishScript {
       name = "nuke-nvim";
-      text = builtins.readFile ./scripts/nuke-nvim.fish;
+      text = builtins.readFile ./nuke-nvim.fish;
     };
 
     setup-github-keys = mkFishScript {
       name = "setup-github-keys";
-      text = builtins.readFile ./scripts/setup-github-keys.fish;
+      text = builtins.readFile ./setup-github-keys.fish;
       runtimeInputs = [ pkgs.openssh pkgs.gh ];
     };
 
     launch-first-available = mkFishScript {
       name = "launch_first_available";
-      text = builtins.readFile ./scripts/launch_first_available.fish;
+      text = builtins.readFile ./launch_first_available.fish;
     };
 
     fuzzel-emoji = mkFishScript {
       name = "fuzzel-emoji";
-      text = builtins.readFile ./scripts/fuzzel-emoji.fish;
+      text = builtins.readFile ./fuzzel-emoji.fish;
       runtimeInputs = [ pkgs.fuzzel pkgs.wtype pkgs.wl-clipboard ];
     };
 
     wsaction = mkFishScript {
       name = "wsaction";
-      text = builtins.readFile ./scripts/wsaction.fish;
+      text = builtins.readFile ./wsaction.fish;
       runtimeInputs = [ pkgs.hyprland pkgs.jq ];
     };
 
     fe = mkFishScript {
       name = "fe";
-      text = builtins.readFile ./scripts/fe.fish;
+      text = builtins.readFile ./fe.fish;
       runtimeInputs = [ pkgs.fd pkgs.fzf pkgs.bat ];
     };
 
     se = mkFishScript {
       name = "se";
-      text = builtins.readFile ./scripts/se.fish;
+      text = builtins.readFile ./se.fish;
       runtimeInputs = [ pkgs.ripgrep pkgs.fzf pkgs.bat ];
     };
 
     fkill = mkFishScript {
       name = "fkill";
-      text = builtins.readFile ./scripts/fkill.fish;
+      text = builtins.readFile ./fkill.fish;
       runtimeInputs = [ pkgs.fzf pkgs.procps pkgs.gawk ];
     };
 
     fconf = mkFishScript {
       name = "fconf";
-      text = builtins.readFile ./scripts/fconf.fish;
+      text = builtins.readFile ./fconf.fish;
       runtimeInputs = [ pkgs.fd pkgs.fzf pkgs.bat ];
     };
 
     fp = mkFishScript {
       name = "fp";
-      text = builtins.readFile ./scripts/fp.fish;
+      text = builtins.readFile ./fp.fish;
       runtimeInputs = [ pkgs.fd pkgs.fzf pkgs.eza pkgs.tree pkgs.chafa pkgs.bat pkgs.file ];
     };
 
     fssh = mkFishScript {
       name = "fssh";
-      text = builtins.readFile ./scripts/fssh.fish;
+      text = builtins.readFile ./fssh.fish;
       runtimeInputs = [ pkgs.fzf pkgs.openssh pkgs.gawk ];
     };
   };
@@ -633,14 +640,17 @@ in
 }
 ```
 
+### Fish Function
+
+```fish
+function fh
+    history merge
+    set command (history | fzf --query="$argv[1]" --height="40%" --layout="reverse" --no-multi)
+
+    if test -n "$command"
+        commandline --replace "$command"
+    end
+end
+```
+
 ---
-
-### Do the Scripts Need to Be Made Executable?
-
-**No, they do not.**
-
-The individual source files (e.g., `safe-rm.fish`) do not need to have the executable bit set (`chmod +x`).
-
-Here’s why: The Nix function `pkgs.writeShellApplication` reads the _content_ of your script files using `builtins.readFile`. It then uses this content to build a new, separate script inside the Nix store (`/nix/store/...`). It is this final script in the Nix store that Nix makes executable.
-
-Your local `.fish` files are treated purely as source text. The Nix build process handles all the details of creating a properly packaged and executable result, which is one of the benefits of its declarative nature.
