@@ -56,7 +56,12 @@
     userName = "aahsnr-configs";
     userEmail = "ahsanur041@proton.me";
 
-    extraConfig = {
+    settings = {
+      user = {
+        name = "aahsnr-configs";
+        email = "ahsanur041@proton.me";
+
+      };
       init.defaultBranch = "main";
       "url \"git@github.com-aahsnr-configs:\"" = {
         insteadOf = "git@github.com:";
@@ -128,4 +133,5 @@
       };
     };
   };
+
 }
