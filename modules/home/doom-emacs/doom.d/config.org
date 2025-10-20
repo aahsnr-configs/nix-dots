@@ -55,12 +55,90 @@ This customizes the title bar of the Emacs window to show the current buffer nam
 * UI & Theming
 This section covers the visual appearance of Emacs, including themes, fonts, the modeline, and other aesthetic elements.
 
-** Theme and Fonts
+** Theme
 We use the `doom-tokyo-night` theme and `JetBrainsMono Nerd Font` for a modern and consistent look across different text styles.
 #+begin_src emacs-lisp
-(setq doom-theme 'doom-tokyo-night
-      doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5 :weight 'medium)
-      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5)
+(use-package! doom-themes
+  :custom
+  ;; Global settings (defaults)
+  (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
+  (doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; for treemacs users
+  (doom-themes-treemacs-theme "doom-palenight") ; use "doom-colors" for less minimal icon theme
+  :config
+  (load-theme 'doom-palenight t)
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (nerd-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+#+end_src
+
+** Doom Palenight Theme Customization
+Override specific Palenight theme colors for better Org mode contrast.
+#+begin_src emacs-lisp
+(after! doom-themes
+  (setq doom-palenight-brighter-comments t
+        doom-palenight-brighter-modeline t
+        doom-palenight-padded-modeline t)
+
+  ;; Override theme colors for better contrast
+  (custom-theme-set-faces! 'doom-palenight
+    '(default :background "#292d3e" :foreground "#bfc7d5")
+    '(org-block :background "#1f2233" :foreground "#bfc7d5")
+    '(org-block-begin-line :background "#1f2233" :foreground "#676e95")
+    '(org-block-end-line :background "#1f2233" :foreground "#676e95")
+    '(org-meta-line :foreground "#676e95")
+    '(org-document-info-keyword :foreground "#676e95")))
+#+end_src
+
+** Catppuccin Theme Setup
+Set the Catppuccin Mocha flavor and customize colors for better Org mode contrast.
+#+begin_src emacs-lisp
+;; Set Catppuccin flavor before loading theme
+(setq catppuccin-flavor 'mocha)
+
+;; Override theme colors for better Org contrast
+(after! catppuccin-theme
+  (catppuccin-set-color 'base "#1e1e2e")     ; Main background
+  (catppuccin-set-color 'surface0 "#313244") ; Code block background (lighter)
+  (catppuccin-reload))
+
+;; Additional Org-specific customizations
+(custom-theme-set-faces! 'catppuccin
+  '(org-block :background "#313244" :foreground "#cdd6f4" :extend t)
+  '(org-block-begin-line :background "#313244" :foreground "#6c7086" :extend t)
+  '(org-block-end-line :background "#313244" :foreground "#6c7086" :extend t))
+#+end_src
+
+** Rainbow Delimiters
+This package colorizes parentheses, brackets, and braces according to their nesting level, which greatly improves code readability. The colors are customized for better contrast with the `doom-tokyo-night` theme, and the hook is extended to work with Tree-sitter modes.
+#+begin_src emacs-lisp
+(use-package! rainbow-delimiters
+  :hook ((prog-mode . rainbow-delimiters-mode)
+         (org-src-mode . rainbow-delimiters-mode)
+         (treesit-auto-mode-hook . rainbow-delimiters-mode))
+
+  ;; Catppuccin Mocha palette for rainbow delimiters
+  :custom-face
+  (rainbow-delimiters-depth-1-face ((t (:foreground "#f38ba8"))))  ; Red
+  (rainbow-delimiters-depth-2-face ((t (:foreground "#fab387"))))  ; Peach
+  (rainbow-delimiters-depth-3-face ((t (:foreground "#f9e2af"))))  ; Yellow
+  (rainbow-delimiters-depth-4-face ((t (:foreground "#a6e3a1"))))  ; Green
+  (rainbow-delimiters-depth-5-face ((t (:foreground "#74c7ec"))))  ; Sapphire
+  (rainbow-delimiters-depth-6-face ((t (:foreground "#b4befe"))))  ; Lavender
+  (rainbow-delimiters-depth-7-face ((t (:foreground "#cba6f7"))))) ; Mauve
+#+end_src
+
+** Fonts
+
+#+begin_src emacs-lisp
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.0 :weight 'medium)
+      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.0)
       doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 26))
 #+end_src
 
@@ -105,25 +183,6 @@ Line numbers are enabled globally by default, which is useful for programming. W
 (setq which-key-idle-delay 0.3)
 #+end_src
 
-** Rainbow Delimiters
-This package colorizes parentheses, brackets, and braces according to their nesting level, which greatly improves code readability. The colors are customized for better contrast with the `doom-tokyo-night` theme, and the hook is extended to work with Tree-sitter modes.
-#+begin_src emacs-lisp
-(use-package! rainbow-delimiters
-  :hook ((prog-mode . rainbow-delimiters-mode)
-         (org-src-mode . rainbow-delimiters-mode)
-         (treesit-auto-mode-hook . rainbow-delimiters-mode))
-
-  ;; A more vibrant and high-contrast set of colors for doom-tokyo-night.
-  :custom-face
-  (rainbow-delimiters-depth-1-face ((t (:foreground "#e0af68"))))  ; Yellow
-  (rainbow-delimiters-depth-2-face ((t (:foreground "#7aa2f7"))))  ; Blue
-  (rainbow-delimiters-depth-3-face ((t (:foreground "#9ece6a"))))  ; Green
-  (rainbow-delimiters-depth-4-face ((t (:foreground "#bb9af7"))))  ; Magenta
-  (rainbow-delimiters-depth-5-face ((t (:foreground "#73daca"))))  ; Cyan
-  (rainbow-delimiters-depth-6-face ((t (:foreground "#ff9e64"))))  ; Orange
-  (rainbow-delimiters-depth-7-face ((t (:foreground "#f7768e"))))) ; Red
-#+end_src
-
 ** Markdown Styling
 We customize the faces for Markdown headers to make them larger and more distinct. A helper function is also defined to easily toggle between the raw Markdown and a rendered preview.
 #+begin_src emacs-lisp
@@ -145,6 +204,7 @@ We customize the faces for Markdown headers to make them larger and more distinc
       (markdown-mode)
     (markdown-view-mode)))
 #+end_src
+
 
 * Evil Mode
 This section configures `evil-mode`, the Vim emulation layer that provides modal editing capabilities within Emacs.
@@ -284,7 +344,7 @@ Using `flymake-collection`, we enable `ruff` as a high-performance linter and `m
   (setq-default flymake-collection-python-mypy-executable "mypy")
   (flymake-collection-add-for-major-mode
    'python-ts-mode
-   'flymake-collection-python-pylint ; This will use ruff as defined above
+   'flymake-collection-python-ruff ; This will use ruff as defined above
    'flymake-collection-python-mypy))
 #+end_src
 
@@ -345,18 +405,27 @@ We define custom directories and set foundational Org mode behaviors. This inclu
         org-archive-location (concat my/org-directory "archive/%s_archive::")
         org-todo-keywords
         '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCEL(c@)")
-          (sequence "PLAN(P)" "ACTIVE(A)" "PAUSED(x)" "|" "ACHIEVED(a)" "DROPPED(D)")))
-  (add-hook 'org-src-mode-hook #'show-paren-mode))
+          (sequence "PLAN(P)" "ACTIVE(A)" "PAUSED(x)" "|" "ACHIEVED(a)" "DROPPED(D)"))))
 #+end_src
 
-** Jupyter Integration (Org Babel)
-This configures Org Babel to work with Jupyter kernels, enabling interactive Python programming directly within Org documents. The fix for the "Need a valid session" error is included here.
+** Org Babel & Jupyter
+Configuration for executing code blocks and Jupyter integration.
 #+begin_src emacs-lisp
 (after! org
-  (require 'ob-jupyter)
-  (org-babel-jupyter-override-src-block "python")
-  (setq jupyter-repl-echo-eval-p nil)
-  (add-hook 'org-mode-hook #'org-babel-jupyter-aliases-from-kernelspecs))
+  ;; Ensure jupyter is loaded in babel languages
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (jupyter . t))))
+
+;; Enable jupyter-org-interaction-mode after jupyter is loaded
+(after! jupyter-org-client
+  (add-hook 'org-mode-hook #'jupyter-org-interaction-mode))
+
+;; Disable undo-fu-session for org files with jupyter blocks
+(after! undo-fu-session
+  (add-to-list 'undo-fu-session-incompatible-major-modes 'org-mode))
 #+end_src
 
 ** Org Roam
@@ -463,4 +532,11 @@ We set `fish` as the default shell for terminal emulators like `vterm`.
 Disable the "Are you sure you want to quit Emacs?" prompt.
 #+begin_src emacs-lisp
 (setq confirm-kill-emacs nil)
+#+end_src
+
+** Suppress Warnings
+Disable annoying warnings that don't affect functionality.
+#+begin_src emacs-lisp
+;; Suppress org-element warnings in non-org buffers
+(setq warning-suppress-types '((org-element)))
 #+end_src
