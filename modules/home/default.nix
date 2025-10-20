@@ -51,7 +51,7 @@
     ./catppuccin
     ./cliphist
     ./dev
-    ./doom-emacs
+    # ./doom-emacs
     ./eza
     ./fd-find
     ./fish
@@ -60,7 +60,6 @@
     ./gammastep
     ./git
     ./hyprland
-    ./hyprpolkitagent
     ./imv
     ./keyring
     ./kitty

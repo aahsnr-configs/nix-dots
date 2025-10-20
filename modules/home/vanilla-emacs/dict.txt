@@ -1,8 +1,0 @@
-emacs
-lisp
-flymake
-eglot
-org-roam
-state-of-the-art
-side-by-side
-built-in

@@ -1,6 +1,0 @@
-Dockerfile
-*.elc
-.git/
-.pytest_cache/
-*.pyc
-\#*

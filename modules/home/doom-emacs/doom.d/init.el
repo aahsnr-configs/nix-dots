@@ -123,7 +123,7 @@
        ;;upload            ; map local to remote projects via ssh/ftp
 
        :os
-       ;;tty               ; improve the terminal Emacs experience
+       tty               ; improve the terminal Emacs experience
 
        :lang
        ;;ada               ; In strong typing we (blindly) trust

@@ -10,6 +10,7 @@
         "caelestia resizer -d"
         "caelestia shell -d"
         "trash-empty 30"
+        "systemctl --user start hyprpolkitagent"
       ];
     };
     extraConfig = ''
