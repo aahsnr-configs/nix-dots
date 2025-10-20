@@ -94,6 +94,11 @@ let
       text = builtins.readFile ./fssh.fish;
       runtimeInputs = [ pkgs.fzf pkgs.openssh pkgs.gawk ];
     };
+
+    org-capture = mkFishScript {
+      name = "org-capture";
+      text = builtins.readFile ./org-capture.fish;
+    };
   };
 
 in

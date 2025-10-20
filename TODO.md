@@ -23,6 +23,7 @@
 
 ---
 
+- [ ] Change the fish scripts to bash scripts
 - [ ] make sure the volume keybinding does not increase the volume more than 100 percent
 - [ ] turn org-capture bash script into fish script and integrate into scripts
 - [ ] add the new colorscheme from claude to doom emacs
