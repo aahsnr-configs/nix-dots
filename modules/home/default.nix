@@ -68,6 +68,7 @@
     ./pay-respects
     ./pkgs
     ./ripgrep
+    ./schizofox
     ./starship
     ./scripts
     ./texlive

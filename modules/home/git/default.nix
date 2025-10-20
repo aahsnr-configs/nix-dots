@@ -52,10 +52,6 @@
   programs.git = {
     enable = true;
     package = pkgs.gitFull;
-
-    userName = "aahsnr-configs";
-    userEmail = "ahsanur041@proton.me";
-
     settings = {
       user = {
         name = "aahsnr-configs";

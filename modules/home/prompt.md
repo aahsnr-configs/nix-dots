@@ -1,1 +1,0 @@
-Study the attached rules.nix file containing the rules for Hyprland and then study the pyprland configuration in `pyprland.toml`. Even though the pypr daemon is running, Hyprland does not open the associated scratchpads. Fix that issue for me. Search the web before writing anything.

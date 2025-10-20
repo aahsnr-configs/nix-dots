@@ -1,0 +1,156 @@
+* UI & Theming
+This section covers the visual appearance of Emacs, including themes, fonts, the modeline, and other aesthetic elements.
+
+** Theme and Fonts
+We use the Catppuccin Mocha theme with customizations for better contrast and readability.
+#+begin_src emacs-lisp
+;; Set Catppuccin flavor BEFORE loading theme
+(setq catppuccin-flavor 'mocha)
+
+;; Enable Catppuccin quality-of-life features
+(setq catppuccin-italic-comments t
+      catppuccin-italic-blockquotes t
+      catppuccin-italic-variables nil
+      catppuccin-highlight-matches t
+      catppuccin-dark-line-numbers-background t)
+
+;; Load the theme
+(setq doom-theme 'catppuccin)
+
+;; Fonts - modern and consistent look
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5 :weight 'medium)
+      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5)
+      doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 26))
+#+end_src
+
+** Catppuccin Theme Customization
+Override specific colors for better Org mode contrast and visual improvements.
+#+begin_src emacs-lisp
+(after! catppuccin-theme
+  ;; Customize colors for better contrast
+  (catppuccin-set-color 'base "#1e1e2e")      ; Main background (default)
+  (catppuccin-set-color 'surface0 "#313244")  ; Lighter surface for contrast
+  (catppuccin-set-color 'surface1 "#45475a")  ; Even lighter
+  
+  ;; Apply custom faces for better Org mode experience
+  (custom-theme-set-faces! 'catppuccin
+    ;; Org mode improvements
+    '(org-block :background "#313244" :foreground "#cdd6f4" :extend t)
+    '(org-block-begin-line :background "#313244" :foreground "#6c7086" :extend t)
+    '(org-block-end-line :background "#313244" :foreground "#6c7086" :extend t)
+    '(org-meta-line :foreground "#6c7086")
+    '(org-document-info-keyword :foreground "#6c7086")
+    
+    ;; Better default foreground to prevent black text
+    '(default :background "#1e1e2e" :foreground "#cdd6f4")
+    
+    ;; Enhanced modeline contrast
+    '(mode-line :background "#181825" :foreground "#cdd6f4")
+    '(mode-line-inactive :background "#11111b" :foreground "#6c7086")
+    
+    ;; Better selection visibility
+    '(region :background "#585b70" :extend t)
+    
+    ;; Improved cursor visibility
+    '(cursor :background "#f5e0dc")
+    
+    ;; Better hl-line
+    '(hl-line :background "#313244" :extend t)
+    
+    ;; Enhanced matching parens
+    '(show-paren-match :foreground "#f5c2e7" :background "#45475a" :weight bold)
+    
+    ;; Better minibuffer
+    '(minibuffer-prompt :foreground "#89dceb" :weight bold)))
+#+end_src
+
+** Frame Padding
+A small internal border is added around the frame to create visual breathing room between the text and the window edge.
+#+begin_src emacs-lisp
+(setq-default internal-border-width 5)
+(add-to-list 'default-frame-alist '(internal-border-width . 5))
+#+end_src
+
+** Modeline
+The modeline is the information bar at the bottom of each window. We use `doom-modeline` and customize its appearance for better readability and information density.
+#+begin_src emacs-lisp
+(after! doom-modeline
+  (setq doom-modeline-height 28
+        doom-modeline-bar-width 3
+        doom-modeline-buffer-file-name-style 'relative-from-project
+        doom-modeline-major-mode-icon t
+        doom-modeline-vcs-max-length 12
+        doom-modeline-icon t
+        doom-modeline-modal t
+        doom-modeline-modal-icon t
+        doom-modeline-buffer-encoding nil
+        doom-modeline-indent-info nil
+        doom-modeline-enable-word-count nil))
+#+end_src
+
+** Line Numbers
+Line numbers are enabled globally by default, which is useful for programming. We then selectively disable them in modes where they are distracting, such as Org, Dired, and Magit.
+#+begin_src emacs-lisp
+;; Enable absolute line numbers globally by default.
+(setq display-line-numbers-type t)
+
+;; Disable line numbers in modes where they aren't useful.
+(add-hook! '(org-mode-hook
+             dired-mode-hook
+             magit-status-mode-hook
+             eshell-mode-hook
+             vterm-mode-hook
+             help-mode-hook
+             doom-dashboard-mode-hook)
+           #'(lambda () (display-line-numbers-mode -1)))
+#+end_src
+
+** Which-key
+`which-key` displays available keybindings after a prefix key is pressed. We configure a short delay for responsiveness.
+#+begin_src emacs-lisp
+(setq which-key-idle-delay 0.3
+      which-key-allow-imprecise-window-fit nil)
+#+end_src
+
+** Rainbow Delimiters
+Catppuccin theme provides rainbow-delimiters colors using its native palette for perfect color harmony.
+#+begin_src emacs-lisp
+(use-package! rainbow-delimiters
+  :hook ((prog-mode . rainbow-delimiters-mode)
+         (org-src-mode . rainbow-delimiters-mode)
+         (treesit-auto-mode-hook . rainbow-delimiters-mode))
+
+  ;; Catppuccin Mocha palette - these are already defined by the theme
+  ;; but we customize for optimal nesting visibility
+  :custom-face
+  (rainbow-delimiters-depth-1-face ((t (:foreground "#f38ba8"))))  ; Red
+  (rainbow-delimiters-depth-2-face ((t (:foreground "#fab387"))))  ; Peach
+  (rainbow-delimiters-depth-3-face ((t (:foreground "#f9e2af"))))  ; Yellow
+  (rainbow-delimiters-depth-4-face ((t (:foreground "#a6e3a1"))))  ; Green
+  (rainbow-delimiters-depth-5-face ((t (:foreground "#74c7ec"))))  ; Sapphire
+  (rainbow-delimiters-depth-6-face ((t (:foreground "#b4befe"))))  ; Lavender
+  (rainbow-delimiters-depth-7-face ((t (:foreground "#cba6f7"))))  ; Mauve
+  (rainbow-delimiters-unmatched-face ((t (:foreground "#f38ba8" :weight bold)))))
+#+end_src
+
+** Markdown Styling
+We customize the faces for Markdown headers to make them larger and more distinct. A helper function is also defined to easily toggle between the raw Markdown and a rendered preview.
+#+begin_src emacs-lisp
+;; Headers with Catppuccin colors
+(custom-set-faces
+ '(markdown-header-face ((t (:inherit font-lock-function-name-face :weight bold :family "variable-pitch"))))
+ '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.6 :foreground "#f38ba8"))))
+ '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.5 :foreground "#fab387"))))
+ '(markdown-header-face-3 ((t (:inherit markdown-header-face :height 1.4 :foreground "#f9e2af"))))
+ '(markdown-header-face-4 ((t (:inherit markdown-header-face :height 1.3 :foreground "#a6e3a1"))))
+ '(markdown-header-face-5 ((t (:inherit markdown-header-face :height 1.2 :foreground "#74c7ec"))))
+ '(markdown-header-face-6 ((t (:inherit markdown-header-face :height 1.1 :foreground "#b4befe")))))
+
+;; Toggle Markdown View
+(defun dt/toggle-markdown-view-mode ()
+  "Toggle between `markdown-mode' and `markdown-view-mode'."
+  (interactive)
+  (if (eq major-mode 'markdown-view-mode)
+      (markdown-mode)
+    (markdown-view-mode)))
+#+end_src

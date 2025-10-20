@@ -1,5 +1,7 @@
 # Setting Up NixOS
 
+[**Note**]: ahsan.05rahman@gmail.com for claude.ai is very important
+
 - [ ] Before adding the simplified org setup, test org-mode with the default settings provided by the emacs packages.
 - [x] Fix caelestia hmModule; make it look exactly like json file
 - [x] Fix hyprland keybindings for caelestia
@@ -21,9 +23,16 @@
 
 ---
 
+- [ ] make sure the volume keybinding does not increase the volume more than 100 percent
+- [ ] turn org-capture bash script into fish script and integrate into scripts
+- [ ] add the new colorscheme from claude to doom emacs
+- [ ] setup foot so that it always opens with zellij
+- [ ] before switching to hyprscroller, setup and test hyprscrolling using the config from [black-don-os](https://gitlab.com/theblackdon/black-don-os)
+- [ ] setup hyprscroller instead of hyprscrolling
+- [ ] modify the hyprland configuration so that moving the cursor does not bring a window to focus; then make sure that when window focus is changed, the cursor follows the focused windows
 - [ ] kickstart-nvim setup to port all my necessary Astronvim configurations slowly
-- [ ] scripts creation
-- [ ] gammastep home-manager configuration; remove hyprsunset
+- [x] scripts creation
+- [x] gammastep home-manager configuration; remove hyprsunset
 - [x] temporarily set the scheme color variables directly as hyprland home-manager modules in extraConfig option
 - [x] Use claude opus to compare and contrast the config files in both the home-manager modules and the default hyprland config files
 - [x] Port hyprland.conf settings to the execs.nix
