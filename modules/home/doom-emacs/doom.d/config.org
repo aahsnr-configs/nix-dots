@@ -363,6 +363,42 @@ We configure `dape` to use `debugpy` as the debug adapter for Python, enabling f
                  :pathMappings [(:localRoot dape-cwd-fn :remoteRoot dape-cwd-fn)])))
 #+end_src
 
+*** Org Babel Jupyter-Python with Eglot
+This fixes the JSONRPC connection error when using eglot in org-edit-special buffers for jupyter-python blocks. Jupyter's completion is removed to avoid conflicts with eglot/corfu, while dabbrev handles completion of kernel variables.
+#+begin_src emacs-lisp
+(defun org-babel-edit-prep:jupyter-python (babel-info)
+  "Prepare jupyter-python src block for eglot by setting buffer-file-name.
+This function is called automatically when entering org-edit-special."
+  (let* ((params (nth 2 babel-info))
+         (tangle-file (alist-get :tangle params)))
+    (when tangle-file
+      ;; Set buffer-file-name to enable eglot
+      (setq-local buffer-file-name (expand-file-name tangle-file))
+
+      ;; Remove jupyter completion immediately to prevent conflicts
+      (setq-local completion-at-point-functions
+                  (delq 'jupyter-completion-at-point
+                        completion-at-point-functions))
+
+      ;; Start eglot and wait for it to be ready
+      (eglot-ensure)
+
+      ;; Ensure corfu-mode is enabled
+      (unless corfu-mode
+        (corfu-mode 1))
+
+      ;; Force eglot completion to be at the front after it initializes
+      (run-with-timer 0.5 nil
+                      (lambda ()
+                        (when (buffer-live-p (current-buffer))
+                          (with-current-buffer (current-buffer)
+                            (setq-local completion-at-point-functions
+                                        (cons 'eglot-completion-at-point-function
+                                              (delq 'eglot-completion-at-point-function
+                                                    (delq 'jupyter-completion-at-point
+                                                          completion-at-point-functions)))))))))))
+#+end_src
+
 ** LaTeX
 Configuration for writing LaTeX documents, including PDF viewing and citation management.
 #+begin_src emacs-lisp
