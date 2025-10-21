@@ -19,7 +19,9 @@
     obsidian
     bottom
     brave
-    firefox
-    geoclue2 
+    protonvpn-gui
+    ticktick
+    nemo
+    onlyoffice-desktopeditors
   ];
 }

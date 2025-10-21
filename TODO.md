@@ -23,13 +23,16 @@
 
 ---
 
-- [ ] Change the fish scripts to bash scripts
 - [ ] make sure the volume keybinding does not increase the volume more than 100 percent
 - [ ] turn org-capture bash script into fish script and integrate into scripts
 - [ ] add the new colorscheme from claude to doom emacs
 - [ ] setup foot so that it always opens with zellij
 - [ ] before switching to hyprscroller, setup and test hyprscrolling using the config from [black-don-os](https://gitlab.com/theblackdon/black-don-os)
+- [ ] check back about needed packages for latex and org-mode
+- [ ] add configs for latex and nix
+- [ ] modify the org-modern config like my vanilla emacs config
 - [ ] setup hyprscroller instead of hyprscrolling
+- [ ] add [hyprshell](https://github.com/H3rmt/hyprshell)
 - [ ] modify the hyprland configuration so that moving the cursor does not bring a window to focus; then make sure that when window focus is changed, the cursor follows the focused windows
 - [ ] kickstart-nvim setup to port all my necessary Astronvim configurations slowly
 - [x] scripts creation

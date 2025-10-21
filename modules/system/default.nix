@@ -20,6 +20,7 @@
     ./security
     ./sound
     ./systemd
+    ./thunar
     ./users
     ./zram
   ];

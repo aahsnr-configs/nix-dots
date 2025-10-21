@@ -24,7 +24,6 @@
     nodejs_24
     openssl
     piper
-    protonvpn-gui
     poppler
     resvg
     python313 

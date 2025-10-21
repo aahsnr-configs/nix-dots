@@ -1,3 +1,5 @@
+#!/usr/bin/env fish
+
 # Open an org-capture popup frame from the shell. This opens a temporary emacs
 # daemon if emacs isn't already running.
 #

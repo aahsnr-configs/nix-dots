@@ -1,3 +1,1 @@
-- [ ] check back about needed packages for latex and org-mode
-- [ ] add configs for latex and nix
-- [ ] modify the org-modern config like my vanilla emacs config
+
