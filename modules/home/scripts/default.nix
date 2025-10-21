@@ -26,72 +26,78 @@ let
 
   # All scripts are defined here, reading their content from the ./scripts directory.
   scripts = {
-    safe-rm = mkFishScript {
-      name = "safe-rm";
-      text = builtins.readFile ./safe-rm.fish;
-    };
-
-    nuke-nvim = mkFishScript {
-      name = "nuke-nvim";
-      text = builtins.readFile ./nuke-nvim.fish;
-    };
-
-    setup-github-keys = mkFishScript {
-      name = "setup-github-keys";
-      text = builtins.readFile ./setup-github-keys.fish;
-      runtimeInputs = [ pkgs.openssh pkgs.gh ];
-    };
-
-    launch-first-available = mkFishScript {
-      name = "launch_first_available";
-      text = builtins.readFile ./launch_first_available.fish;
-    };
-
-    fuzzel-emoji = mkFishScript {
-      name = "fuzzel-emoji";
-      text = builtins.readFile ./fuzzel-emoji.fish;
-      runtimeInputs = [ pkgs.fuzzel pkgs.wtype pkgs.wl-clipboard ];
-    };
-
-    wsaction = mkFishScript {
-      name = "wsaction";
-      text = builtins.readFile ./wsaction.fish;
-      runtimeInputs = [ pkgs.hyprland pkgs.jq ];
+    fconf = mkFishScript {
+      name = "fconf";
+      text = builtins.readFile ./bin/fconf.fish;
     };
 
     fe = mkFishScript {
       name = "fe";
-      text = builtins.readFile ./fe.fish;
+      text = builtins.readFile ./bin/fe.fish;
+    };
+
+    fkill = mkFishScript {
+      name = "fkill";
+      text = builtins.readFile ./bin/fkill.fish;
+      runtimeInputs = [ pkgs.openssh pkgs.gh ];
+    };
+
+    fp = mkFishScript {
+      name = "fp";
+      text = builtins.readFile ./bin/fp.fish;
+    };
+
+    fssh = mkFishScript {
+      name = "fssh";
+      text = builtins.readFile ./bin/fssh.fish;
+      runtimeInputs = [ pkgs.fuzzel pkgs.wtype pkgs.wl-clipboard ];
+    };
+
+    fuzzel-emoji = mkFishScript {
+      name = "fuzzel-emoji";
+      text = builtins.readFile ./bin/fuzzel-emoji.fish;
+      runtimeInputs = [ pkgs.hyprland pkgs.jq ];
+    };
+
+    launch_first_available = mkFishScript {
+      name = "launch_first_available";
+      text = builtins.readFile ./bin/launch_first_available.fish;
+      runtimeInputs = [ pkgs.fd pkgs.fzf pkgs.bat ];
+    };
+
+    nuke-nvim = mkFishScript {
+      name = "nuke-nvim";
+      text = builtins.readFile ./bin/nuke-nvim.fish;
+      runtimeInputs = [ pkgs.ripgrep pkgs.fzf pkgs.bat ];
+    };
+
+    org-capture = mkFishScript {
+      name = "org-capture";
+      text = builtins.readFile ./bin/org-capture.fish;
+      runtimeInputs = [ pkgs.fzf pkgs.procps pkgs.gawk ];
+    };
+
+    safe-rm = mkFishScript {
+      name = "safe-rm";
+      text = builtins.readFile ./bin/safe-rm.fish;
       runtimeInputs = [ pkgs.fd pkgs.fzf pkgs.bat ];
     };
 
     se = mkFishScript {
       name = "se";
-      text = builtins.readFile ./se.fish;
-      runtimeInputs = [ pkgs.ripgrep pkgs.fzf pkgs.bat ];
-    };
-
-    fkill = mkFishScript {
-      name = "fkill";
-      text = builtins.readFile ./fkill.fish;
-      runtimeInputs = [ pkgs.fzf pkgs.procps pkgs.gawk ];
-    };
-
-    fconf = mkFishScript {
-      name = "fconf";
-      text = builtins.readFile ./fconf.fish;
-      runtimeInputs = [ pkgs.fd pkgs.fzf pkgs.bat ];
-    };
-
-    fp = mkFishScript {
-      name = "fp";
-      text = builtins.readFile ./fp.fish;
+      text = builtins.readFile ./bin/se.fish;
       runtimeInputs = [ pkgs.fd pkgs.fzf pkgs.eza pkgs.tree pkgs.chafa pkgs.bat pkgs.file ];
     };
 
-    fssh = mkFishScript {
-      name = "fssh";
-      text = builtins.readFile ./fssh.fish;
+    setup-github-keys = mkFishScript {
+      name = "setup-github-keys";
+      text = builtins.readFile ./bin/setup-github-keys.fish;
+      runtimeInputs = [ pkgs.fzf pkgs.openssh pkgs.gawk ];
+    };
+
+    wsaction = mkFishScript {
+      name = "wsaction";
+      text = builtins.readFile ./bin/wsaction.fish;
       runtimeInputs = [ pkgs.fzf pkgs.openssh pkgs.gawk ];
     };
   };
