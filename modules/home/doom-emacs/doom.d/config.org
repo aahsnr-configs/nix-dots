@@ -55,91 +55,67 @@ This customizes the title bar of the Emacs window to show the current buffer nam
 * UI & Theming
 This section covers the visual appearance of Emacs, including themes, fonts, the modeline, and other aesthetic elements.
 
-** Theme
-We use the `doom-tokyo-night` theme and `JetBrainsMono Nerd Font` for a modern and consistent look across different text styles.
-#+begin_src emacs-lisp
-(use-package! doom-themes
-  :custom
-  ;; Global settings (defaults)
-  (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
-  (doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;; for treemacs users
-  (doom-themes-treemacs-theme "doom-palenight") ; use "doom-colors" for less minimal icon theme
-  :config
-  (load-theme 'doom-palenight t)
-
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  ;; Enable custom neotree theme (nerd-icons must be installed!)
-  (doom-themes-neotree-config)
-  ;; or for treemacs users
-  (doom-themes-treemacs-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
-#+end_src
-
-** Doom Palenight Theme Customization
-Override specific Palenight theme colors for better Org mode contrast.
-#+begin_src emacs-lisp
-(after! doom-themes
-  (setq doom-palenight-brighter-comments t
-        doom-palenight-brighter-modeline t
-        doom-palenight-padded-modeline t)
-
-  ;; Override theme colors for better contrast
-  (custom-theme-set-faces! 'doom-palenight
-    '(default :background "#292d3e" :foreground "#bfc7d5")
-    '(org-block :background "#1f2233" :foreground "#bfc7d5")
-    '(org-block-begin-line :background "#1f2233" :foreground "#676e95")
-    '(org-block-end-line :background "#1f2233" :foreground "#676e95")
-    '(org-meta-line :foreground "#676e95")
-    '(org-document-info-keyword :foreground "#676e95")))
-#+end_src
-
-** Catppuccin Theme Setup
-Set the Catppuccin Mocha flavor and customize colors for better Org mode contrast.
-#+begin_src emacs-lisp
-;; Set Catppuccin flavor before loading theme
-(setq catppuccin-flavor 'mocha)
-
-;; Override theme colors for better Org contrast
-(after! catppuccin-theme
-  (catppuccin-set-color 'base "#1e1e2e")     ; Main background
-  (catppuccin-set-color 'surface0 "#313244") ; Code block background (lighter)
-  (catppuccin-reload))
-
-;; Additional Org-specific customizations
-(custom-theme-set-faces! 'catppuccin
-  '(org-block :background "#313244" :foreground "#cdd6f4" :extend t)
-  '(org-block-begin-line :background "#313244" :foreground "#6c7086" :extend t)
-  '(org-block-end-line :background "#313244" :foreground "#6c7086" :extend t))
-#+end_src
-
-** Rainbow Delimiters
-This package colorizes parentheses, brackets, and braces according to their nesting level, which greatly improves code readability. The colors are customized for better contrast with the `doom-tokyo-night` theme, and the hook is extended to work with Tree-sitter modes.
-#+begin_src emacs-lisp
-(use-package! rainbow-delimiters
-  :hook ((prog-mode . rainbow-delimiters-mode)
-         (org-src-mode . rainbow-delimiters-mode)
-         (treesit-auto-mode-hook . rainbow-delimiters-mode))
-
-  ;; Catppuccin Mocha palette for rainbow delimiters
-  :custom-face
-  (rainbow-delimiters-depth-1-face ((t (:foreground "#f38ba8"))))  ; Red
-  (rainbow-delimiters-depth-2-face ((t (:foreground "#fab387"))))  ; Peach
-  (rainbow-delimiters-depth-3-face ((t (:foreground "#f9e2af"))))  ; Yellow
-  (rainbow-delimiters-depth-4-face ((t (:foreground "#a6e3a1"))))  ; Green
-  (rainbow-delimiters-depth-5-face ((t (:foreground "#74c7ec"))))  ; Sapphire
-  (rainbow-delimiters-depth-6-face ((t (:foreground "#b4befe"))))  ; Lavender
-  (rainbow-delimiters-depth-7-face ((t (:foreground "#cba6f7"))))) ; Mauve
-#+end_src
-
 ** Fonts
-
 #+begin_src emacs-lisp
-(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.0 :weight 'medium)
-      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.0)
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5 :weight 'medium)
+      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5)
       doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 26))
+#+end_src
+
+** Catppuccin Theme Customization
+Override specific colors for better contrast and visual improvements, with special attention to background shades for different UI elements.
+#+begin_src emacs-lisp
+(use-package! catppuccin-theme
+  :config
+  (setq catppuccin-flavor 'mocha)
+  (setq doom-theme 'catppuccin)
+
+  ;; Enable Catppuccin quality-of-life features
+  (setq catppuccin-italic-comments t
+        catppuccin-italic-blockquotes t
+        catppuccin-italic-variables nil
+        catppuccin-highlight-matches t
+        catppuccin-dark-line-numbers-background t)
+
+  ;; Apply custom faces for a unique and consistent color scheme.
+  ;; The hexadecimal colors are from the Catppuccin Mocha palette:
+  ;; #11111b (crust), #181825 (mantle), #1e1e2e (base), #24273a (surface0)
+  (custom-theme-set-faces! 'catppuccin
+    ;; 1. Default background is a lighter shade (surface0)
+    '(default :background "#1e1e2e" :foreground "#cdd6f4")
+
+    ;; 2. Popup completion system is a darker shade (base)
+    '(corfu-default :background "#1e1e2e" :foreground "#cdd6f4")
+
+    ;; 3. Solaire-mode has the darkest accent color (crust)
+    '(solaire-mode-bg-face :background "#11111b")
+
+    ;; 4. Highlighted line is a unique, lighter shade than solaire (mantle)
+    '(hl-line :background "#11111b" :extend t)
+
+    ;; --- Other UI Enhancements ---
+    ;; Org mode improvements
+    '(org-block :background "#313244" :foreground "#cdd6f4" :extend t)
+    '(org-block-begin-line :background "#313244" :foreground "#6c7086" :extend t)
+    '(org-block-end-line :background "#313244" :foreground "#6c7086" :extend t)
+    '(org-meta-line :foreground "#6c7086")
+    '(org-document-info-keyword :foreground "#6c7086")
+
+    ;; Enhanced modeline contrast
+    '(mode-line :background "#181825" :foreground "#cdd6f4")
+    '(mode-line-inactive :background "#11111b" :foreground "#6c7086")
+
+    ;; Better selection visibility
+    '(region :background "#585b70" :extend t)
+
+    ;; Improved cursor visibility
+    '(cursor :background "#f5e0dc")
+
+    ;; Enhanced matching parens
+    '(show-paren-match :foreground "#f5c2e7" :background "#45475a" :weight bold)
+
+    ;; Better minibuffer
+    '(minibuffer-prompt :foreground "#89dceb" :weight bold)))
 #+end_src
 
 ** Frame Padding
@@ -157,7 +133,13 @@ The modeline is the information bar at the bottom of each window. We use `doom-m
         doom-modeline-bar-width 3
         doom-modeline-buffer-file-name-style 'relative-from-project
         doom-modeline-major-mode-icon t
-        doom-modeline-vcs-max-length 12))
+        doom-modeline-vcs-max-length 12
+        doom-modeline-icon t
+        doom-modeline-modal t
+        doom-modeline-modal-icon t
+        doom-modeline-buffer-encoding nil
+        doom-modeline-indent-info nil
+        doom-modeline-enable-word-count nil))
 #+end_src
 
 ** Line Numbers
@@ -180,21 +162,43 @@ Line numbers are enabled globally by default, which is useful for programming. W
 ** Which-key
 `which-key` displays available keybindings after a prefix key is pressed. We configure a short delay for responsiveness.
 #+begin_src emacs-lisp
-(setq which-key-idle-delay 0.3)
+(setq which-key-idle-delay 0.3
+      which-key-allow-imprecise-window-fit nil)
+#+end_src
+
+** Rainbow Delimiters
+Catppuccin theme provides rainbow-delimiters colors using its native palette for perfect color harmony.
+#+begin_src emacs-lisp
+(use-package! rainbow-delimiters
+  :hook ((prog-mode . rainbow-delimiters-mode)
+         (org-src-mode . rainbow-delimiters-mode)
+         (treesit-auto-mode-hook . rainbow-delimiters-mode))
+
+  ;; Catppuccin Mocha palette - these are already defined by the theme
+  ;; but we customize for optimal nesting visibility
+  :custom-face
+  (rainbow-delimiters-depth-1-face ((t (:foreground "#f38ba8"))))  ; Red
+  (rainbow-delimiters-depth-2-face ((t (:foreground "#fab387"))))  ; Peach
+  (rainbow-delimiters-depth-3-face ((t (:foreground "#f9e2af"))))  ; Yellow
+  (rainbow-delimiters-depth-4-face ((t (:foreground "#a6e3a1"))))  ; Green
+  (rainbow-delimiters-depth-5-face ((t (:foreground "#74c7ec"))))  ; Sapphire
+  (rainbow-delimiters-depth-6-face ((t (:foreground "#b4befe"))))  ; Lavender
+  (rainbow-delimiters-depth-7-face ((t (:foreground "#cba6f7"))))  ; Mauve
+  (rainbow-delimiters-unmatched-face ((t (:foreground "#f38ba8" :weight bold)))))
 #+end_src
 
 ** Markdown Styling
 We customize the faces for Markdown headers to make them larger and more distinct. A helper function is also defined to easily toggle between the raw Markdown and a rendered preview.
 #+begin_src emacs-lisp
-;; Headers
+;; Headers with Catppuccin colors
 (custom-set-faces
  '(markdown-header-face ((t (:inherit font-lock-function-name-face :weight bold :family "variable-pitch"))))
- '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.6))))
- '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.5))))
- '(markdown-header-face-3 ((t (:inherit markdown-header-face :height 1.4))))
- '(markdown-header-face-4 ((t (:inherit markdown-header-face :height 1.3))))
- '(markdown-header-face-5 ((t (:inherit markdown-header-face :height 1.2))))
- '(markdown-header-face-6 ((t (:inherit markdown-header-face :height 1.1)))))
+ '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.6 :foreground "#f38ba8"))))
+ '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.5 :foreground "#fab387"))))
+ '(markdown-header-face-3 ((t (:inherit markdown-header-face :height 1.4 :foreground "#f9e2af"))))
+ '(markdown-header-face-4 ((t (:inherit markdown-header-face :height 1.3 :foreground "#a6e3a1"))))
+ '(markdown-header-face-5 ((t (:inherit markdown-header-face :height 1.2 :foreground "#74c7ec"))))
+ '(markdown-header-face-6 ((t (:inherit markdown-header-face :height 1.1 :foreground "#b4befe")))))
 
 ;; Toggle Markdown View
 (defun dt/toggle-markdown-view-mode ()
@@ -204,7 +208,6 @@ We customize the faces for Markdown headers to make them larger and more distinc
       (markdown-mode)
     (markdown-view-mode)))
 #+end_src
-
 
 * Evil Mode
 This section configures `evil-mode`, the Vim emulation layer that provides modal editing capabilities within Emacs.
@@ -313,10 +316,10 @@ We use `yasnippet-capf` to integrate snippet expansion with the Corfu completion
 #+end_src
 
 ** Python
-This provides a complete Python development environment using Tree-sitter for syntax highlighting, `basedpyright` for LSP features, `ruff` for formatting and linting, and `debugpy` for debugging.
+This provides a complete Python development environment using Tree-sitter for syntax highlighting, *basedpyright* for LSP features, *ruff* for formatting and linting, and *debugpy* for debugging.
 
 *** LSP Configuration
-We tell `eglot` to use the `basedpyright-langserver` for Python files that are in `python-ts-mode`.
+We tell *eglot* to use the *basedpyright-langserver* for Python files that are in *python-ts-mode*.
 #+begin_src emacs-lisp
 (after! eglot
   (add-to-list 'eglot-server-programs
@@ -324,16 +327,12 @@ We tell `eglot` to use the `basedpyright-langserver` for Python files that are i
 #+end_src
 
 *** Code Formatting (Apheleia)
-We configure `apheleia` to use a combination of `isort` and `ruff` to automatically format Python code on save.
+We configure *apheleia* to use a combination of *isort* and *ruff* to automatically format Python code on save.
 #+begin_src emacs-lisp
 (after! apheleia
-  (setf (alist-get 'isort apheleia-formatters)
-        '("isort" "--stdout" "-")
-        (alist-get 'ruff apheleia-formatters)
-        '("ruff" "format" "--stdin-filename" filepath "-")
-        (alist-get 'ruff-isort apheleia-formatters)
-        '("sh" "-c" "isort --stdout - | ruff format --stdin-filename " filepath " -"))
-  (setf (alist-get 'python-ts-mode apheleia-mode-alist) 'ruff-isort))
+  (setf (alist-get 'ruff apheleia-formatters)
+        '("ruff" "format" "--stdin-filename" filepath "-"))
+  (setf (alist-get 'python-ts-mode apheleia-mode-alist) 'ruff))
 #+end_src
 
 *** Syntax Checking (Flymake)
@@ -448,7 +447,7 @@ Configuration for executing code blocks and Jupyter integration.
 #+end_src
 
 ** UI Enhancements
-These packages improve the visual presentation of Org mode. `org-super-agenda` provides powerful grouping for agenda views, while `org-fragtog` and `org-appear` enhance the display of LaTeX fragments and emphasis markers.
+These packages improve the visual presentation of Org mode. *org-super-agenda* provides powerful grouping for agenda views, while *org-fragtog* and *org-appear* enhance the display of LaTeX fragments and emphasis markers.
 #+begin_src emacs-lisp
 (use-package! org-super-agenda
   :after org-agenda
@@ -460,6 +459,41 @@ These packages improve the visual presentation of Org mode. `org-super-agenda` p
   (setq org-appear-autoemphasis t
         org-appear-autolinks t
         org-appear-autosubmarkers t))
+
+(after! org
+  ;; Set custom faces for scaled org headers to improve visual hierarchy.
+  (custom-set-faces!
+    '(org-level-1 :inherit 'variable-pitch :weight bold :height 1.2)
+    '(org-level-2 :inherit 'variable-pitch :weight bold :height 1.13)
+    '(org-level-3 :inherit 'variable-pitch :weight bold :height 1.10)
+    '(org-level-4 :inherit 'variable-pitch :weight bold :height 1.07)
+    '(org-level-5 :inherit 'variable-pitch :weight bold :height 1.05)
+    '(org-level-6 :inherit 'variable-pitch :weight bold :height 1.03)
+    '(org-level-7 :inherit 'variable-pitch :weight bold :height 1.02)
+    '(org-level-8 :inherit 'variable-pitch :weight bold :height 1.0)))
+#+end_src
+
+** Org Modern
+#+begin_src emacs-lisp
+(after! org-modern
+  (setq
+   ;; Override Doom's dynamic star visibility with a consistent character.
+   org-modern-hide-stars "· "
+   ;; Customize the appearance of headline stars/bullets.
+   org-modern-star '("◉" "○" "◈" "◇" "◆" "▷")
+   ;; Customize list item bullets.
+   org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))
+   ;; Adjust table line appearance.
+   org-modern-table-vertical 1
+   org-modern-table-horizontal 0.1
+   ;; Customize the block name delimiters.
+   org-modern-block-name '(("src" "»" "«")
+                           ("example" "»" "«")
+                           ("quote" "❝" "❞"))
+   ;; Define custom checkbox characters.
+   org-modern-checkbox '((todo . "☐") (done . "☑") (cancel . "☒") (priority . "⚑") (on . "◉") (off . "○"))
+   ;; Override Doom's derived tag faces with a specific style for Catppuccin.
+   org-modern-tag-faces `((:foreground ,(face-attribute 'default :foreground) :weight bold :box (:line-width (1 . -1) :color "#45475a")))))
 #+end_src
 
 * Keybindings
