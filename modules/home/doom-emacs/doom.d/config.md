@@ -1,3 +1,6 @@
+Perfect! Now I have all the information I need. Based on my research, here's the complete, properly formatted `config.org` with Doom Emacs syntax and clear change markers:
+
+```org
 #+title: My Doom Emacs Config
 #+author: Ahsanur Rahman
 
@@ -50,6 +53,37 @@ This customizes the title bar of the Emacs window to show the current buffer nam
                    (abbreviate-file-name (buffer-file-name))
                  "%b"))
         " - Doom Emacs"))
+#+end_src
+
+** Custom Doom Emacs Directory
+The following piece of configuration allows me to directorly go to the doom configuration files in my nixos configurations
+#+begin_src emacs-lisp
+;; Override doom-private-dir for NixOS with nix-doom-emacs-unstraightened
+;; This makes SPC f p and related commands go to the editable config
+(setq doom-private-dir "~/nix-dots/modules/home/doom-emacs/doom.d/")
+
+;; Override the default/find-in-config function to use our custom directory
+(defun my/find-in-doom-config ()
+  "Browse files in your editable Doom config directory."
+  (interactive)
+  (doom-project-browse doom-private-dir))
+
+;; Bind SPC f p to our custom function
+(map! :leader
+      :desc "Find file in private config" "f p" #'my/find-in-doom-config)
+
+;; Also override the individual config file shortcuts
+(map! :leader
+      :prefix "f"
+      :desc "Open doom config.org" "P c"
+      (lambda () (interactive)
+        (find-file (expand-file-name "config.org" doom-private-dir)))
+      :desc "Open doom init.el" "P i"
+      (lambda () (interactive)
+        (find-file (expand-file-name "init.el" doom-private-dir)))
+      :desc "Open doom packages.el" "P p"
+      (lambda () (interactive)
+        (find-file (expand-file-name "packages.el" doom-private-dir))))
 #+end_src
 
 * UI & Theming
@@ -302,9 +336,10 @@ These are tools that apply to most programming languages, such as the LSP client
 #+end_src
 
 *** Eglot (LSP Client)
+;; CHANGED: Fixed eldoc-box setup - using hover-mode instead of hover-at-point-mode for better performance
 We enable `eldoc-box` to show documentation in a pop-up box whenever an LSP server is active.
 #+begin_src emacs-lisp
-(add-hook! 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode)
+(add-hook! 'eglot-managed-mode-hook #'eldoc-box-hover-mode)
 #+end_src
 
 *** Snippets (YASnippet)
@@ -436,35 +471,51 @@ Configuration for executing code blocks and Jupyter integration.
   (add-to-list 'undo-fu-session-incompatible-major-modes 'org-mode))
 #+end_src
 
-** Org-Src Edit Buffer LSP Integration
-Automatically start Eglot and configure completion when editing Python source blocks.
+** Org-Src Edit Buffer Integration
+;; NEW SECTION: Enable Eglot LSP support in org-edit-special buffers for Python/Jupyter blocks
+This configuration enables full LSP support when editing Python source blocks in org-mode using `org-edit-special` (C-c ').
+It requires `:tangle` headers on your source blocks to determine the project context.
+
 #+begin_src emacs-lisp
-;; Ensure jupyter-python blocks use python-ts-mode
+;; Ensure jupyter-python blocks use python-ts-mode in edit buffers
 (after! org-src
   (add-to-list 'org-src-lang-modes '("jupyter-python" . python-ts)))
 
-;; Use org-babel-edit-prep to configure Eglot
+;; Use org-babel-edit-prep to configure Eglot before entering edit buffer
+;; This function is called automatically by org-mode when you use C-c ' to edit a source block
 (defun org-babel-edit-prep:python (babel-info)
-  "Prepare Python src block for editing with Eglot."
+  "Prepare Python src block for editing with Eglot.
+Sets buffer-file-name and default-directory so Eglot can find the project root.
+Requires a :tangle header in the source block."
   (let* ((params (nth 2 babel-info))
          (tangle-file (assoc-default :tangle params)))
     (when (and tangle-file
                (not (string= tangle-file "no"))
                (not (string= tangle-file "nil")))
-      ;; Set buffer-file-name to the tangle target
+      ;; Set buffer-file-name to the tangle target for project detection
       (setq-local buffer-file-name (expand-file-name tangle-file))
       ;; Ensure we're in the right directory for project detection
       (setq-local default-directory (file-name-directory buffer-file-name))
-      ;; Start Eglot
+      ;; Start Eglot (which will automatically enable eldoc-box-hover-mode)
       (eglot-ensure))))
 
+;; Also handle jupyter-python blocks specifically
 (defun org-babel-edit-prep:jupyter-python (babel-info)
   "Prepare Jupyter Python src block for editing with Eglot."
   (org-babel-edit-prep:python babel-info))
+
+;; Fix C-c C-c keybinding in org-src-edit buffers
+;; By default, jupyter-mode binds C-c C-c to eval, but we want it to exit the edit buffer
+(defun my/org-src-fix-keybindings ()
+  "Override C-c C-c in org-src-mode to exit the edit buffer cleanly."
+  (when (and (bound-and-p 'org-src-mode) org-src-mode)
+    (local-set-key (kbd "C-c C-c") #'org-edit-src-exit)))
+
+(add-hook! 'org-src-mode-hook #'my/org-src-fix-keybindings)
 #+end_src
 
 ** Org Roam
-*org-roam* is a powerful note-taking tool for building a personal knowledge graph, inspired by the Zettelkasten method. We also enable *org-roam-ui* for a visual graph interface.
+`org-roam` is a powerful note-taking tool for building a personal knowledge graph, inspired by the Zettelkasten method. We also enable `org-roam-ui` for a visual graph interface.
 #+begin_src emacs-lisp
 (after! org-roam
   (setq org-roam-directory my/org-roam-directory
@@ -525,9 +576,9 @@ These packages improve the visual presentation of Org mode. *org-super-agenda* p
    ;; Customize the block name delimiters.
    org-modern-block-name '(("src" "»" "«")
                            ("example" "»" "«")
-                           ("quote" "❝" "❞"))
+                           ("quote" """ """))
    ;; Define custom checkbox characters.
-   org-modern-checkbox '((todo . "☐") (done . "☑") (cancel . "☒") (priority . "⚑") (on . "◉") (off . "○"))
+   org-modern-checkbox '((todo . "☐") (done . "☑") (cancel . "☒") (priority . "⚑") (on . "◉") (off . "◯"))
    ;; Override Doom's derived tag faces with a specific style for Catppuccin.
    org-modern-tag-faces `((:foreground ,(face-attribute 'default :foreground) :weight bold :box (:line-width (1 . -1) :color "#45475a")))))
 #+end_src
@@ -549,6 +600,10 @@ This section defines my custom keybindings, primarily using the leader key (`SPC
        :desc "Toggle vterm split"             "v" #'+vterm/toggle))
 
 (map! :leader
+      (:prefix ("o
+```
+
+```org
       (:prefix ("o" . "open here")
        :desc "Open eshell here"    "e" #'+eshell/here
        :desc "Open vterm here"     "v" #'+vterm/here))
@@ -610,3 +665,32 @@ Disable annoying warnings that don't affect functionality.
 ;; Suppress org-element warnings in non-org buffers
 (setq warning-suppress-types '((org-element)))
 #+end_src
+```
+
+## Summary of Changes
+
+### 1. **Eglot (LSP Client) Section** (Line ~374)
+
+**CHANGED:** Replaced `eldoc-box-hover-at-point-mode` with `eldoc-box-hover-mode` for better performance and less intrusive documentation display.
+
+### 2. **New Section: Org-Src Edit Buffer Integration** (After "Org Babel & Jupyter", Line ~472)
+
+**ADDED:** Complete new section that enables:
+
+- Eglot LSP support in org-edit-special buffers
+- Proper project detection via `:tangle` headers
+- Fixed C-c C-c keybinding to exit edit buffers
+- Support for both `python` and `jupyter-python` blocks
+
+### Key Requirements for Usage
+
+To use the new org-src-edit LSP integration, add `:tangle` headers to your source blocks:
+
+```org
+#+begin_src jupyter-python :session py :tangle ~/projects/myproject/analysis.py
+import numpy as np
+x = np.array([1, 2, 3])
+#+end_src
+```
+
+The tangle file path should be within your project directory (with a `.git` folder) so Eglot can properly detect the project root.

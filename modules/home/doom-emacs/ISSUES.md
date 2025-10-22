@@ -1,0 +1,1 @@
+- [ ] Sometime doom emacs hangs when exiting, fix that for me

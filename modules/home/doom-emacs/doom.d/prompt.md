@@ -1,5 +1,5 @@
-Write a more comprehensive version of the following prompt but don't execute the tasks in this updated prompt since I need to review this updated prompt:
+Looking at config.el for corfu determine why does corfu-popupinfo--get-documentation and corfu-popupinfo in general need company-doc-buffer. Then determine if there is a way to make company-doc-buffer work. Keep in mind that corfu and company are competing completion systems.
 
-```
-For the attached doom emacs configuration file `config.el`, Adjust the custom colors of the catppuccin theme so that: (1) the default background is a slightly lighter shade; (2) the popup completion system is a darker shade; (3) solaire-mode should have the darkest accent color; (4) the highlighted line should have a lighter shade than solaire mode; (5) all the colors mentioned so far in this prompt must have unique colors, keeping in mind that other custom colors mentioned in the custom colors may have overlapping colors with the changes mentioned in this prompt but the colors must be different for (1) to (4).
-```
+The C-c C-c is bound to jupyter-eval-line-or-region when inside org-edit-special buffer. This keybinding should exit the mentioned buffer when done with coding.
+
+Fix all these issues for me and write the changes needed.

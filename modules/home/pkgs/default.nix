@@ -23,5 +23,6 @@
     ticktick
     nemo
     onlyoffice-desktopeditors
+    todoist-electron
   ];
 }
