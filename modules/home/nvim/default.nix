@@ -1,30 +1,47 @@
-{ inputs, ... }: {
+# default.nix - Main entry point for Nixvim configuration
+# This can be imported into your home-manager configuration
+{ config, pkgs, lib, ... }:
+
+{
   imports = [
-    inputs.nixvim.homeManagerModules.nixvim
-    ./autocommands.nix
-    ./completion.nix
-    ./keymappings.nix
-    ./options.nix
-    ./plugins
-    ./todo.nix
+    ./core.nix
+    ./ui.nix
+    ./lsp.nix
+    ./plugins.nix
+    ./keybindings.nix
   ];
 
   programs.nixvim = {
     enable = true;
-
-    nixpkgs.useGlobalPackages = true;
-
-    performance = {
-      combinePlugins = {
-        enable = true;
-        standalonePlugins = [ "hmts.nvim" "neorg" "nvim-treesitter" ];
-      };
-      byteCompileLua.enable = true;
-    };
-
+    
+    # Use the latest stable version
     viAlias = true;
     vimAlias = true;
-
-    luaLoader.enable = true;
+    
+    # Enable man pages for nixvim
+    enableMan = true;
+    
+    # Default packages needed for various plugins
+    extraPackages = with pkgs; [
+      # Language servers
+      pyright
+      nil
+      nodePackages.bash-language-server
+      
+      # Formatters
+      black
+      nixpkgs-fmt
+      nodePackages.prettier
+      
+      # Linters
+      ruff
+      
+      # Tools for telescope
+      ripgrep
+      fd
+      
+      # For markdown preview
+      nodePackages.markdownlint-cli
+    ];
   };
 }
