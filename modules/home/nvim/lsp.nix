@@ -60,7 +60,7 @@
           };
 
           # Nix
-          nil-ls = {
+          nil_ls = {
             enable = true;
             settings = {
               formatting = {
@@ -86,9 +86,10 @@
         enable = true;
         sources = {
           # Python
-          diagnostics = {
-            ruff.enable = true;
-          };
+          # doesn't exist
+          # diagnostics = {
+          #   ruff.enable = true;
+          # };
           formatting = {
             black = {
               enable = true;
@@ -275,10 +276,8 @@
       # LSP progress indicator
       fidget = {
         enable = true;
-        notification = {
-          window = {
-            winblend = 0;
-          };
+        settings = {
+          notification.window.winblend = 0;
         };
       };
     };

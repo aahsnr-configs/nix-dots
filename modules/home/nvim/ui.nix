@@ -163,18 +163,19 @@
       };
 
       # Highlight colors in code
-      nvim-colorizer = {
+      colorizer = {
         enable = true;
-        userDefaultOptions = {
-          RGB = true;
-          RRGGBB = true;
-          names = true;
-          RRGGBBAA = true;
-          rgb_fn = true;
-          hsl_fn = true;
-          css = true;
-          css_fn = true;
-        };
+        # NOTE: does not exist
+        # userDefaultOptions = {
+        #   RGB = true;
+        #   RRGGBB = true;
+        #   names = true;
+        #   RRGGBBAA = true;
+        #   rgb_fn = true;
+        #   hsl_fn = true;
+        #   css = true;
+        #   css_fn = true;
+        # };
       };
 
       # Better buffer deletion

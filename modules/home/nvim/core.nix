@@ -25,11 +25,10 @@
 
       # UI improvements
       termguicolors = true;
-      cursorline = true;
       signcolumn = "yes";
       scrolloff = 8;
       sidescrolloff = 8;
-      wrap = false;
+      wrap = true;
       showmode = false;
 
       # Split behavior

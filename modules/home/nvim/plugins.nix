@@ -385,31 +385,29 @@
       # File tree
       neo-tree = {
         enable = true;
-        closeIfLastWindow = true;
-        window = {
-          width = 30;
-          mappings = {
-            "<space>" = "none";
-          };
+        settings = {
+          close_if_last_window = true;
+          window.width = 30;
         };
-        filesystem = {
-          followCurrentFile = {
-            enabled = true;
+        settings = {
+          filesystem = {
+            follow_current_file.enabled = true;
+            use_libuv_file_watcher = true;
           };
-          useLibuvFileWatcher = true;
         };
       };
 
       # Python virtual environment selector
-      venv-selector = {
-        enable = true;
-        settings = {
-          auto_refresh = true;
-          search_venv_managers = true;
-          search_workspace = true;
-          notify_user_on_venv_activation = true;
-        };
-      };
+      # NOTE: Does not exist
+      # venv-selector = {
+      #   enable = true;
+      #   settings = {
+      #     auto_refresh = true;
+      #     search_venv_managers = true;
+      #     search_workspace = true;
+      #     notify_user_on_venv_activation = true;
+      #   };
+      # };
 
       # Better UI for vim.ui.select and vim.ui.input
       dressing = {
@@ -430,36 +428,39 @@
       };
 
       # Smooth scrolling
-      nvim-scrollbar = {
-        enable = true;
-        settings = {
-          handle = {
-            color = "#3b4261";
-          };
-          marks = {
-            Search = { color = "#ff9e64"; };
-            Error = { color = "#f7768e"; };
-            Warn = { color = "#e0af68"; };
-            Info = { color = "#7aa2f7"; };
-            Hint = { color = "#1abc9c"; };
-            Misc = { color = "#9d7cd8"; };
-          };
-        };
-      };
+      # does not exist
+      # nvim-scrollbar = {
+      #   enable = true;
+      #   settings = {
+      #     handle = {
+      #       color = "#3b4261";
+      #     };
+      #     marks = {
+      #       Search = { color = "#ff9e64"; };
+      #       Error = { color = "#f7768e"; };
+      #       Warn = { color = "#e0af68"; };
+      #       Info = { color = "#7aa2f7"; };
+      #       Hint = { color = "#1abc9c"; };
+      #       Misc = { color = "#9d7cd8"; };
+      #     };
+      #   };
+      # };
 
       # Illuminate - highlight word under cursor
       illuminate = {
         enable = true;
-        underCursor = false;
-        filetypesDenylist = [
-          "DressingSelect"
-          "Outline"
-          "TelescopePrompt"
-          "alpha"
-          "harpoon"
-          "reason"
-          "neo-tree"
-        ];
+        settings = {
+          under_cursor = false;
+          filetypes_denylist = [
+            "DressingSelect"
+            "Outline"
+            "TelescopePrompt"
+            "alpha"
+            "harpoon"
+            "reason"
+            "neo-tree"
+          ]; 
+        };
       };
     };
   };

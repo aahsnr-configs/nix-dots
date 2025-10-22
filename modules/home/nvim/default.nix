@@ -1,9 +1,10 @@
 # default.nix - Main entry point for Nixvim configuration
 # This can be imported into your home-manager configuration
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, nixvim, ... }:
 
 {
   imports = [
+    inputs.nixvim.homeModules.nixvim    
     ./core.nix
     ./ui.nix
     ./lsp.nix
@@ -23,24 +24,14 @@
     
     # Default packages needed for various plugins
     extraPackages = with pkgs; [
-      # Language servers
       pyright
       nil
       nodePackages.bash-language-server
-      
-      # Formatters
-      black
       nixpkgs-fmt
       nodePackages.prettier
-      
-      # Linters
       ruff
-      
-      # Tools for telescope
       ripgrep
       fd
-      
-      # For markdown preview
       nodePackages.markdownlint-cli
     ];
   };
