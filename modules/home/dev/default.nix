@@ -7,7 +7,6 @@
     delta
     fd
     neovim
-    cosign
     nil
     nixfmt
     nixpkgs-fmt

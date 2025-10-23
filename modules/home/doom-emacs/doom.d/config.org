@@ -57,9 +57,9 @@ This section covers the visual appearance of Emacs, including themes, fonts, the
 
 ** Fonts
 #+begin_src emacs-lisp
-(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5 :weight 'medium)
-      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.5)
-      doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 26))
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.0 :weight 'medium)
+      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.0)
+      doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 25))
 #+end_src
 
 ** Catppuccin Theme Customization
@@ -131,7 +131,7 @@ The modeline is the information bar at the bottom of each window. We use `doom-m
 (after! doom-modeline
   (setq doom-modeline-height 28
         doom-modeline-bar-width 3
-        doom-modeline-buffer-file-name-style 'relative-from-project
+        doom-modeline-buffer-file-name-style 'auto
         doom-modeline-major-mode-icon t
         doom-modeline-vcs-max-length 12
         doom-modeline-icon t
@@ -141,6 +141,8 @@ The modeline is the information bar at the bottom of each window. We use `doom-m
         doom-modeline-indent-info nil
         doom-modeline-enable-word-count nil))
 #+end_src
+
+#+RESULTS:
 
 ** Line Numbers
 Line numbers are enabled globally by default, which is useful for programming. We then selectively disable them in modes where they are distracting, such as Org, Dired, and Magit.
@@ -430,6 +432,10 @@ Configuration for executing code blocks and Jupyter integration.
                           (delq 'jupyter-org-completion-at-point
                                 completion-at-point-functions)))
             90))
+
+;; Prevent jupyter from overriding C-c C-c in org-src buffers
+(after! jupyter-org-interaction-mode
+  (define-key jupyter-org-interaction-mode-map (kbd "C-c C-c") nil))
 
 ;; Disable undo-fu-session for org files with jupyter blocks
 (after! undo-fu-session

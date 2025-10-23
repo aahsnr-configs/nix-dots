@@ -42,7 +42,6 @@
   };
 
   imports = [
-    ./anyrun
     ./atuin
     ./bat
     ./brave

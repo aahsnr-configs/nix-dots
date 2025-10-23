@@ -23,9 +23,10 @@
 
 ---
 
-- [ ] make sure the volume keybinding does not increase the volume more than 100 percent
-- [ ] turn org-capture bash script into fish script and integrate into scripts
-- [ ] add the new colorscheme from claude to doom emacs
+- [ ] thunar is not working apparently because it being sent to special workspaces
+- [x] make sure the volume keybinding does not increase the volume more than 100 percent
+- [x] turn org-capture bash script into fish script and integrate into scripts
+- x ] add the new colorscheme from claude to doom emacs
 - [ ] setup foot so that it always opens with zellij
 - [ ] before switching to hyprscroller, setup and test hyprscrolling using the config from [black-don-os](https://gitlab.com/theblackdon/black-don-os)
 - [ ] check back about needed packages for latex and org-mode

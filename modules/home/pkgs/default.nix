@@ -21,8 +21,8 @@
     brave
     protonvpn-gui
     ticktick
-    nemo
     onlyoffice-desktopeditors
     todoist-electron
+    celluloid
   ];
 }

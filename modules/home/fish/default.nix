@@ -17,11 +17,13 @@
       cat = "bat --paging=never";
       grep = "rg";
       du = "dust";
-      rmi = "sudo rm -rf";
+      rmi = "safe-rm";
 
       # NixOS / Home Manager
-      "hm-switch" = "home-manager switch";
+      nixswitch = "sudo nixos-rebuild switch --flake ~/nix-dots#zephyrus";
+      nixup = "sudo nixos-rebuild switch --flake ~/nix-dots#zephyrus --upgrade";
       nixs = "nix-shell -p";
+      nixgc = "sudo nix-collect-garbage -d";
 
       # Systemd
       sctl = "systemctl";
@@ -44,6 +46,15 @@
         rg --color=always --line-number $argv | fzf --ansi \
             --preview 'bat --style=numbers --color=always --line-range :500 {1}' \
             --preview-window 'right:60%:wrap'
+      '';
+
+      fh = ''
+        history merge
+        set command (history | fzf --query="$argv[1]" --height="40%" --layout="reverse" --no-multi)
+
+        if test -n "$command"
+          commandline --replace "$command"
+        end
       '';
     };
 

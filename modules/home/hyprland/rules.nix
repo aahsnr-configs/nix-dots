@@ -74,8 +74,8 @@
       "workspace special silent, class:^(explorer)$"
       "float, class:^(lazygit)$"
       "workspace special silent, class:^(lazygit)$"
-      "float, class:^(thunar)$"
-      "workspace special silent, class:^(thunar)$"
+      # "float, class:^(thunar)$"
+      # "workspace special silent, class:^(thunar)$"
     ];
 
     windowrulev2 = [
