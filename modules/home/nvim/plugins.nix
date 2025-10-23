@@ -230,40 +230,6 @@
       # Autopairs
       nvim-autopairs = {
         enable = true;
-        settings = {
-          check_ts = true;
-          ts_config = {
-            lua = [ "string" "source" ];
-            javascript = [ "string" "template_string" ];
-          };
-          disable_filetype = [ "TelescopePrompt" "spectre_panel" ];
-          fast_wrap = {
-            map = "<M-e>";
-            chars = [ "{" "[" "(" "\"" "'" ];
-            pattern = "[%'%\"%)%>%]%)%}%,]";
-            offset = 0;
-            end_key = "$";
-            keys = "qwertyuiopzxcvbnmasdfghjkl";
-            check_comma = true;
-            highlight = "PmenuSel";
-            highlight_grey = "LineNr";
-          };
-        };
-      };
-
-      # Comment toggling
-      comment = {
-        enable = true;
-        settings = {
-          opleader = {
-            line = "gc";
-            block = "gb";
-          };
-          toggler = {
-            line = "gcc";
-            block = "gbc";
-          };
-        };
       };
 
       # Surround text objects
@@ -294,13 +260,13 @@
       markdown-preview = {
         enable = true;
         settings = {
-          auto_start = false;
-          auto_close = true;
-          refresh_slow = false;
-          command_for_global = false;
-          open_to_the_world = false;
+          auto_start = 0;
+          auto_close = 1;
+          refresh_slow = 0;
+          command_for_global = 0;
+          open_to_the_world = 0;
           browser = "";
-          echo_preview_url = true;
+          echo_preview_url = 1;
           port = "8080";
           theme = "dark";
         };

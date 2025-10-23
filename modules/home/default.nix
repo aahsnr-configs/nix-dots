@@ -64,7 +64,7 @@
     ./kitty
     ./lazygit
     ./mpv
-    #./nvim
+    # ./nvim
     ./pay-respects
     ./pkgs
     ./ripgrep

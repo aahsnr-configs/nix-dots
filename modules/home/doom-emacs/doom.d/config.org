@@ -344,7 +344,7 @@ Using `flymake-collection`, we enable `ruff` as a high-performance linter and `m
   (setq-default flymake-collection-python-pylint-executable "ruff")
   (setq-default flymake-collection-python-mypy-executable "mypy")
   (flymake-collection-add-for-major-mode
-   'python-ts-mode
+   'python-mode
    'flymake-collection-python-ruff ; This will use ruff as defined above
    'flymake-collection-python-mypy))
 #+end_src
@@ -433,13 +433,179 @@ Configuration for executing code blocks and Jupyter integration.
                                 completion-at-point-functions)))
             90))
 
-;; Prevent jupyter from overriding C-c C-c in org-src buffers
-(after! jupyter-org-interaction-mode
-  (define-key jupyter-org-interaction-mode-map (kbd "C-c C-c") nil))
-
 ;; Disable undo-fu-session for org files with jupyter blocks
 (after! undo-fu-session
   (add-to-list 'undo-fu-session-incompatible-major-modes 'org-mode))
+#+end_src
+
+** Jupyter Utilities
+Custom utility functions for managing Jupyter kernels, output formatting, and selective execution.
+
+*** Kernel Management
+Functions to refresh kernelspecs and clean up orphaned kernel files.
+#+begin_src emacs-lisp
+(defun my/jupyter-refresh-kernelspecs ()
+  "Refresh Jupyter kernelspecs."
+  (interactive)
+  (jupyter-available-kernelspecs t))
+
+(defun my/jupyter-refresh-langs ()
+  "Refresh Jupyter languages for org-babel."
+  (interactive)
+  (org-babel-jupyter-aliases-from-kernelspecs t))
+
+(defun my/get-open-ports ()
+  "Get list of open ports by parsing netstat output."
+  (let ((netstat-output (shell-command-to-string "netstat -tuln")))
+    (delq nil
+          (mapcar (lambda (line)
+                    (when (string-match ":\\([0-9]+\\)" line)
+                      (string-to-number (match-string 1 line))))
+                  (split-string netstat-output "\n")))))
+
+(defun my/list-jupyter-kernel-files ()
+  "List Jupyter kernel connection files with their ports."
+  (let* ((runtime-dir (or (getenv "JUPYTER_RUNTIME_DIR")
+                          (expand-file-name "~/.local/share/jupyter/runtime")))
+         (files (when (file-directory-p runtime-dir)
+                  (directory-files runtime-dir t "kernel-.*\\.json$"))))
+    (delq nil
+          (mapcar (lambda (file)
+                    (condition-case nil
+                        (with-temp-buffer
+                          (insert-file-contents file)
+                          (goto-char (point-min))
+                          (let* ((json-object-type 'alist)
+                                 (data (json-read)))
+                            (cons file (alist-get 'shell_port data))))
+                      (error nil)))
+                  files))))
+
+(defun my/jupyter-cleanup-kernels ()
+  "Clean up orphaned Jupyter kernel connection files."
+  (interactive)
+  (let* ((ports (my/get-open-ports))
+         (files (my/list-jupyter-kernel-files))
+         (to-delete (seq-filter
+                     (lambda (file)
+                       (not (member (cdr file) ports)))
+                     files)))
+    (when (and (length> to-delete 0)
+               (y-or-n-p (format "Delete %d orphaned kernel files?" (length to-delete))))
+      (dolist (file to-delete)
+        (delete-file (car file))
+        (message "Deleted: %s" (car file))))))
+#+end_src
+
+*** Output Formatting
+Control output formatting with raw mode and caption wrapping.
+#+begin_src emacs-lisp
+(defun my/jupyter-org-scalar (value)
+  "Handle scalar values, preferring raw output when enabled."
+  (cond
+   ((stringp value) value)
+   (t (jupyter-org-scalar value))))
+
+(define-minor-mode my/emacs-jupyter-raw-output
+  "Toggle raw output mode for emacs-jupyter."
+  :lighter " JupyRaw"
+  :global nil)
+
+(after! jupyter
+  (defadvice! my/jupyter-org-scalar-around (orig-fn value)
+    "Advice to use raw output when `my/emacs-jupyter-raw-output' is active."
+    :around #'jupyter-org-scalar
+    (if my/emacs-jupyter-raw-output
+        (my/jupyter-org-scalar value)
+      (funcall orig-fn value))))
+
+(defun my/org-strip-results (data)
+  "Strip :RESULTS: and :END: drawer markers from DATA."
+  (replace-regexp-in-string ":\\(RESULTS\\|END\\):\n" "" data))
+
+(defun my/org-caption-wrap (data &optional name caption attrs strip-drawer src-wrap)
+  "Wrap org results DATA with NAME, CAPTION, and ATTRS.
+If STRIP-DRAWER is non-nil, remove result drawer markers.
+If SRC-WRAP is non-nil, wrap in a source block of that language."
+  (let* ((data-s (if (and strip-drawer (not (string-empty-p strip-drawer)))
+                     (my/org-strip-results data)
+                   data))
+         (drawer-start (if (string-match-p "^:RESULTS:.*" data-s) 10 0)))
+    (concat
+     (substring data-s 0 drawer-start)
+     (and name (not (string-empty-p name)) (concat "#+NAME: " name "\n"))
+     (and caption (not (string-empty-p caption)) (concat "#+CAPTION: " caption "\n"))
+     (and attrs (not (string-empty-p attrs)) (concat "#+ATTR_LATEX: " attrs "\n"))
+     (if (and src-wrap (not (string-empty-p src-wrap)))
+         (concat "#+begin_src " src-wrap "\n"
+                 (substring data-s drawer-start)
+                 (unless (string-match-p ".*\n$" data-s) "\n")
+                 "#+end_src")
+       (substring data-s drawer-start)))))
+#+end_src
+
+*** Selective Execution
+Execute code blocks selectively based on position or markers.
+#+begin_src emacs-lisp
+(defun my/org-babel-execute-buffer-below (&optional arg)
+  "Execute all source blocks from point to end of buffer."
+  (interactive "P")
+  (org-babel-eval-wipe-error-buffer)
+  (let ((point (point)))
+    (org-save-outline-visibility t
+      (org-babel-map-executables nil
+        (when (>= (point) point)
+          (if (memq (org-element-type (org-element-context))
+                    '(babel-call inline-babel-call))
+              (org-babel-lob-execute-maybe)
+            (org-babel-execute-src-block arg)))))))
+
+(defun my/org-babel-execute-buffer-above (&optional arg)
+  "Execute all source blocks from beginning of buffer to point."
+  (interactive "P")
+  (org-babel-eval-wipe-error-buffer)
+  (let ((point (point)))
+    (org-save-outline-visibility t
+      (org-babel-map-executables nil
+        (when (<= (point) point)
+          (if (memq (org-element-type (org-element-context))
+                    '(babel-call inline-babel-call))
+              (org-babel-lob-execute-maybe)
+            (org-babel-execute-src-block arg)))))))
+
+(defun my/org-babel-execute-marked (&optional arg)
+  "Execute source blocks marked with ':startup t' parameter.
+With prefix ARG, only execute marked blocks below point."
+  (interactive "P")
+  (let (markers)
+    (org-element-map (org-element-parse-buffer) 'src-block
+      (lambda (elem)
+        (let ((params (org-element-property :parameters elem)))
+          (when (and params
+                     (string-match-p (rx "startup t") params))
+            (let ((m (make-marker)))
+              (set-marker m (org-element-property :begin elem))
+              (set-marker-insertion-type m t)
+              (push m markers))))))
+    (setq markers (nreverse markers))
+    (when arg
+      (setq markers
+            (seq-filter
+             (lambda (m) (> (marker-position m) (point)))
+             markers)))
+    (dolist (m markers)
+      (goto-char m)
+      (ignore-errors
+        (org-babel-execute-src-block)))))
+#+end_src
+
+
+
+** Inline Images
+#+begin_src emacs-lisp
+;; Auto-refresh inline images after executing code blocks
+(after! org
+  (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images))
 #+end_src
 
 ** Org-Src Edit Buffer LSP Integration
@@ -449,24 +615,33 @@ Automatically start Eglot and configure completion when editing Python source bl
 (after! org-src
   (add-to-list 'org-src-lang-modes '("jupyter-python" . python-ts)))
 
-;; Use org-babel-edit-prep to configure Eglot
-(defun org-babel-edit-prep:python (babel-info)
-  "Prepare Python src block for editing with Eglot."
-  (let* ((params (nth 2 babel-info))
-         (tangle-file (assoc-default :tangle params)))
+;; Hook-based approach for automatic Eglot activation
+(defun my/org-src-babel-setup-eglot ()
+  "Set up Eglot in org-src edit buffers with proper file association."
+  (when-let* ((info (org-babel-get-src-block-info 'light))
+              (params (nth 2 info))
+              (tangle-file (assoc-default :tangle params)))
     (when (and tangle-file
                (not (string= tangle-file "no"))
                (not (string= tangle-file "nil")))
-      ;; Set buffer-file-name to the tangle target
-      (setq-local buffer-file-name (expand-file-name tangle-file))
-      ;; Ensure we're in the right directory for project detection
-      (setq-local default-directory (file-name-directory buffer-file-name))
-      ;; Start Eglot
-      (eglot-ensure))))
+      (let* ((abs-tangle-file (expand-file-name tangle-file))
+             (tangle-dir (file-name-directory abs-tangle-file)))
+        ;; Set buffer-file-name for LSP detection
+        (setq-local buffer-file-name abs-tangle-file)
+        ;; Set working directory for project detection
+        (setq-local default-directory tangle-dir)
+        ;; Mark buffer as modified so LSP sees it as a "real" file
+        (set-buffer-modified-p t)
+        ;; Start Eglot after a short delay to ensure buffer is ready
+        (run-with-timer 0.1 nil
+                        (lambda (buf)
+                          (when (buffer-live-p buf)
+                            (with-current-buffer buf
+                              (eglot-ensure))))
+                        (current-buffer))))))
 
-(defun org-babel-edit-prep:jupyter-python (babel-info)
-  "Prepare Jupyter Python src block for editing with Eglot."
-  (org-babel-edit-prep:python babel-info))
+;; Add hook to org-src-mode
+(add-hook 'org-src-mode-hook #'my/org-src-babel-setup-eglot)
 #+end_src
 
 ** Org Roam
@@ -538,6 +713,16 @@ These packages improve the visual presentation of Org mode. *org-super-agenda* p
    org-modern-tag-faces `((:foreground ,(face-attribute 'default :foreground) :weight bold :box (:line-width (1 . -1) :color "#45475a")))))
 #+end_src
 
+** Org Structure Templates
+#+begin_src emacs-lisp
+(after! org
+  (require 'org-tempo)
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("py" . "src jupyter-python"))
+  (add-to-list 'org-structure-template-alist '("sq" . "src sql")))
+#+end_src
+
+
 * Keybindings
 This section defines my custom keybindings, primarily using the leader key (`SPC`).
 
@@ -567,9 +752,24 @@ This section defines my custom keybindings, primarily using the leader key (`SPC
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix ("l" . "literate")
-       :desc "Tangle file" "t" #'org-babel-tangle
-       :desc "Execute buffer" "x" #'org-babel-execute-buffer))
+       :desc "Tangle file"              "t" #'org-babel-tangle
+       :desc "Execute buffer"           "x" #'org-babel-execute-buffer
+       :desc "Execute buffer above"     "A" #'my/org-babel-execute-buffer-above
+       :desc "Execute buffer below"     "B" #'my/org-babel-execute-buffer-below
+       :desc "Execute marked blocks"    "m" #'my/org-babel-execute-marked))
 #+end_src
+
+** Jupyter Management Keybindings
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix ("j" . "jupyter")
+       :desc "Refresh kernelspecs"     "r" #'my/jupyter-refresh-kernelspecs
+       :desc "Refresh languages"       "l" #'my/jupyter-refresh-langs
+       :desc "Cleanup kernels"         "c" #'my/jupyter-cleanup-kernels
+       :desc "Toggle raw output"       "o" #'my/emacs-jupyter-raw-output))
+#+end_src
+
+#+RESULTS:
 
 ** Debugging (DAPE)
 Global keybindings for the Debug Adapter Protocol client.
@@ -600,8 +800,8 @@ Default settings for viewing PDF files inside Emacs.
 ** Default Shell
 We set `fish` as the default shell for terminal emulators like `vterm`.
 #+begin_src emacs-lisp
-(setq-default vterm-shell "/usr/bin/fish"
-              explicit-shell-file-name "/usr/bin/fish")
+;; (setq-default vterm-shell "/usr/bin/fish"
+;;               explicit-shell-file-name "/usr/bin/fish")
 #+end_src
 
 ** Quit Confirmation
