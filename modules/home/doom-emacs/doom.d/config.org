@@ -293,23 +293,14 @@ Use eldoc-box to display documentation in a childframe for better visibility.
     '(eldoc-box-body ((t (:background "#1e1e2e" :foreground "#cdd6f4"))))))
 #+end_src
 
-** TODO Snippets (YASnippet)
-We use *yasnippet-capf* to integrate snippet expansion with the Corfu completion framework.
-#+begin_src emacs-lisp
-(use-package! yasnippet-capf
-  :after cape
-  :config (add-to-list 'completion-at-point-functions #'yasnippet-capf))
-#+end_src
-
-
 * Python Development Environment
 This section configures a state-of-the-art Python development environment using specialized, standalone tools for formatting, linting, and debugging.
 
 ** DONE Eglot Setup
 Enable Eglot automatically in Python buffers, including org-src-mode.
 #+begin_src emacs-lisp
-(add-hook 'python-mode-hook #'eglot-ensure)
-(add-hook 'python-ts-mode-hook #'eglot-ensure)
+;; Enable Eglot automatically in Python modes
+(add-hook! (python-mode python-ts-mode) #'eglot-ensure)
 
 ;; Enable Eglot in org-src-mode buffers for Python
 (defun my/org-src-python-eglot-setup ()
@@ -340,10 +331,10 @@ This function ensures LSP features work in code blocks edited via org-edit-speci
 
 ;; Enable eldoc in org-src-mode for documentation display
 (add-hook 'org-src-mode-hook
-  (lambda ()
-    (when (and (derived-mode-p 'python-mode 'python-ts-mode)
-               (eglot-managed-p))
-      (eldoc-mode 1))))
+          (defun my/org-src-eldoc-setup ()
+            (when (and (derived-mode-p 'python-mode 'python-ts-mode)
+                       (eglot-managed-p))
+              (eldoc-mode 1))))
 #+end_src
 
 #+RESULTS:
