@@ -23,6 +23,6 @@
     ticktick
     onlyoffice-desktopeditors
     todoist-electron
-    celluloid
+    firefox
   ];
 }

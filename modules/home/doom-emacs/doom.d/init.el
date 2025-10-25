@@ -25,7 +25,7 @@
        (corfu              ; complete with cap(f), cape and a flying feather!
         +orderless
         +icons
-        +dabbrev)  
+        +dabbrev)
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;;ivy               ; a search engine for love and life
@@ -36,7 +36,7 @@
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
-       (emoji +unicode)  ; 🙂
+       (emoji +unicode)  ; ðŸ™‚
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        indent-guides     ; highlighted indent columns
        (ligatures +extra) ; ligatures and symbols to make your code pretty again
@@ -48,7 +48,7 @@
        (popup +defaults)   ; tame sudden yet inevitable temporary windows
        ;;smooth-scroll     ; So smooth you won't believe it's not butter
        ;;tabs              ; a tab bar for Emacs
-       treemacs          ; a project drawer, like neotree but cooler
+       (treemacs +lsp)     ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
        (vc-gutter +pretty) ; vcs diff in the fringe
        ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -74,7 +74,7 @@
        :emacs
        (dired             ; making dired pretty [functional]
         +icons
-        +dirvish)         
+        +dirvish)
        electric          ; smarter, keyword-based electric-indent
        ;;eww               ; the internet is gross
        (ibuffer +icons)  ; interactive buffer management
@@ -90,8 +90,7 @@
 
        :checkers
        (syntax             ; tasing you for every semicolon you forget
-        +flymake
-        +icons)              
+        +icons)
        ;;(spell +flyspell) ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
@@ -110,16 +109,15 @@
        lookup              ; navigate your code and its documentation
        llm                 ; when I said you needed friends, I didn't mean...
        (lsp                ; M-x vscode
-        +eglot
-        +booster)      
+        +peek)
        (magit              ; a git porcelain for Emacs
-        +forge)             
+        +forge)
        ;;make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
        pdf                 ; pdf enhancements
        ;;terraform         ; infrastructure as code
        tmux              ; an API for interacting with tmux
-       tree-sitter       ; syntax and parsing, sitting in a tree...
+       tree-sitter      ; syntax and parsing, sitting in a tree...
        ;;upload            ; map local to remote projects via ssh/ftp
 
        :os
@@ -163,34 +161,35 @@
        (latex              ; writing papers in Emacs has never been so fun
         +cdlatex
         +fold
-        +lsp)             
+        +lsp)
        ;;lean              ; for folks with too much to prove
        ;;ledger            ; be audit you can be
        ;;lua               ; one-based indices? one-based indices
        markdown            ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
-       (nix                ; I hereby declare "nix geht mehr!"  
+       (nix                ; I hereby declare "nix geht mehr!"
         +lsp
-        +tree-sitter)                 
+        +tree-sitter)
        ;;ocaml             ; an objective camel
-       (org                ; organize your plain life in plain text 
+       (org                ; organize your plain life in plain text
         +dragndrop
         +gnuplot
         +notes
         +pandoc
         +pretty
         +jupyter
-        +roam)               
+        +roam)
        ;;php               ; perl's insecure younger brother
-       ;;plantuml          ; diagrams for confusing people more
+       plantuml          ; diagrams for confusing people more
        ;;graphviz          ; diagrams for confusing yourself even more
        ;;purescript        ; javascript, but functional
        (python             ; beautiful is better than ugly
         +lsp
-        +tree-sitter)           
+        +pyright
+        +tree-sitter)
        (qt                 ; the 'cutest' gui framework ever
         +lsp
-        +tree-sitter)               
+        +tree-sitter)
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
        ;;rest              ; Emacs as a REST client
@@ -201,7 +200,7 @@
        ;;(scheme +guile)   ; a fully conniving family of lisps
        (sh                 ; she sells {ba,z,fi}sh shells on the C xor
         +lsp
-        +fish)                
+        +fish)
        ;;sml
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
@@ -211,12 +210,12 @@
        ;;zig               ; C, but simpler
 
        :email
-       ;;(mu4e +org +gmail)
+       (mu4e +org +gmail)
        ;;notmuch
        ;;(wanderlust +gmail)
 
        :app
-       ;;calendar
+       calendar
        ;;emms
        ;;everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize

@@ -77,44 +77,21 @@ Override specific colors for better contrast and visual improvements, with speci
         catppuccin-highlight-matches t
         catppuccin-dark-line-numbers-background t)
 
-  ;; Apply custom faces for a unique and consistent color scheme.
-  ;; The hexadecimal colors are from the Catppuccin Mocha palette:
-  ;; #11111b (crust), #181825 (mantle), #1e1e2e (base), #24273a (surface0)
   (custom-theme-set-faces! 'catppuccin
-    ;; 1. Default background is a lighter shade (surface0)
     '(default :background "#1e1e2e" :foreground "#cdd6f4")
-
-    ;; 2. Popup completion system is a darker shade (base)
     '(corfu-default :background "#1e1e2e" :foreground "#cdd6f4")
-
-    ;; 3. Solaire-mode has the darkest accent color (crust)
     '(solaire-mode-bg-face :background "#11111b")
-
-    ;; 4. Highlighted line is a unique, lighter shade than solaire (mantle)
     '(hl-line :background "#11111b" :extend t)
-
-    ;; --- Other UI Enhancements ---
-    ;; Org mode improvements
     '(org-block :background "#313244" :foreground "#cdd6f4" :extend t)
     '(org-block-begin-line :background "#313244" :foreground "#6c7086" :extend t)
     '(org-block-end-line :background "#313244" :foreground "#6c7086" :extend t)
     '(org-meta-line :foreground "#6c7086")
     '(org-document-info-keyword :foreground "#6c7086")
-
-    ;; Enhanced modeline contrast
     '(mode-line :background "#181825" :foreground "#cdd6f4")
     '(mode-line-inactive :background "#11111b" :foreground "#6c7086")
-
-    ;; Better selection visibility
     '(region :background "#585b70" :extend t)
-
-    ;; Improved cursor visibility
     '(cursor :background "#f5e0dc")
-
-    ;; Enhanced matching parens
     '(show-paren-match :foreground "#f5c2e7" :background "#45475a" :weight bold)
-
-    ;; Better minibuffer
     '(minibuffer-prompt :foreground "#89dceb" :weight bold)))
 #+end_src
 
@@ -130,19 +107,8 @@ The modeline is the information bar at the bottom of each window. We use `doom-m
 #+begin_src emacs-lisp
 (after! doom-modeline
   (setq doom-modeline-height 28
-        doom-modeline-bar-width 3
-        doom-modeline-buffer-file-name-style 'auto
-        doom-modeline-major-mode-icon t
-        doom-modeline-vcs-max-length 12
-        doom-modeline-icon t
-        doom-modeline-modal t
-        doom-modeline-modal-icon t
-        doom-modeline-buffer-encoding nil
-        doom-modeline-indent-info nil
-        doom-modeline-enable-word-count nil))
+        doom-modeline-bar-width 3))
 #+end_src
-
-#+RESULTS:
 
 ** Line Numbers
 Line numbers are enabled globally by default, which is useful for programming. We then selectively disable them in modes where they are distracting, such as Org, Dired, and Magit.
@@ -234,12 +200,14 @@ This section configures `evil-mode`, the Vim emulation layer that provides modal
 This configures the packages responsible for in-buffer completion (`corfu`) and minibuffer completion (`vertico`), creating a modern and powerful interactive experience.
 
 ** Corfu
-`corfu` provides a clean, pop-up completion UI for text being typed directly in a buffer.
+*corfu* provides a clean, pop-up completion UI for text being typed directly in a buffer.
 #+begin_src emacs-lisp
 (after! corfu
   (setq corfu-auto t
-        corfu-auto-delay 0.1
-        corfu-auto-prefix 2))
+        corfu-auto-delay 0.2
+        corfu-cycle t
+        corfu-preselect 'prompt)
+  (corfu-popupinfo-mode -1))
 #+end_src
 
 ** Vertico
@@ -294,19 +262,28 @@ This section contains all configurations related to software development, includ
 ** General Tools
 These are tools that apply to most programming languages, such as the LSP client, debugger, and syntax checkers.
 
-*** Flymake Collection
-`flymake-collection` provides a convenient way to set up syntax checkers (`linters`) for various languages without extensive manual configuration.
+*** LSP-UI Configuration
+Configure LSP-UI for better documentation and diagnostics display.
 #+begin_src emacs-lisp
-(use-package! flymake-collection
-  :after flymake
-  :config
-  (flymake-collection-hook-setup))
+(after! lsp-ui
+  (setq lsp-ui-doc-enable t
+        lsp-ui-doc-position 'at-point
+        lsp-ui-doc-max-width 80
+        lsp-ui-doc-max-height 30
+        lsp-ui-doc-show-with-cursor nil
+        lsp-ui-doc-show-with-mouse t
+        lsp-ui-sideline-enable t
+        lsp-ui-sideline-show-hover nil
+        lsp-ui-sideline-show-code-actions t
+        lsp-ui-sideline-show-diagnostics t))
+
 #+end_src
 
-*** Eglot (LSP Client)
-We enable `eldoc-box` to show documentation in a pop-up box whenever an LSP server is active.
+*** LSP Performance Optimization
+Minimal performance tuning that doesn't conflict with Doom's defaults.
 #+begin_src emacs-lisp
-(add-hook! 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode)
+(after! lsp-mode
+  (setq read-process-output-max (* 1024 1024)))  ; 1MB
 #+end_src
 
 *** Snippets (YASnippet)
@@ -317,69 +294,97 @@ We use `yasnippet-capf` to integrate snippet expansion with the Corfu completion
   :config (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 #+end_src
 
-** Python
-This provides a complete Python development environment using Tree-sitter for syntax highlighting, *basedpyright* for LSP features, *ruff* for formatting and linting, and *debugpy* for debugging.
 
-*** LSP Configuration
-We tell *eglot* to use the *basedpyright-langserver* for Python files that are in *python-ts-mode*.
+* Python Development Environment
+This section configures a state-of-the-art Python development environment using specialized, standalone tools for formatting, linting, and debugging.
+
+** Language Server Protocol (basedpyright)
+Configure lsp-mode to use basedpyright, which offers more features than the default pyright.
 #+begin_src emacs-lisp
-(after! eglot
-  (add-to-list 'eglot-server-programs
-               '((python-ts-mode) . ("basedpyright-langserver" "--stdio"))))
+(use-package! lsp-pyright
+  :init
+  ;; Disable ruff-lsp BEFORE lsp-mode starts
+  (setq lsp-disabled-clients '(ruff-lsp ruff))
+  ;; Use basedpyright from nix-shell environment
+  (setq lsp-pyright-langserver-command "basedpyright")
+  :hook ((python-mode python-ts-mode) . (lambda ()
+                                           (require 'lsp-pyright)
+                                           (lsp-deferred))))
 #+end_src
 
-*** Code Formatting (Apheleia)
-We configure *apheleia* to use a combination of *isort* and *ruff* to automatically format Python code on save.
+** Code Formatting (Apheleia + Ruff)
+Decouple code formatting from LSP and use apheleia with ruff for fast, reliable formatting.
 #+begin_src emacs-lisp
+;; Disable LSP formatting for Python
+(setq-hook! 'python-mode-hook +format-with-lsp nil)
+(setq-hook! 'python-ts-mode-hook +format-with-lsp nil)
+
+;; Configure apheleia to use ruff for Python formatting
+;; Ruff formatter is already built-in to apheleia, we just need to associate it
 (after! apheleia
-  (setf (alist-get 'ruff apheleia-formatters)
-        '("ruff" "format" "--stdin-filename" filepath "-"))
-  (setf (alist-get 'python-ts-mode apheleia-mode-alist) 'ruff))
+  (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff))
+  (setf (alist-get 'python-ts-mode apheleia-mode-alist) '(ruff)))
 #+end_src
 
-*** Syntax Checking (Flymake)
-Using `flymake-collection`, we enable `ruff` as a high-performance linter and `mypy` for static type checking.
+** Syntax Checking (Flycheck + Ruff + Mypy)
+Replace LSP-based syntax checking with a custom flycheck toolchain for superior performance.
 #+begin_src emacs-lisp
-(after! python-ts-mode
-  (setq-default flymake-collection-python-pylint-executable "ruff")
-  (setq-default flymake-collection-python-mypy-executable "mypy")
-  (flymake-collection-add-for-major-mode
-   'python-mode
-   'flymake-collection-python-ruff ; This will use ruff as defined above
-   'flymake-collection-python-mypy))
+(after! flycheck
+  (defun my/python-flycheck-setup ()
+    "Set up flycheck for Python with ruff and mypy."
+    ;; Disable LSP diagnostics to avoid conflicts
+    (setq-local lsp-diagnostics-provider :none)
+
+    ;; Disable LSP checker
+    (add-to-list 'flycheck-disabled-checkers 'lsp)
+
+    ;; Select ruff as the checker
+    (flycheck-select-checker 'python-ruff)
+
+    ;; Chain mypy after ruff
+    (flycheck-add-next-checker 'python-ruff 'python-mypy t))
+
+  (add-hook 'python-mode-hook #'my/python-flycheck-setup)
+  (add-hook 'python-ts-mode-hook #'my/python-flycheck-setup))
 #+end_src
 
-*** Debugging (DAPE)
-We configure `dape` to use `debugpy` as the debug adapter for Python, enabling full debugging capabilities inside Emacs.
+** Debugging (Dape for Python)
+Dape comes with built-in debug adapter configurations for Python using debugpy. No additional configuration is required for basic debugging functionality. Simply install debugpy (`pip install debugpy`) and use `M-x dape` to start debugging, selecting one of the Python configurations (e.g., `debugpy`).
+
+If you need custom debugging configurations (e.g., with specific arguments or environment variables), you can add them:
 #+begin_src emacs-lisp
 (after! dape
+  ;; Example: Custom Python debugging configuration with arguments
   (add-to-list 'dape-configs
-               `(debugpy modes (python-ts-mode) command "python" command-args ("-m" "debugpy.adapter")
-                 :type "executable" :request "launch" :cwd dape-cwd-fn :program dape-find-file-buffer-default))
-  (add-to-list 'dape-configs
-               `(debugpy-module modes (python-ts-mode) command "python" command-args ("-m" "debugpy.adapter")
-                 :type "executable" :request "launch" :module (read-string "Module: ") :cwd dape-cwd-fn))
-  (add-to-list 'dape-configs
-               `(debugpy-attach modes (python-ts-mode) command "python" command-args ("-m" "debugpy.adapter")
-                 :type "executable" :request "attach" :connect (:host "localhost" :port (read-number "Port: " 5678))
-                 :pathMappings [(:localRoot dape-cwd-fn :remoteRoot dape-cwd-fn)])))
+               `(debugpy-args
+                 modes (python-mode python-ts-mode)
+                 ensure dape-ensure-command
+                 command "python"
+                 command-args ("-m" "debugpy.adapter")
+                 :request "launch"
+                 :type "python"
+                 :cwd dape-cwd-fn
+                 :program dape-find-file-buffer-default
+                 :args ["arg1" "arg2"])))  ; Your custom arguments here
 #+end_src
 
-** LaTeX
-Configuration for writing LaTeX documents, including PDF viewing and citation management.
+** Optimize Org Mode Jupyter Integration
+Disable Jupyter's code completion features within Org mode to avoid conflicts with the new LSP setup.
 #+begin_src emacs-lisp
-(after! latex
-  (setq TeX-engine 'xetex
-        TeX-view-program-selection '((output-pdf "PDF Tools"))
-        TeX-source-correlate-mode t))
-
-(add-hook! 'LaTeX-mode-hook #'laas-mode)
-
-;; Citar integration with Org Roam for managing literature notes.
-(use-package! citar-org-roam
-  :after (citar org-roam)
-  :config (citar-org-roam-mode))
+(after! jupyter
+  ;; Remove jupyter completion from completion-at-point-functions
+  ;; when in org-src-mode for Python to avoid conflicts with LSP completion
+  (add-hook 'org-src-mode-hook
+    (lambda ()
+      (when (and (derived-mode-p 'python-mode 'python-ts-mode)
+                 (bound-and-true-p jupyter-current-client))
+        ;; Remove jupyter-org-completion-at-point from the list
+        (setq-local completion-at-point-functions
+                    (delq 'jupyter-org-completion-at-point
+                          completion-at-point-functions))))))
 #+end_src
+
+
 
 * Org Mode
 This is the central hub for my personal knowledge management, task tracking, and literate programming.
@@ -409,33 +414,11 @@ We define custom directories and set foundational Org mode behaviors. This inclu
           (sequence "PLAN(P)" "ACTIVE(A)" "PAUSED(x)" "|" "ACHIEVED(a)" "DROPPED(D)"))))
 #+end_src
 
-** Org Babel & Jupyter
-Configuration for executing code blocks and Jupyter integration.
+** Inline Images
 #+begin_src emacs-lisp
-;; CRITICAL: Remove Doom's advice that re-enables jupyter-org-interaction-mode
-(after! ob-jupyter
-  (advice-remove 'org-babel-jupyter-initiate-session
-                 #'+org--ob-jupyter-initiate-session-a)
-
-  ;; Set default header arguments for jupyter-python
-  (setq org-babel-default-header-args:jupyter-python
-        '((:async . "yes")
-          (:session . "py")
-          (:kernel . "python3"))))
-
-;; Remove jupyter completion from org-mode
-(after! jupyter-org-client
-  ;; Actively remove jupyter completion function
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (setq-local completion-at-point-functions
-                          (delq 'jupyter-org-completion-at-point
-                                completion-at-point-functions)))
-            90))
-
-;; Disable undo-fu-session for org files with jupyter blocks
-(after! undo-fu-session
-  (add-to-list 'undo-fu-session-incompatible-major-modes 'org-mode))
+;; Auto-refresh inline images after executing code blocks
+(after! org
+  (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images))
 #+end_src
 
 ** Jupyter Utilities
@@ -444,204 +427,113 @@ Custom utility functions for managing Jupyter kernels, output formatting, and se
 *** Kernel Management
 Functions to refresh kernelspecs and clean up orphaned kernel files.
 #+begin_src emacs-lisp
-(defun my/jupyter-refresh-kernelspecs ()
-  "Refresh Jupyter kernelspecs."
-  (interactive)
-  (jupyter-available-kernelspecs t))
+;; (defun my/jupyter-refresh-kernelspecs ()
+;;   "Refresh Jupyter kernelspecs."
+;;   (interactive)
+;;   (jupyter-available-kernelspecs t))
 
-(defun my/jupyter-refresh-langs ()
-  "Refresh Jupyter languages for org-babel."
-  (interactive)
-  (org-babel-jupyter-aliases-from-kernelspecs t))
+;; (defun my/jupyter-refresh-langs ()
+;;   "Refresh Jupyter languages for org-babel."
+;;   (interactive)
+;;   (org-babel-jupyter-aliases-from-kernelspecs t))
 
-(defun my/get-open-ports ()
-  "Get list of open ports by parsing netstat output."
-  (let ((netstat-output (shell-command-to-string "netstat -tuln")))
-    (delq nil
-          (mapcar (lambda (line)
-                    (when (string-match ":\\([0-9]+\\)" line)
-                      (string-to-number (match-string 1 line))))
-                  (split-string netstat-output "\n")))))
+;; (defun my/get-open-ports ()
+;;   "Get list of open ports by parsing netstat output."
+;;   (let ((netstat-output (shell-command-to-string "netstat -tuln")))
+;;     (delq nil
+;;           (mapcar (lambda (line)
+;;                     (when (string-match ":\\([0-9]+\\)" line)
+;;                       (string-to-number (match-string 1 line))))
+;;                   (split-string netstat-output "\n")))))
 
-(defun my/list-jupyter-kernel-files ()
-  "List Jupyter kernel connection files with their ports."
-  (let* ((runtime-dir (or (getenv "JUPYTER_RUNTIME_DIR")
-                          (expand-file-name "~/.local/share/jupyter/runtime")))
-         (files (when (file-directory-p runtime-dir)
-                  (directory-files runtime-dir t "kernel-.*\\.json$"))))
-    (delq nil
-          (mapcar (lambda (file)
-                    (condition-case nil
-                        (with-temp-buffer
-                          (insert-file-contents file)
-                          (goto-char (point-min))
-                          (let* ((json-object-type 'alist)
-                                 (data (json-read)))
-                            (cons file (alist-get 'shell_port data))))
-                      (error nil)))
-                  files))))
+;; (defun my/list-jupyter-kernel-files ()
+;;   "List Jupyter kernel connection files with their ports."
+;;   (let* ((runtime-dir (or (getenv "JUPYTER_RUNTIME_DIR")
+;;                           (expand-file-name "~/.local/share/jupyter/runtime")))
+;;          (files (when (file-directory-p runtime-dir)
+;;                   (directory-files runtime-dir t "kernel-.*\\.json$"))))
+;;     (delq nil
+;;           (mapcar (lambda (file)
+;;                     (condition-case nil
+;;                         (with-temp-buffer
+;;                           (insert-file-contents file)
+;;                           (goto-char (point-min))
+;;                           (let* ((json-object-type 'alist)
+;;                                  (data (json-read)))
+;;                             (cons file (alist-get 'shell_port data))))
+;;                       (error nil)))
+;;                   files))))
 
-(defun my/jupyter-cleanup-kernels ()
-  "Clean up orphaned Jupyter kernel connection files."
-  (interactive)
-  (let* ((ports (my/get-open-ports))
-         (files (my/list-jupyter-kernel-files))
-         (to-delete (seq-filter
-                     (lambda (file)
-                       (not (member (cdr file) ports)))
-                     files)))
-    (when (and (length> to-delete 0)
-               (y-or-n-p (format "Delete %d orphaned kernel files?" (length to-delete))))
-      (dolist (file to-delete)
-        (delete-file (car file))
-        (message "Deleted: %s" (car file))))))
+;; (defun my/jupyter-cleanup-kernels ()
+;;   "Clean up orphaned Jupyter kernel connection files."
+;;   (interactive)
+;;   (let* ((ports (my/get-open-ports))
+;;          (files (my/list-jupyter-kernel-files))
+;;          (to-delete (seq-filter
+;;                      (lambda (file)
+;;                        (not (member (cdr file) ports)))
+;;                      files)))
+;;     (when (and (length> to-delete 0)
+;;                (y-or-n-p (format "Delete %d orphaned kernel files?" (length to-delete))))
+;;       (dolist (file to-delete)
+;;         (delete-file (car file))
+;;         (message "Deleted: %s" (car file))))))
 #+end_src
 
-*** Output Formatting
-Control output formatting with raw mode and caption wrapping.
-#+begin_src emacs-lisp
-(defun my/jupyter-org-scalar (value)
-  "Handle scalar values, preferring raw output when enabled."
-  (cond
-   ((stringp value) value)
-   (t (jupyter-org-scalar value))))
-
-(define-minor-mode my/emacs-jupyter-raw-output
-  "Toggle raw output mode for emacs-jupyter."
-  :lighter " JupyRaw"
-  :global nil)
-
-(after! jupyter
-  (defadvice! my/jupyter-org-scalar-around (orig-fn value)
-    "Advice to use raw output when `my/emacs-jupyter-raw-output' is active."
-    :around #'jupyter-org-scalar
-    (if my/emacs-jupyter-raw-output
-        (my/jupyter-org-scalar value)
-      (funcall orig-fn value))))
-
-(defun my/org-strip-results (data)
-  "Strip :RESULTS: and :END: drawer markers from DATA."
-  (replace-regexp-in-string ":\\(RESULTS\\|END\\):\n" "" data))
-
-(defun my/org-caption-wrap (data &optional name caption attrs strip-drawer src-wrap)
-  "Wrap org results DATA with NAME, CAPTION, and ATTRS.
-If STRIP-DRAWER is non-nil, remove result drawer markers.
-If SRC-WRAP is non-nil, wrap in a source block of that language."
-  (let* ((data-s (if (and strip-drawer (not (string-empty-p strip-drawer)))
-                     (my/org-strip-results data)
-                   data))
-         (drawer-start (if (string-match-p "^:RESULTS:.*" data-s) 10 0)))
-    (concat
-     (substring data-s 0 drawer-start)
-     (and name (not (string-empty-p name)) (concat "#+NAME: " name "\n"))
-     (and caption (not (string-empty-p caption)) (concat "#+CAPTION: " caption "\n"))
-     (and attrs (not (string-empty-p attrs)) (concat "#+ATTR_LATEX: " attrs "\n"))
-     (if (and src-wrap (not (string-empty-p src-wrap)))
-         (concat "#+begin_src " src-wrap "\n"
-                 (substring data-s drawer-start)
-                 (unless (string-match-p ".*\n$" data-s) "\n")
-                 "#+end_src")
-       (substring data-s drawer-start)))))
-#+end_src
 
 *** Selective Execution
 Execute code blocks selectively based on position or markers.
 #+begin_src emacs-lisp
-(defun my/org-babel-execute-buffer-below (&optional arg)
-  "Execute all source blocks from point to end of buffer."
-  (interactive "P")
-  (org-babel-eval-wipe-error-buffer)
-  (let ((point (point)))
-    (org-save-outline-visibility t
-      (org-babel-map-executables nil
-        (when (>= (point) point)
-          (if (memq (org-element-type (org-element-context))
-                    '(babel-call inline-babel-call))
-              (org-babel-lob-execute-maybe)
-            (org-babel-execute-src-block arg)))))))
+;; (defun my/org-babel-execute-buffer-below (&optional arg)
+;;   "Execute all source blocks from point to end of buffer."
+;;   (interactive "P")
+;;   (org-babel-eval-wipe-error-buffer)
+;;   (let ((point (point)))
+;;     (org-save-outline-visibility t
+;;       (org-babel-map-executables nil
+;;         (when (>= (point) point)
+;;           (if (memq (org-element-type (org-element-context))
+;;                     '(babel-call inline-babel-call))
+;;               (org-babel-lob-execute-maybe)
+;;             (org-babel-execute-src-block arg)))))))
 
-(defun my/org-babel-execute-buffer-above (&optional arg)
-  "Execute all source blocks from beginning of buffer to point."
-  (interactive "P")
-  (org-babel-eval-wipe-error-buffer)
-  (let ((point (point)))
-    (org-save-outline-visibility t
-      (org-babel-map-executables nil
-        (when (<= (point) point)
-          (if (memq (org-element-type (org-element-context))
-                    '(babel-call inline-babel-call))
-              (org-babel-lob-execute-maybe)
-            (org-babel-execute-src-block arg)))))))
+;; (defun my/org-babel-execute-buffer-above (&optional arg)
+;;   "Execute all source blocks from beginning of buffer to point."
+;;   (interactive "P")
+;;   (org-babel-eval-wipe-error-buffer)
+;;   (let ((point (point)))
+;;     (org-save-outline-visibility t
+;;       (org-babel-map-executables nil
+;;         (when (<= (point) point)
+;;           (if (memq (org-element-type (org-element-context))
+;;                     '(babel-call inline-babel-call))
+;;               (org-babel-lob-execute-maybe)
+;;             (org-babel-execute-src-block arg)))))))
 
-(defun my/org-babel-execute-marked (&optional arg)
-  "Execute source blocks marked with ':startup t' parameter.
-With prefix ARG, only execute marked blocks below point."
-  (interactive "P")
-  (let (markers)
-    (org-element-map (org-element-parse-buffer) 'src-block
-      (lambda (elem)
-        (let ((params (org-element-property :parameters elem)))
-          (when (and params
-                     (string-match-p (rx "startup t") params))
-            (let ((m (make-marker)))
-              (set-marker m (org-element-property :begin elem))
-              (set-marker-insertion-type m t)
-              (push m markers))))))
-    (setq markers (nreverse markers))
-    (when arg
-      (setq markers
-            (seq-filter
-             (lambda (m) (> (marker-position m) (point)))
-             markers)))
-    (dolist (m markers)
-      (goto-char m)
-      (ignore-errors
-        (org-babel-execute-src-block)))))
-#+end_src
-
-
-
-** Inline Images
-#+begin_src emacs-lisp
-;; Auto-refresh inline images after executing code blocks
-(after! org
-  (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images))
-#+end_src
-
-** Org-Src Edit Buffer LSP Integration
-Automatically start Eglot and configure completion when editing Python source blocks.
-#+begin_src emacs-lisp
-;; Ensure jupyter-python blocks use python-ts-mode
-(after! org-src
-  (add-to-list 'org-src-lang-modes '("jupyter-python" . python-ts)))
-
-;; Hook-based approach for automatic Eglot activation
-(defun my/org-src-babel-setup-eglot ()
-  "Set up Eglot in org-src edit buffers with proper file association."
-  (when-let* ((info (org-babel-get-src-block-info 'light))
-              (params (nth 2 info))
-              (tangle-file (assoc-default :tangle params)))
-    (when (and tangle-file
-               (not (string= tangle-file "no"))
-               (not (string= tangle-file "nil")))
-      (let* ((abs-tangle-file (expand-file-name tangle-file))
-             (tangle-dir (file-name-directory abs-tangle-file)))
-        ;; Set buffer-file-name for LSP detection
-        (setq-local buffer-file-name abs-tangle-file)
-        ;; Set working directory for project detection
-        (setq-local default-directory tangle-dir)
-        ;; Mark buffer as modified so LSP sees it as a "real" file
-        (set-buffer-modified-p t)
-        ;; Start Eglot after a short delay to ensure buffer is ready
-        (run-with-timer 0.1 nil
-                        (lambda (buf)
-                          (when (buffer-live-p buf)
-                            (with-current-buffer buf
-                              (eglot-ensure))))
-                        (current-buffer))))))
-
-;; Add hook to org-src-mode
-(add-hook 'org-src-mode-hook #'my/org-src-babel-setup-eglot)
+;; (defun my/org-babel-execute-marked (&optional arg)
+;;   "Execute source blocks marked with ':startup t' parameter.
+;; With prefix ARG, only execute marked blocks below point."
+;;   (interactive "P")
+;;   (let (markers)
+;;     (org-element-map (org-element-parse-buffer) 'src-block
+;;       (lambda (elem)
+;;         (let ((params (org-element-property :parameters elem)))
+;;           (when (and params
+;;                      (string-match-p (rx "startup t") params))
+;;             (let ((m (make-marker)))
+;;               (set-marker m (org-element-property :begin elem))
+;;               (set-marker-insertion-type m t)
+;;               (push m markers))))))
+;;     (setq markers (nreverse markers))
+;;     (when arg
+;;       (setq markers
+;;             (seq-filter
+;;              (lambda (m) (> (marker-position m) (point)))
+;;              markers)))
+;;     (dolist (m markers)
+;;       (goto-char m)
+;;       (ignore-errors
+;;         (org-babel-execute-src-block)))))
 #+end_src
 
 ** Org Roam
@@ -722,7 +614,6 @@ These packages improve the visual presentation of Org mode. *org-super-agenda* p
   (add-to-list 'org-structure-template-alist '("sq" . "src sql")))
 #+end_src
 
-
 * Keybindings
 This section defines my custom keybindings, primarily using the leader key (`SPC`).
 
@@ -770,6 +661,28 @@ This section defines my custom keybindings, primarily using the leader key (`SPC
 #+end_src
 
 #+RESULTS:
+
+
+** IDE Keybindings for LSP
+Convenient keybindings for common LSP operations in org-src-mode and regular buffers.
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix ("c" . "code")
+       :desc "LSP Format buffer"        "=" #'lsp-format-buffer
+       :desc "LSP Organize imports"     "o" #'lsp-organize-imports
+       :desc "LSP Rename"               "r" #'lsp-rename
+       :desc "LSP Find references"      "R" #'lsp-find-references
+       :desc "LSP Describe at point"    "h" #'lsp-describe-thing-at-point
+       :desc "LSP Code actions"         "a" #'lsp-execute-code-action
+       :desc "LSP Execute code lens"    "l" #'lsp-avy-lens))
+
+;; Org-src-mode specific keybindings
+(map! :map org-src-mode-map
+      :localleader
+      :desc "Exit and save" "'" #'org-edit-src-exit
+      :desc "Abort edit" "k" #'org-edit-src-abort
+      :desc "Format buffer" "=" #'lsp-format-buffer)
+#+end_src
 
 ** Debugging (DAPE)
 Global keybindings for the Debug Adapter Protocol client.

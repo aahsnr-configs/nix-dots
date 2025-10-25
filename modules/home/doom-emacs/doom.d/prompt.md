@@ -1,5 +1,1 @@
-Looking at config.el for corfu determine why does corfu-popupinfo--get-documentation and corfu-popupinfo in general need company-doc-buffer. Then determine if there is a way to make company-doc-buffer work. Keep in mind that corfu and company are competing completion systems.
-
-The C-c C-c is bound to jupyter-eval-line-or-region when inside org-edit-special buffer. This keybinding should exit the mentioned buffer when done with coding.
-
-Fix all these issues for me and write the changes needed.
+For the python programming setup section of the my config.org file, I get the following error in the attached screenshots. The error for one screenshot appears when I am typing in jupyter-python org source code blocks. The second screenshot gives me the error when I am editing a .py file. Furthermore, when editing this .py file, ruff is activated as the lsp provided instead basedpyright as it is supposed to. Also disable corfu-popupinfo entirely for corfu since the doom emacs project enables this by default as in the config.el for corfu in https://github.com/doomemacs/doomemacs/blob/master/modules/completion/corfu/config.el
