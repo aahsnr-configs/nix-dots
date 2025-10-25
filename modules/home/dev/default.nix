@@ -16,7 +16,6 @@
     ripgrep
     statix
     marksman
-    emacs-lsp-booster
   ];
 
   programs.direnv = {

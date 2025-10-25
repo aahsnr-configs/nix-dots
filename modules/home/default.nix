@@ -50,7 +50,8 @@
     ./catppuccin
     ./cliphist
     ./dev
-    ./doom-emacs
+    # ./doom-emacs
+    ./emacs
     ./eza
     ./fd-find
     ./fish

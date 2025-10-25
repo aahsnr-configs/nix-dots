@@ -8,8 +8,5 @@ in
 { # home-manager
   home.packages = with pkgs; [
     tex
-    texlab
-    texpresso
-    gnuplot
   ];
 }

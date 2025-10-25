@@ -1,0 +1,2773 @@
+#+TITLE: Emacs CoNfiguration
+#+AUTHOR: Ahsanur Rahman
+#+STARTUP: overview
+#+PROPERTY: header-args:emacs-lisp :tangle config.el :mkdirp yes
+
+* Core Emacs Configuration
+This section incorporates the sensible defaults and settings from the minimal-emacs.d project. This provides a robust and well-optimized foundation.
+** Lexical Binding
+#+begin_src emacs-lisp
+;;; init.el --- DESCRIPTION -*- no-byte-compile: t; lexical-binding: t; -*-
+#+end_src
+
+** NixOS Specific
+#+begin_src emacs-lisp
+(require 'use-package)
+(setq use-package-expand-minimally t)
+
+;; Manually define XDG-compliant paths, replacing no-littering.
+(defvar no-littering-etc-directory
+  (expand-file-name "etc/" user-emacs-directory)
+  "Directory for configuration files.")
+(defvar no-littering-var-directory
+  (expand-file-name "var/" user-emacs-directory)
+  "Directory for mutable data files.")
+(defvar no-littering-cache-directory
+  (expand-file-name "cache/" user-emacs-directory)
+  "Directory for cache files.")
+
+;; Ensure these directories exist
+(make-directory no-littering-etc-directory :parents)
+(make-directory no-littering-var-directory :parents)
+(make-directory no-littering-cache-directory :parents)
+
+;; Configure Emacs core variables to use these paths
+(setq custom-file (expand-file-name "custom.el" no-littering-etc-directory))
+(setq package-user-dir (expand-file-name "elpa/" no-littering-var-directory))
+(setq url-history-file (expand-file-name "url-history" no-littering-var-directory))
+(setq recentf-save-file (expand-file-name "recentf" no-littering-var-directory))
+(setq savehist-file (expand-file-name "savehist" no-littering-var-directory))
+(setq save-place-file (expand-file-name "saveplace" no-littering-var-directory))
+(setq bookmark-save-file (expand-file-name "bookmarks" no-littering-var-directory))
+#+end_src
+
+** General Behaviour
+#+begin_src emacs-lisp
+;; Allow for shorter "y" or "n" responses.
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; Allow nested minibuffers.
+(setq enable-recursive-minibuffers t)
+
+;; Keep the cursor out of the read-only portions of the minibuffer.
+(setq minibuffer-prompt-properties
+      '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+;; No beeping or blinking on errors.
+(setq ring-bell-function 'ignore)
+(setq visible-bell nil)
+
+;; Disable the obsolete practice of end-of-line spacing from the typewriter era.
+(setq sentence-end-double-space nil)
+
+;; According to POSIX, a line should end with a newline.
+(setq require-final-newline t)
+
+;; Move point to top/bottom of buffer before signaling a scrolling error.
+(setq scroll-error-top-bottom t)
+
+;; If `scroll-conservatively' is set above 100, the window is never automatically recentered.
+(setq scroll-conservatively 120)
+
+;; Number of lines of margin at the top and bottom of a window.
+(setq scroll-margin 0)
+
+;; Prefer vertical splits over horizontal ones.
+(setq split-width-threshold 170
+      split-height-threshold nil)
+
+;; Uniquify buffer names by adding a directory prefix.
+(setq uniquify-buffer-name-style 'forward)
+
+;; Delete files by moving them to the system trash.
+(setq delete-by-moving-to-trash t)
+
+;; Disable automatic backups and lockfiles.
+(setq make-backup-files nil
+      create-lockfiles nil)
+
+;; Ask the user whether to terminate async compilations on exit.
+(setq native-comp-async-query-on-exit t)
+
+;; Skip confirmation prompts when creating a new file or buffer
+(setq confirm-nonexistent-file-or-buffer nil)
+
+;; Disable cursor blink for a more responsive feel and fewer redraws.
+(blink-cursor-mode -1)
+#+end_src
+
+** Editing and Indentation
+#+begin_src emacs-lisp
+;; Set default indentation.
+(setq-default indent-tabs-mode nil
+              tab-width 2
+              fill-column 80)
+
+;; Enable multi-line commenting.
+(setq comment-multi-line t)
+(setq comment-empty-lines t)
+
+;; Continue wrapped lines at whitespace.
+(setq-default word-wrap t)
+;; But truncate lines by default for performance. (visual-line-mode will override this)
+(setq-default truncate-lines t)
+
+;; Improve `show-paren-mode` behavior.
+(setq show-paren-delay 0.1
+      show-paren-when-point-inside-paren t)
+(setq blink-matching-paren nil) ; Don't blink, it's distracting.
+#+end_src
+
+** Setup User
+#+begin_src emacs-lisp
+(setq user-full-name "Ahsanur Rahman"
+      user-mail-address "ahsanur041@proton.me")
+#+end_src
+
+** Custom Functions
+#+begin_src emacs-lisp
+(defun ar/reload-config ()
+  "Reload the Emacs configuration."
+  (interactive)
+  ;; Assuming config.org is the main configuration file and this config.el is tangled from it.
+  ;; If config.el is the primary config, change to: (load-file (expand-file-name "config.el" user-emacs-directory))
+  (let ((config-file "~/.config/emacs/init.el"))
+    (if (file-exists-p config-file)
+        (progn
+          (message "Reloading Emacs configuration from config.org...")
+          (org-babel-load-file config-file)
+          (message "Configuration reloaded successfully!"))
+      (error "Configuration file %s not found" config-file))))
+#+end_src
+
+** Frame Title Formatting
+#+begin_src emacs-lisp
+(setq-default
+ frame-title-format
+ '(:eval (format "[%%b%s] - %s"
+           (if (buffer-modified-p)
+                      " •"
+             "")
+           system-name)))
+#+end_src
+
+** Session Management
+#+begin_src emacs-lisp
+;; Auto-revert in Emacs is a feature that automatically updates the
+;; contents of a buffer to reflect changes made to the underlying file
+;; on disk.
+(use-package autorevert
+  :ensure nil
+  :commands (auto-revert-mode global-auto-revert-mode)
+  :hook (after-init . global-auto-revert-mode)
+  :custom
+  (auto-revert-interval 3)
+  (auto-revert-remote-files nil)
+  (auto-revert-use-notify t)
+  (auto-revert-avoid-polling nil)
+  (auto-revert-verbose t))
+
+;; Recentf is an Emacs package that maintains a list of recently
+;; accessed files, making it easier to reopen files you have worked on
+;; recently.
+(use-package recentf
+  :ensure nil
+  :commands (recentf-mode recentf-cleanup)
+  :hook (after-init . recentf-mode)
+  :custom
+  (recentf-auto-cleanup (if (daemonp) 300 'never))
+  (recentf-exclude
+   (list "^/\\(?:ssh\\|su\\|sudo\\)?:" ; From minimal-emacs.d
+          "\\.?cache" ".cask" "url" "COMMIT_EDITMSG\\'" "bookmarks"
+          "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
+          "\\.?ido\\.last$" "\\.revive$" "/G?TAGS$" "/.elfeed/"
+          "^/tmp/" "^/var/folders/.+$" "^/ssh:" "/persp-confs/"))
+
+  :config
+  ;; A cleanup depth of -90 ensures that `recentf-cleanup' runs before
+  ;; `recentf-save-list', allowing stale entries to be removed before the list
+  ;; is saved by `recentf-save-list', which is automatically added to
+  ;; `kill-emacs-hook' by `recentf-mode'.
+  (add-hook 'kill-emacs-hook #'recentf-cleanup -90))
+
+;; savehist is an Emacs feature that preserves the minibuffer history between
+;; sessions. It saves the history of inputs in the minibuffer, such as commands,
+;; search strings, and other prompts, to a file. This allows users to retain
+;; their minibuffer history across Emacs restarts.
+(use-package savehist
+  :ensure nil
+  :commands (savehist-mode savehist-save)
+  :hook (after-init . savehist-mode)
+  :custom
+  (savehist-autosave-interval 600)
+  (savehist-additional-variables
+   '(kill-ring                        ; clipboard
+     register-alist                   ; macros
+     mark-ring global-mark-ring       ; marks
+     search-ring regexp-search-ring)))
+
+;; save-place-mode enables Emacs to remember the last location within a file
+;; upon reopening. This feature is particularly beneficial for resuming work at
+;; the precise point where you previously left off.
+(use-package saveplace
+  :ensure nil
+  :commands (save-place-mode save-place-local-mode)
+  :hook (after-init . save-place-mode)
+  :custom
+  (save-place-limit 400))
+
+;; Enable `auto-save-mode' to prevent data loss. Use `recover-file' or
+;; `recover-session' to restore unsaved changes.
+(setq auto-save-default t)
+
+(setq auto-save-interval 300)
+(setq auto-save-timeout 30)
+
+;; When auto-save-visited-mode is enabled, Emacs will auto-save file-visiting
+;; buffers after a certain amount of idle time if the user forgets to save it
+;; with save-buffer or C-x s for example.
+;;
+;; This is different from auto-save-mode: auto-save-mode periodically saves
+;; all modified buffers, creating backup files, including those not associated
+;; with a file, while auto-save-visited-mode only saves file-visiting buffers
+;; after a period of idle time, directly saving to the file itself without
+;; creating backup files.
+(setq auto-save-visited-interval 5)   ; Save after 5 seconds if inactivity
+(auto-save-visited-mode 1)
+#+end_src
+
+** Performance Tuning Packages
+#+begin_src emacs-lisp
+;;; Handling Large Files
+;; Prevent slowdowns when opening very large files by disabling expensive modes.
+(use-package so-long
+  :hook (emacs-startup . so-long-mode))
+#+end_src
+
+** PGTK/Wayland Mitigations
+This section contains settings specifically to mitigate performance and input
+issues when running the Pure GTK (PGTK) build of Emacs on Wayland.
+
+#+begin_src emacs-lisp
+;; Mitigate Rendering Sluggishness:
+;; The PGTK backend relies on CPU-intensive rendering. Disabling bidirectional
+;; text reordering can improve responsiveness. This setting is safe to call
+;; early as it does not depend on a graphical frame.
+(setq-default bidi-display-reordering nil)
+
+;; Mitigate Input Lag by disabling GTK input methods.
+;; The function `pgtk-use-im-context` MUST be called after a frame is
+;; created, otherwise it will error. We hook it into `after-make-frame-functions`
+;; to ensure it runs at the correct time, both on startup and for new frames
+;; created by emacsclient in daemon mode.
+(when (fboundp 'pgtk-use-im-context)
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (with-selected-frame frame
+                (pgtk-use-im-context nil)))))
+#+end_src
+
+** Auto-Tangle Files
+Automatically tangle our Emacs.org config file when we save it.
+#+begin_src emacs-lisp
+(defun efs/org-babel-tangle-config ()
+  (when (string-equal (file-name-directory (buffer-file-name))
+                      (expand-file-name user-emacs-directory))
+    ;; Dynamic scoping to the rescue
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
+
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+#+end_src
+
+* General Keybindings
+#+begin_src emacs-lisp
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+(use-package general
+  :ensure t
+  :after evil
+  :config
+  (general-create-definer ar/global-leader
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
+
+  (ar/global-leader
+    ;; Core
+    "SPC" '(execute-extended-command :wk "M-x")
+    "q q" '(save-buffers-kill-terminal :wk "Quit Emacs")
+    "q r" '(ar/reload-config :wk "Reload Config")))
+#+end_src
+
+* UI & Theming
+** Fonts
+This setup defines a robust function to find and set the best available font from a priority list. It prevents errors if a font is not installed and warns the user.
+#+begin_src emacs-lisp
+(defun ar/set-fonts ()
+  "Set the default, fixed-pitch, and variable-pitch fonts for the current frame."
+  (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 140 :weight 'medium)
+  (set-face-attribute 'fixed-pitch nil :font "JetBrainsMono Nerd Font" :height 140 :weight 'medium)
+  (set-face-attribute 'variable-pitch nil :font "JetBrainsMono Nerd Font" :height 140 :weight 'medium)
+  ;; Apply italic slant to comments and keywords for visual distinction
+  (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
+  (set-face-attribute 'font-lock-keyword-face nil :slant 'italic))
+
+;; Set fonts on startup and for new frames in daemon mode.
+(if (daemonp)
+    (add-hook 'after-make-frame-functions (lambda (frame) (with-selected-frame frame (ar/set-fonts))))
+  (ar/set-fonts))
+
+;; Adjust line spacing for better readability.
+(setq-default line-spacing 0.02)
+
+;; Ensure full syntax highlighting decoration.
+(setq font-lock-maximum-decoration t)
+
+;; Inhibit font cache compaction for performance.
+(setq inhibit-compacting-font-caches t)
+#+end_src
+
+** Line Numbers
+Enable line numbers for some modes
+#+begin_src emacs-lisp
+(dolist (mode '(prog-mode-hook
+                conf-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode t))))
+#+end_src
+
+** Theming
+#+begin_src emacs-lisp
+(use-package doom-themes
+  :ensure t
+  :custom
+  (doom-themes-enable-bold t)
+  (doom-themes-enable-italic t)
+  :config
+  (load-theme 'doom-tokyo-night t)
+  (doom-themes-neotree-config)
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config)
+
+  ;; Set distinct colors for bold and italic
+  (custom-set-faces
+   '(bold ((t (:foreground "#7aa2f7" :weight bold))))
+   '(italic ((t (:foreground "#bb9af7" :slant italic))))))
+#+end_src
+
+** Solaire Mode
+#+begin_src emacs-lisp
+(use-package solaire-mode
+  :ensure t
+  :defer t
+  :hook (after-init . solaire-global-mode)
+  :config
+  ;; Differentiate popups from "real" buffers
+  (add-hook 'completion-list-mode-hook #'solaire-mode)
+  (add-hook 'which-key-mode-hook #'solaire-mode)
+  (add-hook 'help-mode-hook #'solaire-mode)
+  (add-hook 'info-mode-hook #'solaire-mode)
+  (add-hook 'org-src-mode-hook #'solaire-mode)
+  (advice-add 'vertico--display-candidates :after
+              (lambda (&rest _)
+                (when (minibufferp)
+                  (with-selected-window (minibuffer-window) (solaire-mode +1))))))
+#+end_src
+
+** Nerd Icons
+#+begin_src emacs-lisp
+(use-package nerd-icons
+  :ensure t
+  :defer t
+  :custom
+  (nerd-icons-font-family "JetBrainsMono Nerd Font")
+  (nerd-icons-color-icons t))
+#+end_src
+
+** Modeline
+#+begin_src emacs-lisp
+(use-package doom-modeline
+  :ensure t
+  :hook (after-init . doom-modeline-mode)
+  :config
+  (setq doom-modeline-height 28)
+  (setq doom-modeline-bar-width 3)
+  (setq doom-modeline-icon t)
+  (setq doom-modeline-major-mode-icon t)
+  (setq doom-modeline-major-mode-color-icon t)
+  (setq doom-modeline-buffer-file-name-style 'relative)
+  (setq doom-modeline-buffer-state-icon t)
+  (setq doom-modeline-buffer-modification-icon t)
+  (setq doom-modeline-minor-modes nil)
+  (setq doom-modeline-enable-word-count nil)
+  (setq doom-modeline-buffer-encoding t)
+  (setq doom-modeline-indent-info nil)
+  (setq doom-modeline-checker-simple-format t)
+  (setq doom-modeline-vcs-max-length 12)
+  (setq doom-modeline-env-version t)
+  (setq doom-modeline-irc-stylize 'identity)
+  (setq doom-modeline-github-timer nil)
+  (setq doom-modeline-gnus-timer nil)
+    (custom-set-faces
+   '(mode-line ((t (:family "JetBrainsMono Nerd Font" :height 1.0))))
+   '(mode-line-active ((t (:family "JetBrainsMono Nerd Font" :height 1.0)))) ; For 29+
+   '(mode-line-inactive ((t (:family "JetBrainsMono Nerd Font" :height 1.0)))))
+)
+#+end_src
+
+** Dashboard
+#+begin_src emacs-lisp
+(use-package dashboard
+  :ensure t
+  :init
+  (setq dashboard-banner-logo-title "Welcome to Emacs!")
+  (setq dashboard-startup-banner 'logo)
+  ;; For example: (setq dashboard-startup-banner "~/.emacs.d/emacs_logo.png")
+
+  ;; Set the content of the dashboard
+  (setq dashboard-items '((recents   . 5)
+                         (bookmarks . 5)
+                         (projects  . 5)
+                         (agenda    . 5)))
+
+  ;; Center the dashboard content
+  (setq dashboard-center-content t)
+
+  ;; Enable icons
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-icon-type 'nerd-icons)
+
+  :config
+  ;; Enable the dashboard on startup
+  (dashboard-setup-startup-hook)
+  ;; If you are using emacsclient, you'll want to see the dashboard when you create a new frame.
+  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
+#+end_src
+
+** Which Key
+#+begin_src emacs-lisp
+(use-package which-key
+  :ensure t
+  :defer t
+  :hook (after-init . which-key-mode)
+  :custom
+  (which-key-idle-delay 0.1)
+  (which-key-separator " → ")
+  (which-key-popup-type 'minibuffer))
+#+end_src
+
+** Hide Modeline
+#+begin_src emacs-lisp
+;; <
+(defun ar/hide-modeline-for-special-buffers ()
+  "Hide the modeline in special buffers starting and ending with '*'.
+An exclusion list prevents this for essential buffers like *scratch*
+or compilation buffers where the modeline provides useful info."
+  (let ((buf-name (buffer-name))
+        ;; Add buffer names here to prevent their modelines from being hidden.
+        (exclude-list '("*scratch*"
+                         "*Messages*"
+                         "*compilation*"
+                         "*Agenda Commands*"
+                         "*grep*"
+                         "*vterm*")))
+    (when (and buf-name
+               (> (length buf-name) 2) ; Ensure buffer name is not just "**"
+               (string-prefix-p "*" buf-name)
+               (string-suffix-p "*" buf-name)
+               (not (member buf-name exclude-list)))
+      (setq-local mode-line-format nil))))
+
+;; This hook runs whenever a buffer's major mode is initialized,
+;; applying the rule to all new and existing special buffers.
+(add-hook 'after-change-major-mode-hook #'ar/hide-modeline-for-special-buffers)
+#+end_src
+
+* Evil
+** Undo System
+#+begin_src emacs-lisp
+;; The undo-fu package is a lightweight wrapper around Emacs' built-in undo
+;; system, providing more convenient undo/redo functionality.
+(use-package undo-fu
+  :ensure t
+  :commands (undo-fu-only-undo
+             undo-fu-only-redo
+             undo-fu-only-redo-all
+             undo-fu-disable-checkpoint)
+  :config
+  (global-unset-key (kbd "C-z"))
+  (global-set-key (kbd "C-z") 'undo-fu-only-undo)
+  (global-set-key (kbd "C-S-z") 'undo-fu-only-redo))
+
+;; The undo-fu-session package complements undo-fu by enabling the saving
+;; and restoration of undo history across Emacs sessions, even after restarting.
+(use-package undo-fu-session
+  :ensure t
+  :commands undo-fu-session-global-mode
+  :hook (after-init . undo-fu-session-global-mode))
+#+end_src
+
+** Core Evil
+#+begin_src emacs-lisp
+;; Uncomment the following if you are using undo-fu
+(setq evil-undo-system 'undo-fu)
+
+;; Vim emulation
+(use-package evil
+  :ensure t
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+
+  :config
+  (evil-mode 1)
+
+  :custom
+  (evil-ex-visual-char-range t)
+  (evil-ex-search-vim-style-regexp t)
+  (evil-split-window-below t)
+  (evil-vsplit-window-right t)
+  (evil-echo-state nil)
+  (evil-move-cursor-back nil)
+  (evil-v$-excludes-newline t)
+  (evil-want-C-h-delete t)
+  (evil-want-C-u-delete t)
+  (evil-want-fine-undo t)
+  (evil-move-beyond-eol t)
+  (evil-search-wrap nil)
+  (evil-want-Y-yank-to-eol t))
+#+end_src
+
+** Evil Collection
+#+begin_src emacs-lisp
+(use-package evil-collection
+  :ensure t
+  :after evil
+  :init
+  ;; It has to be defined before evil-colllection
+  (setq evil-collection-setup-minibuffer t)
+  :config
+  (evil-collection-init))
+#+end_src
+
+** Evil Extensions
+#+begin_src emacs-lisp
+(use-package evil-surround :ensure t :hook (evil-mode . global-evil-surround-mode))
+(use-package evil-nerd-commenter :ensure t :after evil)
+
+(use-package evil-numbers :ensure t :after evil)
+(use-package evil-args :ensure t :after evil)
+(use-package evil-anzu :ensure t :after evil)
+(use-package evil-exchange :ensure t :after evil :config (evil-exchange-install))
+(use-package evil-indent-plus :ensure t :after evil :config (evil-indent-plus-default-bindings))
+(use-package evil-visualstar :ensure t :hook (evil-mode . global-evil-visualstar-mode))
+(use-package evil-matchit :ensure t :hook (evil-mode . global-evil-matchit-mode))
+(use-package evil-snipe :ensure t :after evil :config (evil-snipe-mode 1) (evil-snipe-override-mode 1))
+
+(use-package evil-lion
+  :ensure t
+  :after evil
+  :hook (prog-mode . evil-lion-mode))
+
+(use-package evil-multiedit :ensure t :after evil :config (evil-multiedit-default-keybinds))
+(use-package evil-goggles :ensure t :hook (evil-mode . evil-goggles-mode) :custom (evil-goggles-duration 0.1))
+
+(use-package evil-escape
+  :ensure t
+  :hook (evil-mode . evil-escape-mode)
+  :custom
+  (evil-escape-key-sequence "jk")
+  (evil-escape-delay 0.2)
+  (evil-escape-excluded-modes '(dired-mode)))
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp
+(with-eval-after-load 'evil-maps
+  (evil-define-key '(normal visual) 'global "gc" 'evilnc-comment-or-uncomment-lines))
+#+end_src
+
+* Editor Behaviour
+** Lines Behaviour
+#+begin_src emacs-lisp
+;; Highlight the current line
+(add-hook 'after-init-hook #'global-hl-line-mode)
+;; Use visual line mode for soft wrapping instead of truncating lines
+(add-hook 'after-init-hook #'global-visual-line-mode)
+#+end_src
+
+** Smartparens
+#+begin_src emacs-lisp
+(use-package smartparens
+  :ensure t
+  :after evil
+  :hook ((prog-mode . smartparens-mode)
+         (text-mode . smartparens-mode)
+         (markdown-mode . smartparens-mode)
+         (org-mode . smartparens-mode))
+  :config
+  ;;  (smartparens-global-strict-mode 1)
+  ;; --- Doom Emacs-style Keybindings ---
+  (sp-pair "<" nil :actions :rem)
+
+  ;; --- UI and Behavior Customizations ---
+  (setq sp-show-pair-delay 0.1
+        sp-show-pair-from-inside t))
+#+end_src
+
+** Rainbow Delimiters
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :ensure t
+  :defer t
+  :hook ((text-mode . rainbow-delimiters-mode)
+         (prog-mode . rainbow-delimiters-mode)
+         (org-src-mode-hook . rainbow-delimiters-mode))
+
+  ;; Custom faces updated for the Tokyonight color palette.
+  :custom-face
+  (rainbow-delimiters-depth-1-face ((t (:foreground "#7aa2f7"))))  ; Blue
+  (rainbow-delimiters-depth-2-face ((t (:foreground "#bb9af7"))))  ; Magenta
+  (rainbow-delimiters-depth-3-face ((t (:foreground "#e0af68"))))  ; Yellow
+  (rainbow-delimiters-depth-4-face ((t (:foreground "#73daca"))))  ; Cyan
+  (rainbow-delimiters-depth-5-face ((t (:foreground "#f7768e"))))  ; Red
+  (rainbow-delimiters-depth-6-face ((t (:foreground "#9ece6a"))))  ; Green
+  (rainbow-delimiters-depth-7-face ((t (:foreground "#ff9e64"))))  ; Orange
+  (rainbow-delimiters-depth-8-face ((t (:foreground "#c0caf5"))))  ; Foreground
+  (rainbow-delimiters-depth-9-face ((t (:foreground "#a9b1d6"))))) ; Sub-Foreground
+#+end_src
+
+** Rainbow Mode
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :ensure t
+  :defer t
+  :hook ((prog-mode . rainbow-mode)
+         (org-mode . rainbow-mode)))
+#+end_src
+
+** Buffer Terminator
+#+begin_src emacs-lisp
+(use-package buffer-terminator
+  :ensure t
+  :defer t
+  :custom
+  ;; Enable/Disable verbose mode to log buffer cleanup events
+  (buffer-terminator-verbose nil)
+
+  ;; Set the inactivity timeout (in seconds) after which buffers are considered
+  ;; inactive (default is 30 minutes):
+  (buffer-terminator-inactivity-timeout (* 30 60)) ; 30 minutes
+
+  ;; Define how frequently the cleanup process should run (default is every 10
+  ;; minutes):
+  (buffer-terminator-interval (* 10 60)) ; 10 minutes
+
+  :config
+  (buffer-terminator-mode 1))
+#+end_src
+
+** Inhibit Mouse
+#+begin_src emacs-lisp
+(use-package inhibit-mouse
+  :ensure t
+  :config
+  (if (daemonp)
+      (add-hook 'server-after-make-frame-hook #'inhibit-mouse-mode)
+    (inhibit-mouse-mode 1)))
+#+end_src
+
+** Shackle for Popup Window Management
+This provides a declarative way to control where and how special-purpose buffers
+appear, ensuring a consistent and predictable windowing layout.
+#+begin_src emacs-lisp
+(use-package shackle
+  :ensure t
+  :hook (after-init . shackle-mode)
+  :config
+  (setq shackle-rules
+   '(;; FIX: Add this rule at the beginning to prevent Shackle from managing Treemacs.
+     ;; This allows Treemacs to use its own logic for side-window placement.
+     ;;("^\\*treemacs.*\\*$" :side left :size 35)
+     ;; Rule for Help buffers
+     ("\\`\\*Help" :align bottom :size 0.3)
+     ;; Rule for compilation/grep/etc.
+     ("^\\*.*compilation.*\\*$" :align bottom :size 0.3)
+     ("^\\*grep.*\\*$" :align bottom :size 0.3)
+     ;; Rule for Embark
+     ("\\`\\*Embark Collect" :align bottom :size 0.25)
+     ;; Rules for the debugger (dape)
+     ("\\`\\*dap-repl" :align right :size 0.4)
+     ("\\`\\*dap-locals" :align right :size 0.4)
+     ("\\`\\*dap-breakpoints" :align right :size 0.4)
+     ("\\`\\*dap-sessions" :align right :size 0.4))
+   shackle-inhibit-window-quit-on-same-buffer t))
+#+end_src
+
+** TODO Combobulate
+#+begin_src emacs-lisp
+;; (use-package combobulate
+;;    :custom
+;;    ;; You can customize Combobulate's key prefix here.
+;;    ;; Note that you may have to restart Emacs for this to take effect!
+;;    (combobulate-key-prefix "C-c o")
+;;    :hook ((prog-mode . combobulate-mode))
+;;    ;; Amend this to the directory where you keep Combobulate's source
+;;    ;; code.
+;;    :load-path ("~/.config/emacs/lisp/combobulate"))
+#+end_src
+** Helpful
+*helpful* is an alternative to the built-in Emacs help that provides much more contextual information.
+#+begin_src emacs-lisp
+(use-package helpful
+  :ensure t
+  :commands (helpful-callable
+             helpful-variable
+             helpful-key
+             helpful-command
+             helpful-at-point
+             helpful-function)
+  :bind
+  ([remap describe-command] . helpful-command)
+  ([remap describe-function] . helpful-callable)
+  ([remap describe-key] . helpful-key)
+  ([remap describe-symbol] . helpful-symbol)
+  ([remap describe-variable] . helpful-variable)
+  :custom
+  (helpful-max-buffers 7))
+#+end_src
+
+** Wgrep: Writable Grep
+#+begin_src emacs-lisp
+(use-package wgrep
+  :ensure t
+  :commands (wgrep-change-to-wgrep-mode)
+  :config
+  ;; evil-collection provides bindings like :wq to save and :q! to abort.
+  (setq wgrep-auto-save-buffer t))
+#+end_src
+
+** Indent Bars
+#+begin_src emacs-lisp
+(use-package indent-bars
+  :ensure t
+  :hook ((prog-mode . indent-bars-mode)
+         (tex-mode . indent-bars-mode))
+  :config
+  (require 'indent-bars-ts)
+  (setopt indent-bars-no-descend-lists t
+          indent-bars-treesit-support t
+          indent-bars-width-frac 0.3))
+#+end_src
+
+** Jinx
+#+begin_src emacs-lisp
+(use-package jinx
+  :ensure t
+  :hook (after-init . jinx-mode)
+  :custom
+  ;; Sensibly disable Jinx in modes where spell-checking is not desired.
+  ;; This includes programming modes, UI-centric modes, and special buffers.
+  (jinx-disabled-modes
+   '(prog-mode           ; All programming modes
+     conf-mode           ; All configuration file modes
+     emacs-lisp-mode     ; Specifically for elisp
+     dired-mode          ; File manager
+     ibuffer-mode        ; Buffer list
+     neotree-mode        ; File tree
+     magit-status-mode   ; Magit UI
+     magit-log-mode
+     magit-diff-mode
+     magit-branch-mode
+     org-agenda-mode     ; Agenda view is not for writing
+     org-src-mode        ; Don't check inside code blocks
+     dashboard-mode      ; Startup dashboard
+     which-key-mode      ; Keybinding helper
+     help-mode           ; Help buffers
+     Info-mode           ; Info documentation
+     embark-collect-mode ; Embark's special buffer
+     vterm-mode          ; Terminal emulator
+     pdf-view-mode))     ; PDF viewer
+
+    ;; Ensure the personal dictionary file exists, creating it if necessary.
+  (let ((dict-file (expand-file-name "dict.txt" user-emacs-directory)))
+    (unless (file-exists-p dict-file)
+      (write-region "" nil dict-file)))
+
+  (ar/global-leader
+    "j" '(:ignore t :wk "jinx (spellcheck)")
+    "j c" '(jinx-correct :wk "Correct word at point")
+    "j n" '(jinx-next-error :wk "Go to next error")
+    "j p" '(jinx-previous-error :wk "Go to previous error")
+    "j s" '(jinx-suggest :wk "Show suggestions")
+    "j a" '(jinx-add-word-to-personal-dictionary :wk "Add to dictionary")
+    "j l" '(jinx-languages :wk "Select language")
+    "j t" '(jinx-toggle-checking :wk "Toggle checking in buffer")))
+#+end_src
+
+* Completion Framework
+** Orderless for Advanced Filtering
+#+begin_src emacs-lisp
+(use-package orderless
+  :ensure t
+  :custom
+  ;; Use orderless as the primary completion style.
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  ;; Use standard completion for file paths for a more predictable experience.
+  (orderless-component-separator #'orderless-escapable-split-on-space)
+  (completion-category-overrides '((file (styles basic partial-completion))))
+  ;; Add dispatchers for more precise filtering (e.g., =literal, %regexp)
+  (orderless-dispatchers
+   '(orderless-consult-dispatch orderless-affix-dispatch)))
+#+end_src
+
+** Vertico: The Vertical Completion UI
+#+begin_src emacs-lisp
+(use-package vertico
+  :ensure t
+  :hook (after-init . vertico-mode)
+  :custom
+  (vertico-resize nil)
+  (vertico-cycle t)
+  (vertico-count 10))
+#+end_src
+
+** Marginalia
+#+begin_src emacs-lisp
+(use-package marginalia
+  :ensure t
+  :hook (after-init . marginalia-mode))
+#+end_src
+
+** Nerd Icons Completion
+#+begin_src emacs-lisp
+(use-package nerd-icons-completion
+  :ensure t
+  :config
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
+  (nerd-icons-completion-mode))
+#+end_src
+
+** Consult
+#+begin_src emacs-lisp
+(use-package consult
+  :ensure t
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :init
+  (setq register-preview-delay 0.3)
+  (setq consult-prompt-margin 0)
+  (setq consult-preview-key 'any)
+
+  :custom
+  (consult-narrow-key "<")
+  (consult-find-args "fd --hidden --strip-cwd --type f --color=never --follow --exclude .git")
+  (consult-ripgrep-args "rg --null --line-buffered --color=never --smart-case --no-heading --line-number --hidden --glob '!.git/'")
+  ;; Augment the default consult-buffer sources to include recent files and
+  ;; project-specific recent files for a more powerful buffer switcher.
+  (consult-buffer-sources
+   '(;;consult--source-buffer
+     consult--source-recent-file
+     consult--source-project-recent-file
+     consult--source-bookmark))
+
+  :config
+  ;; Configure preview keys for various commands.
+  ;; A delayed preview is used to avoid performance issues.
+  (consult-customize
+   consult-theme :preview-key '(:debounce 0.05 any)
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-file-register
+   consult--source-recent-file consult--source-project-recent-file
+   :preview-key '(:debounce 0.1 any)))
+#+end_src
+
+#+RESULTS:
+| consult-preview-at-point-mode | hide-mode-line-mode |
+
+** Embark
+#+begin_src emacs-lisp
+(use-package embark
+  :ensure t
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+  (define-key embark-collect-mode-map (kbd "e") #'embark-export)
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+#+end_src
+
+** Embark Consult
+#+begin_src emacs-lisp
+(use-package embark-consult
+  :after (embark consult)
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+#+end_src
+
+** Corfu: The Core UI
+#+begin_src emacs-lisp
+(use-package corfu
+  :ensure t
+  :hook (after-init . global-corfu-mode)
+  :config
+  (corfu-history-mode)
+  (corfu-popupinfo-mode)
+
+  ;; --- START OF MODIFIED CONFIGURATION ---
+  ;; This function makes TAB smart. It tries to complete, and if there are
+  ;; no completions, it falls back to a standard indentation command.
+  (defun ar/corfu-complete-or-indent ()
+    "Try to complete with Corfu, otherwise indent."
+    (interactive)
+    (or (corfu-complete)
+        (indent-for-tab-command)))
+
+  ;; Bind our new smart TAB function in Evil's insert mode.
+  ;; This is the key to making manual completion work.
+  (define-key evil-insert-state-map (kbd "TAB") #'ar/corfu-complete-or-indent)
+  ;; --- END OF MODIFIED CONFIGURATION ---
+
+  :bind
+  (:map corfu-map
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous)
+        ("C-c h" . corfu-info-documentation))
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-resize nil)
+  (corfu-auto-delay 0.13)
+  (corfu-preselect 'prompt)
+  (corfu-quit-at-boundary 'separator) ; hecks if the current completion boundary has been left
+  (corfu-quit-no-match 'separator) ; corfu completion will quit eagerly
+  (corfu-on-exact-match nil))
+
+(orderless-define-completion-style orderless-literal-only
+  (orderless-style-dispatchers nil)
+  (orderless-matching-styles '(orderless-literal)))
+
+(add-hook 'corfu-mode-hook
+          (lambda ()
+            (setq-local completion-styles '(orderless-literal-only basic)
+                        completion-category-overrides nil
+                        completion-category-defaults nil)))
+#+end_src
+
+** Nerd Icons for Corfu
+#+begin_src emacs-lisp
+(use-package nerd-icons-corfu
+  :ensure t
+  :after (corfu nerd-icons)
+  :config (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+#+end_src
+
+** Cape: Completion Backends
+#+begin_src emacs-lisp
+(use-package cape
+  :ensure t
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+  :config
+  ;; Silence the noisy pcomplete capf
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent))
+#+end_src
+
+** Dabbrev
+#+begin_src emacs-lisp
+(use-package dabbrev
+  :ensure nil
+  ;; Swap M-/ and C-M-/
+  :bind (("M-/" . dabbrev-completion)
+         ("C-M-/" . dabbrev-expand))
+  :config
+  (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+  ;; Available since Emacs 29 (Use `dabbrev-ignored-buffer-regexps' on older Emacs)
+  (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+  (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
+  (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
+#+end_src
+
+* Org Mode
+** Dynamic Directory Structure
+#+begin_src emacs-lisp
+;; Define base directory
+(defvar my/org-directory (expand-file-name "~/org/")
+  "Base directory for all org files.")
+
+;; Define subdirectories relative to base
+(defvar my/org-subdirs
+  '("roam" "downloads" "noter" "archive"
+    "roam/projects" "roam/literature" "roam/ideas" "roam/zettel"
+    "attachments" "reviews" "backups")
+  "List of subdirectories to create under `my/org-directory'.")
+
+;; Helper function to get org subdirectory paths
+(defun my/org-subdir (subdir)
+  "Return full path for SUBDIR under `my/org-directory'."
+  (expand-file-name subdir my/org-directory))
+
+;; Lazy directory creation - only when needed
+(defun my/ensure-org-dir (subdir)
+  "Ensure SUBDIR exists under `my/org-directory'."
+  (let ((dir (my/org-subdir subdir)))
+    (unless (file-directory-p dir)
+      (make-directory dir t))
+    dir))
+
+;; Create all directories at startup
+(mapc #'my/ensure-org-dir my/org-subdirs)
+
+;; Define convenience variables
+(defvar my/org-roam-directory (my/org-subdir "roam/"))
+(defvar my/org-downloads-directory (my/org-subdir "downloads/"))
+(defvar my/org-noter-directory (my/org-subdir "noter/"))
+(defvar my/org-archive-directory (my/org-subdir "archive/"))
+
+;; Improved project finder using directory-files-recursively
+(defun my/find-org-projects ()
+  "Return list of org files tagged as projects."
+  (let* ((default-directory my/org-directory)
+         (files (directory-files-recursively
+                 my/org-directory
+                 "\\.org$"
+                 nil
+                 (lambda (dir)
+                   (not (string-match-p "/\\(\\.git\\|archive\\|backups\\)/" dir))))))
+    (seq-filter
+     (lambda (file)
+       (with-temp-buffer
+         (insert-file-contents file nil 0 2000)
+         (goto-char (point-min))
+         (re-search-forward "^#\\+filetags:.*:project:" nil t)))
+     files)))
+#+end_src
+
+** Better Font Faces
+#+begin_src emacs-lisp
+(defun ar/org-font-setup ()
+  ;; Replace list hyphen with dot
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+  ;; Set faces for heading levels
+  (dolist (face '((org-level-1 . 1.2)
+                  (org-level-2 . 1.13)
+                  (org-level-3 . 1.10)
+                  (org-level-4 . 1.07)
+                  (org-level-5 . 1.05)
+                  (org-level-6 . 1.03)
+                  (org-level-7 . 1.02)
+                  (org-level-8 . 1)))
+    (set-face-attribute (car face) nil :font "JetBrainsMono Nerd Font" :weight 'bold :height (cdr face))))
+#+end_src
+
+** Core Configuration
+#+begin_src emacs-lisp
+(use-package org
+  :ensure t
+  :mode ("\\.org\\'" . org-mode)
+  :hook
+  ((org-mode . org-indent-mode)
+   (org-mode . visual-line-mode)
+   (org-mode . ar/org-font-setup)
+   (org-mode . auto-fill-mode)
+   (org-mode . (lambda () (setq-local yas-parents '(latex-mode))))
+   (org-mode . (lambda ()
+                 (setq-local electric-indent-local-mode nil)
+                 (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)))
+   (org-agenda-mode . (lambda ()
+                        (visual-line-mode -1)
+                        (toggle-truncate-lines 1)
+                        (display-line-numbers-mode 0)
+                        (setq mode-line-format nil)
+                        (setq header-line-format nil)))
+   (org-capture-mode . (lambda ()
+                         (setq mode-line-format nil)
+                         (setq header-line-format nil))))
+
+  :custom
+  (org-directory my/org-directory)
+  (org-agenda-files (list (expand-file-name "inbox.org" my/org-directory)
+                          (expand-file-name "projects.org" my/org-directory)
+                          (expand-file-name "habits.org" my/org-directory)
+                          (expand-file-name "goals.org" my/org-directory)))
+  (org-default-notes-file (expand-file-name "inbox.org" my/org-directory))
+  (org-log-done 'time)
+  (org-log-into-drawer t)
+  (org-return-follows-link t)
+  (org-src-fontify-natively t)
+  (org-pretty-entities t)
+  (org-ellipsis " ▾")
+  (org-cycle-separator-lines 2)
+  (org-startup-indented t)
+  (org-startup-folded 'content)
+  (org-hide-leading-stars t)
+  (org-confirm-babel-evaluate nil)
+  (org-hide-emphasis-markers t)
+  (org-src-tab-acts-natively t)
+  (org-src-preserve-indentation t)
+  (org-startup-with-inline-images t)
+  (org-image-actual-width 600)
+
+  (org-tag-alist '(("@work"      . ?w)
+                   ("@home"      . ?h)
+                   ("@computer"  . ?c)
+                   ("@errands"   . ?e)
+                   ("read"       . ?r)
+                   ("meeting"    . ?m)
+                   ("urgent"     . ?u)
+                   ("someday"    . ?s)))
+
+  (org-todo-keywords
+   '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCEL(c@)")
+     (sequence "PLAN(P)" "ACTIVE(A)" "PAUSED(x)" "|" "ACHIEVED(a)" "DROPPED(D)")))
+
+  (org-todo-keyword-faces
+   '(("TODO"      . (:foreground "#f7768e" :weight bold))
+     ("NEXT"      . (:foreground "#ff9e64" :weight bold))
+     ("PROG"      . (:foreground "#7aa2f7" :weight bold))
+     ("WAIT"      . (:foreground "#e0af68" :weight bold))
+     ("DONE"      . (:foreground "#9ece6a" :weight bold))
+     ("CANCEL"    . (:foreground "#565f89" :weight bold))
+     ("PLAN"      . (:foreground "#73daca" :weight bold))
+     ("ACTIVE"    . (:foreground "#bb9af7" :weight bold))
+     ("PAUSED"    . (:foreground "#c0caf5" :weight bold))
+     ("ACHIEVED"  . (:foreground "#9ece6a" :weight bold))
+     ("DROPPED"   . (:foreground "#565f89" :weight bold))))
+
+  (org-babel-execution-completed-message nil)
+  (org-element-use-cache t))
+#+end_src
+
+** Babel & Structure Templates
+Configure code block execution and create handy shortcuts for inserting common structures.
+#+begin_src emacs-lisp
+(with-eval-after-load 'org
+  ;; Load common languages for Babel.
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (shell . t)
+     (sql . t)))
+
+  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+
+  (require 'org-tempo)
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python")))
+#+end_src
+
+** Visual Enhancements
+This section makes Org mode beautiful and ergonomic, with modern styling and seamless Vim keybindings. The `org-modern` configuration complements the base `org-todo-keyword-faces` for a rich, thematic look.
+#+begin_src emacs-lisp
+(use-package org-modern
+  :ensure t
+  :hook (org-mode . org-modern-mode)
+  :config
+  (setq org-modern-hide-stars "· "
+        org-modern-star '("◉" "○" "◈" "◇" "◆" "▷")
+        org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))
+        org-modern-table-vertical 1
+        org-modern-table-horizontal 0.1
+        org-modern-block-name
+        '(("src" "»" "«")
+          ("example" "»" "«")
+          ("quote" """ """))
+
+        org-modern-todo-faces
+        '(("TODO"      . (:foreground "#f7768e" :weight bold))
+          ("NEXT"      . (:foreground "#ff9e64" :weight bold))
+          ("PROG"      . (:foreground "#7aa2f7" :weight bold))
+          ("WAIT"      . (:foreground "#e0af68" :weight bold))
+          ("DONE"      . (:background "#2f3c22" :foreground "#9ece6a" :weight bold))
+          ("CANCEL"    . (:strike-through t :foreground "#565f89"))
+          ("PLAN"      . (:foreground "#73daca" :weight bold))
+          ("ACTIVE"    . (:foreground "#bb9af7" :weight bold))
+          ("PAUSED"    . (:foreground "#c0caf5" :weight bold))
+          ("ACHIEVED"  . (:background "#364a5c" :foreground "#9ece6a" :weight bold :box t))
+          ("DROPPED"   . (:strike-through t :foreground "#565f89")))
+
+        org-modern-tag-faces
+        `((:foreground ,(face-attribute 'default :foreground)
+           :weight bold
+           :box (:line-width (1 . -1) :color "#3b4261")))
+
+        org-modern-checkbox '((todo . "☐") (done . "☑") (cancel . "☒"))))
+
+(use-package org-appear
+  :ensure t
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autoemphasis t
+        org-appear-autolinks t
+        org-appear-autosubmarkers t))
+#+end_src
+
+** Org Roam: The Knowledge Graph
+Org Roam is configured for rapid, Zettelkasten-style note-taking. Templates are minimal and flexible, and the UI is integrated to feel like a natural extension of Emacs.
+#+begin_src emacs-lisp
+(use-package org-roam
+  :ensure t
+  :defer t
+  :after org
+  :init
+  (setq org-roam-directory my/org-roam-directory)
+  (setq org-roam-db-location (expand-file-name "org-roam.db" no-littering-var-directory))
+  :custom
+  (org-roam-completion-everywhere t)
+  (org-roam-node-display-template
+   (concat "${title:*} "
+           (propertize "${tags:20}" 'face 'org-tag)))
+  :config
+  (org-roam-db-autosync-mode)
+
+  ;; Configure the backlinks buffer to appear in a right-hand sidebar.
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-direction)
+                 (direction . right)
+                 (window-width . 0.33)
+                 (window-height . fit-window-to-buffer)))
+
+  ;; Templates for different kinds of notes (Zettelkasten).
+  (setq org-roam-capture-templates
+      '(("d" "default" plain "* %?"
+         :target (file+head "${slug}.org"
+                            "#+title: ${title}\n#+filetags: \n\n")
+         :unnarrowed t)
+        ("p" "project" plain "* Goal\n\n%?\n\n* Tasks\n\n* Notes\n\n* Log\n"
+         :target (file+head "projects/${slug}.org"
+                            "#+title: Project: ${title}\n#+filetags: project\n")
+         :unnarrowed t)
+        ("l" "literature note" plain "* Source\n  - Author: \n  - Title: \n  - Year: \n\n* Summary\n\n%?\n\n* Key Takeaways\n\n* Quotes\n"
+         :target (file+head "literature/${slug}.org"
+                            "#+title: ${title}\n#+filetags: literature\n")
+         :unnarrowed t)
+        ("i" "idea" plain "* %?"
+         :target (file+head "ideas/${slug}.org"
+                            "#+title: ${title}\n#+filetags: idea fleeting\n")
+         :unnarrowed t)
+        ("z" "zettel" plain "* %?\n\n* References\n\n"
+         :target (file+head "zettel/${slug}.org"
+                            "#+title: ${title}\n#+filetags: zettel permanent\n")
+         :unnarrowed t)
+        ("j" "journal" plain "* Log\n\n%?"
+         :target (file+olp+datetree (expand-file-name "journal.org" my/org-roam-directory))
+         :unnarrowed t))))
+
+(use-package org-roam-ui
+  :ensure t
+  :after org-roam
+  :commands (org-roam-ui-mode org-roam-ui-open)
+  :custom
+  (org-roam-ui-sync-theme t)
+  (org-roam-ui-follow t)
+  (org-roam-ui-update-on-save t)
+  (org-roam-ui-open-on-start nil))
+
+(use-package consult-org-roam
+  :ensure t
+  :after (consult org-roam)
+  :init (consult-org-roam-mode 1))
+#+end_src
+
+** Capture: The Gateway to Org
+Your central inbox for capturing tasks, notes, and ideas, now featuring the
+advanced dynamic project task template.
+*Use dynamic directory*
+#+begin_src emacs-lisp
+(use-package org-capture
+  :ensure nil
+  :after org
+  :custom
+  (org-capture-templates
+   `(("t" "Task" entry
+      (file+headline ,(expand-file-name "inbox.org" my/org-directory) "Tasks")
+      "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n")
+
+     ("n" "Note" entry
+      (file+headline ,(expand-file-name "inbox.org" my/org-directory) "Notes")
+      "* %? :note:\n:PROPERTIES:\n:CREATED: %U\n:SOURCE:\n:END:\n")
+
+     ("j" "Journal" entry
+      (file+olp+datetree ,(expand-file-name "journal.org" my/org-directory))
+      "* %U %?\n")
+
+     ("m" "Meeting" entry
+      (file+headline ,(expand-file-name "inbox.org" my/org-directory) "Meetings")
+      "* Meeting: %? :meeting:\n:PROPERTIES:\n:CREATED: %U\n:ATTENDEES:\n:END:\n** Agenda\n** Notes\n** Action Items\n")
+
+     ("p" "Project" entry
+      (file+headline ,(expand-file-name "projects.org" my/org-directory) "Projects")
+      "* PLAN %? :project:\n:PROPERTIES:\n:CREATED: %U\n:GOAL:\n:DEADLINE:\n:END:\n** Goals\n** Tasks\n*** TODO Define project scope\n** Resources\n** Notes\n")
+
+     ("P" "Project Task" entry
+      (file (lambda ()
+              (let* ((files (my/find-org-projects))
+                     (file (completing-read "Select Project: "
+                                           (mapcar #'file-name-nondirectory files)
+                                           nil t)))
+                (car (seq-filter
+                      (lambda (f) (string= (file-name-nondirectory f) file))
+                      files)))))
+      "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n"
+      :prepend t
+      :headline "Tasks")
+
+     ("b" "Book" entry
+      (file+headline ,(expand-file-name "reading.org" my/org-directory) "Reading List")
+      "* %? :book:read:\n:PROPERTIES:\n:CREATED: %U\n:AUTHOR:\n:GENRE:\n:PAGES:\n:STARTED:\n:FINISHED:\n:RATING:\n:END:\n** Summary\n** Key Takeaways\n** Quotes\n")
+
+     ("h" "Habit" entry
+      (file+headline ,(expand-file-name "habits.org" my/org-directory) "Habits")
+      "* TODO %? :habit:\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d>\")\n:PROPERTIES:\n:CREATED: %U\n:STYLE: habit\n:END:\n")
+
+     ("g" "Goal" entry
+      (file+headline ,(expand-file-name "goals.org" my/org-directory) "Goals")
+      "* GOAL %? :goal:\nDEADLINE: %(org-read-date nil nil \"+1y\")\n:PROPERTIES:\n:CREATED: %U\n:TYPE:\n:END:\n** Why this goal?\n** Success criteria\n** Action steps\n*** TODO Break down into smaller tasks\n** Resources needed\n** Potential obstacles\n** Progress tracking\n"))))
+#+end_src
+
+** Org Habit
+#+begin_src emacs-lisp
+(use-package org-habit
+  :ensure nil
+  :after org
+  :custom
+  (org-habit-graph-column 60)
+  (org-habit-show-habits-only-for-today t)
+  (org-habit-preceding-days 21)
+  (org-habit-following-days 7)
+
+  ;; Use nerd-icons instead of emojis
+  (org-habit-completed-glyph
+   (string-to-char (nerd-icons-codicon "nf-cod-check")))
+  (org-habit-today-glyph
+   (string-to-char (nerd-icons-codicon "nf-cod-circle_filled"))))
+#+end_src
+
+** Evil Integration
+#+begin_src emacs-lisp
+(use-package evil-org
+  :ensure t
+  :hook (org-mode . evil-org-mode)
+  :config
+  (add-hook 'evil-org-mode-hook
+            (lambda ()
+              (evil-org-set-key-theme '(navigation insert textobjects additional calendar todo))))
+  (add-to-list 'evil-emacs-state-modes 'org-agenda-mode)
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp
+(ar/global-leader
+ ;; Org-mode specific bindings
+ "o" '(:ignore t :wk "org")
+ "o a" '(org-agenda :wk "agenda")
+ "o c" '(org-capture :wk "capture")
+ "o s" '(org-schedule :wk "schedule")
+ "o d" '(org-deadline :wk "deadline")
+ "o t" '(org-set-tags-command :wk "set tags")
+
+ ;; Org-roam specific bindings under "org roam"
+ "o r" '(:ignore t :wk "roam")
+ "o r f" '(org-roam-node-find :wk "find node")
+ "o r i" '(org-roam-node-insert :wk "insert node")
+ "o r c" '(org-roam-capture :wk "roam capture")
+ "o r g" '(org-roam-graph :wk "show graph")
+ "o r t" '(org-roam-tag-add :wk "add tag")
+
+ "o n" '(:ignore t :which-key "org noter")
+ "o n n" '(ar/org-noter-find-or-create-notes :wk "Open/Create PDF Notes")
+ "o n i" '(org-noter-insert-note :wk "Insert Note"))
+#+end_src
+
+* Workflow Management
+** Dired
+This setup enhances the built-in Dired, turning it into a fast, modern, and feature-rich file manager that integrates perfectly with Evil mode and your other packages.
+#+begin_src emacs-lisp
+(use-package fd-dired
+  :ensure t
+  :defer t
+  :config
+  (setq fd-dired-use-gnu-find-syntax t))
+
+;; Provides commands to open files with external applications.
+(use-package dired-open
+  :ensure t
+  :defer t
+  :config
+  (setq dired-open-extensions '(("png" . "imv") ("mp4" . "mpv"))))
+
+(use-package dired
+  :ensure nil
+  :commands (dired dired-jump)
+  :hook (dired-mode . dired-hide-dotfiles-mode)
+  :custom
+  (dired-listing-switches "-agho --group-directories-first")
+  (dired-auto-revert-buffer t)
+  (dired-dwim-target t)
+  (dired-recursive-deletes 'always)
+  (dired-recursive-copies 'always)
+  :config
+  ;; Enable git gutter information asynchronously.
+  (add-hook 'dired-mode-hook 'dired-git-info-mode)
+
+  ;; Define evil-mode keys for a vim-like experience.
+  (evil-define-key 'normal dired-mode-map
+    ;; Navigation
+    (kbd "h") 'dired-up-directory
+    (kbd "l") 'dired-find-file-other-window ; Open in other window is often more useful
+    (kbd "j") 'dired-next-line
+    (kbd "k") 'dired-previous-line
+    (kbd "G") 'dired-goto-file
+    (kbd "gg") 'dired-first-line
+    (kbd "^") 'dired-goto-root-directory
+    (kbd "~") 'dired-home
+    (kbd "RET") 'dired-find-file
+    (kbd "i") 'dired-maybe-insert-subdir
+    ;; Marking
+    (kbd "m") 'dired-mark
+    (kbd "u") 'dired-unmark
+    (kbd "U") 'dired-unmark-all-marks
+    (kbd "t") 'dired-toggle-marks
+    ;; File Operations
+    (kbd "C-n") 'dired-create-file
+    (kbd "C-d") 'dired-create-directory
+    (kbd "R") 'dired-do-rename
+    (kbd "D") 'dired-do-delete
+    (kbd "C") 'dired-do-copy
+    (kbd "X") 'dired-open-file ; Use dired-open to open externally
+    (kbd "M") 'dired-do-chmod
+    (kbd "O") 'dired-do-chown))
+
+;; dired-x for additional functionality
+(use-package dired-x
+  :ensure nil
+  :after dired
+  :custom (dired-x-hands-off-my-keys nil)
+  :config
+  ;; Define dired-omit-files to prevent void-variable errors
+  (setq dired-omit-files "^\\.[^.]\\|^#\\|^\\.$\\|^\\.\\.$\\|\\.pyc$\\|\\.o$")
+  (setq dired-omit-verbose nil))
+
+;; Asynchronously display git status in Dired. Highly performant.
+(use-package dired-git-info
+  :ensure t
+  :defer t
+  :commands dired-git-info-mode)
+
+;; Adds Nerd Font icons to Dired.
+(use-package nerd-icons-dired
+  :ensure t
+  :hook (dired-mode . nerd-icons-dired-mode))
+
+;; Allows editing directory listings directly (wdired) with ranger-like keys.
+(use-package dired-ranger
+  :ensure t
+  :after dired
+  :config
+  (define-key dired-mode-map (kbd "y") 'dired-ranger-copy)
+  (define-key dired-mode-map (kbd "p") 'dired-ranger-paste)
+  (define-key dired-mode-map (kbd "x") 'dired-ranger-move))
+#+end_src
+
+** Neotree
+This setup configures *neotree*, a fast and simple file tree explorer. It is
+themed with nerd-icons and integrates with evil-mode for vim-like navigation.
+#+begin_src emacs-lisp
+(use-package neotree
+  :ensure t
+  :defer t
+  :custom
+  (neo-smart-open t)
+  (neo-window-width 30)
+  (neo-show-hidden-files t)
+  (neo-autorefresh t)
+  (neo-theme 'nerd-icons)
+  ;; Ensure 'q' quits neotree, which is idiomatic in vim/evil.
+  (evil-define-key 'normal neotree-mode-map "q" 'neotree-hide)
+  (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-select-window))
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp
+(ar/global-leader
+ "f" '(:ignore t :wk "file")
+ "f f" '(find-file :wk "find file")
+ "f e" '(dired (or (buffer-file-name) default-directory) :wk "explore directory")
+ "f r" '(consult-recent-file :wk "find recent file")
+ "f t" '(neotree-toggle :wk "toggle file tree")
+ "f d" '(neotree-dir :wk "find in file tree"))
+#+end_src
+
+* Development Tools
+** Envrc
+#+begin_src emacs-lisp
+(use-package envrc
+  :ensure t
+  :hook (after-init . envrc-global-mode))
+#+end_src
+
+** Language Server Protocol: Eglot & Eglot Booster
+Eglot is the built-in LSP client but since managed by nix, *:ensure t* is needed. It will automatically use the correct
+language server from the PATH set by your direnv-managed environment. Boost Eglot performance using eglot booster
+#+begin_src emacs-lisp
+(use-package eglot
+  :ensure t
+  :defer t
+  :hook (prog-mode . eglot-ensure)
+  :custom
+  (eglot-autoshutdown t)
+  (eglot-events-buffer-size 0)
+  ;;(eglot-extend-to-xref nil)
+  (eglot-ignored-server-capabilities
+   '(:hoverProvider
+     :documentHighlightProvider
+     :documentFormattingProvider
+     :documentRangeFormattingProvider
+     :documentOnTypeFormattingProvider
+     :colorProvider
+     :foldingRangeProvider))
+  (eglot-stay-out-of '(yasnippet)))
+
+(use-package eglot-booster
+  :ensure t
+  :after eglot
+  :config
+  (eglot-booster-mode))
+#+end_src
+
+** Eldoc Box
+Display eldoc documentation in a popup frame at point.
+#+begin_src emacs-lisp
+(use-package eldoc-box
+  :ensure t
+  :defer t
+  :config
+  (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
+  :custom
+  (eldoc-box-show-if-no-doc nil)
+  (eldoc-echo-area-display-truncation-p nil)
+  :custom-face
+  (eldoc-box-border ((t (:foreground "#3b4261"))))
+  (eldoc-highlight-symbol-face ((t (:foreground "#7aa2f7" :weight bold)))))
+#+end_src
+
+** Consult Integration
+#+begin_src emacs-lisp
+;; Configure xref to use the powerful UI provided by the main consult package.
+;; This is the most robust way to ensure consult is loaded first.
+(with-eval-after-load 'consult
+  (setq xref-show-definitions-function #'consult-xref-show-definitions)
+  (setq xref-show-references-function #'consult-xref-show-references))
+
+;; Provides a powerful consult interface for Eglot's LSP features.
+(use-package consult-eglot
+  :ensure t
+  :after (consult eglot))
+
+;; Integrates consult-eglot sources with Embark actions.
+(use-package consult-eglot-embark
+  :ensure t
+  :after (consult-eglot embark))
+#+end_src
+
+** Robust Debugger UI
+We use *dape* for debugging. The UI for debugger windows is cleanly managed by the enhanced *shackle* configuration in my *Editor Behaviour* section.
+#+begin_src emacs-lisp
+(use-package dape
+  :ensure t
+  :defer t
+  :commands (dape dape-debug-recent)
+  :hook
+  ;; Use GUD's tooltip mode for mouse-hover variable inspection.
+  (dape-session-mode-hook . gud-tooltip-mode)
+  :config
+  ;; Set the breakpoint file location to be inside the var directory.
+  (setq dape-breakpoint-file (expand-file-name "dape-breakpoints" no-littering-var-directory))
+  ;; Persist breakpoints across Emacs sessions.
+  (add-hook 'kill-emacs-hook #'dape-breakpoint-save)
+  (add-hook 'after-init-hook #'dape-breakpoint-load))
+
+(ar/global-leader
+ ;; Debugging Keybindings (DAPE)
+ "d" '(:ignore t :wk "debug (dape)")
+ "d b" '(dape-toggle-breakpoint-at-point :wk "breakpoint")
+ "d c" '(dape-continue :wk "continue")
+ "d n" '(dape-next :wk "next")
+ "d i" '(dape-step-in :wk "step in")
+ "d o" '(dape-step-out :wk "step out")
+ "d q" '(dape-disconnect :wk "quit")
+ "d r" '(dape-debug-recent :wk "debug recent")
+ "d e" '(dape :wk "debug new")
+ "d B" '(ar/dape-debug-org-src-block :wk "debug org block"))
+#+end_src
+
+** Syntax Checking
+This setup uses the built-in *flymake* for live diagnostics, enhanced by *flymake-collection* for easy linter integration, and *apheleia* for automatic, on-save formatting.
+#+begin_src emacs-lisp
+(use-package flymake
+  :defer t
+  :ensure t
+  :hook (prog-mode . flymake-mode)
+  :custom
+  (flymake-check-syntax-automatically '(save mode-enabled))
+  (flymake-idle-change-delay 0.1)
+  :custom-face
+  (flymake-error   ((t (:underline (:style wave :color "#f7768e") :inherit nil))))  (flymake-warning ((t (:underline (:style wave :color "#e0af68") :inherit nil))))  (flymake-note    ((t (:underline (:style wave :color "#73daca") :inherit nil)))))
+
+;; A much cleaner way to add support for checkers like pylint and flake8.
+(use-package flymake-collection
+  :ensure t
+  :after flymake
+  :config
+  (flymake-collection-hook-setup))
+
+(use-package sideline-flymake
+  :ensure t
+  :hook (flymake-mode . sideline-mode)
+  :init
+  (setq sideline-flymake-display-mode 'point) ; 'point to show errors only on point
+                                              ; 'line to show errors on the current line
+  (setq sideline-backends-right '(sideline-flymake)))
+#+end_src
+
+** Formatting
+#+begin_src emacs-lisp
+(use-package apheleia
+  :ensure t
+  :defer t
+  :config
+  (apheleia-global-mode +1))
+#+end_src
+
+** Tree-sitter for syntax highlighting
+#+begin_src emacs-lisp
+(with-eval-after-load 'treesit
+  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(markdown-mode . markdown-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(latex-mode . latex-ts-mode)))
+
+(use-package treesit-fold
+  :ensure t
+  :hook (treesit-auto-mode-hook . treesit-fold-mode))
+
+(use-package evil-textobj-tree-sitter
+  :ensure t
+  :after evil
+  :config
+  ;; Goto start of next function
+  (define-key evil-normal-state-map
+              (kbd "]f")
+              (lambda ()
+                (interactive)
+                (evil-textobj-tree-sitter-goto-textobj "function.outer")))
+
+  ;; Goto start of previous function
+  (define-key evil-normal-state-map
+              (kbd "[f")
+              (lambda ()
+                (interactive)
+                (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
+
+  ;; Goto end of next function
+  (define-key evil-normal-state-map
+              (kbd "]F")
+              (lambda ()
+                (interactive)
+                (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
+
+  ;; Goto end of previous function
+  (define-key evil-normal-state-map
+              (kbd "[F")
+            (lambda ()
+              (interactive)
+              (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))))
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp
+(ar/global-leader
+ "l" '(:ignore t :which-key "lsp (eglot)")
+ "l a" '(eglot-code-actions :wk "code actions")
+ "l d" '(xref-find-definitions :wk "go to definition")
+ "l D" '(xref-find-declarations :wk "go to declaration")
+ "l i" '(xref-find-implementations :wk "go to implementation")
+ "l r" '(xref-find-references :wk "find references")
+ "l s" '(consult-imenu :wk "buffer symbols")
+ "l S" '(consult-eglot-symbols :wk "project symbols")
+ "l R" '(eglot-rename :wk "rename")
+ "l f" '(apheleia-format-buffer :wk "format buffer")
+ "l e" '(consult-flymake :wk "buffer errors")
+ "l E" '(consult-eglot-diagnostics :wk "project errors")
+ "l h" '(:ignore t :which-key "help")
+ "l h h" '(eldoc-doc-buffer :wk "show full documentation")
+ "l h d" '(eldoc-doc-buffer :wk "show doc in popup"))
+#+end_src
+
+* Python Development
+** LSP: Eglot with Pyright
+We use *pyright-langserver* for core LSP features like code completion,
+navigation, and documentation. Crucially, we disable pyright's built-in type checking diagnostics to avoid conflicts with our dedicated *mypy* checker, ensuring we get
+a single, authoritative source for type errors.
+#+begin_src emacs-lisp
+(with-eval-after-load 'eglot
+  ;; Register pyright-langserver for Python modes.
+  (add-to-list 'eglot-server-programs
+               '((python-ts-mode) . ("basedpyright-langserver" "--stdio"))))
+#+end_src
+
+** Diagnostics: Flymake with Ruff, Mypy, and Bandit
+My configuration already includes *flymake-collection*, which provides checkers for many tools. Here, we create a hook to specifically enable the checkers for Ruff, Mypy, and Bandit in any Python buffer. This gives us a powerful, multi-layered diagnostic setup without installing any extra Emacs packages.
+#+begin_src emacs-lisp
+(defun ar/python-diagnostics-setup ()
+  "Configure Flymake checkers for Python mode.
+This function enables the checkers provided by the flymake-collection package."
+  (setq-local flymake-checkers
+              '(flymake-collection-ruff
+                flymake-collection-mypy
+                flymake-collection-bandit)))
+
+(add-hook 'python-ts-mode-hook #'ar/python-diagnostics-setup)
+#+end_src
+
+** Formatting: Apheleia with Ruff
+We use *apheleia* to automatically format Python code on save. By using *ruff* as the backend, we ensure that formatting is consistent with our linter rules.
+#+begin_src emacs-lisp
+(with-eval-after-load 'apheleia
+  (setf (alist-get 'python-ts-mode apheleia-formatters)
+        '("ruff" "format" "-")))
+#+end_src
+
+** Debugging: Dape with debugpy
+This integrates Python's standard debugger, *debugpy*, with the *dape* framework.
+A debug template is registered, and a convenience function is created to easily
+start a debug session for the current Python file.
+#+begin_src emacs-lisp
+(with-eval-after-load 'dape
+  ;; Register a debug template for Python using debugpy. This defines how
+  ;; dape will launch the debugger for Python files.
+  (dape-register-debug-template
+   "Python (debugpy)"
+   (list :type "python"
+         :request "launch"
+         :name "Dape: Python File"
+         :program "${file}"
+         :console "internalConsole"))
+
+  ;; Interactive function to start a debug session for the current Python buffer.
+  (defun ar/dape-debug-python-file ()
+    "Start a DAPE debug session for the current Python file."
+    (interactive)
+    (unless (eq major-mode 'python-ts-mode)
+      (error "Not in a Python buffer"))
+    (dape-debug-by-template "Python (debugpy)")))
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp
+(ar/global-leader
+ ;; Add to the existing debug (dape) leader map
+ "d" '(:ignore t :wk "debug (dape)")
+ "d p" '(ar/dape-debug-python-file :wk "Debug Python File"))
+#+end_src
+
+* Jupyter Notebooks
+
+** Core Setup
+#+begin_src emacs-lisp
+(with-eval-after-load 'org
+  ;; Explicitly load the jupyter language for Org Babel.
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((jupyter . t)))
+
+  (org-babel-jupyter-override-src-block "python"))
+
+(setq org-babel-default-header-args:jupyter-python '((:async . "yes")
+                                                     (:session . "python")
+                                                     (:kernel . "python3")))
+
+;; Add a hook to automatically redisplay inline images (like plots) after execution.
+(add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+(setq ob-async-no-async-languages-alist '("jupyter-python"))
+#+end_src
+
+** Advanced Configuration for a Unified Workflow
+#+begin_src emacs-lisp
+;; --- Stabilize Jupyter and Corfu Integration ---
+;; Fix Corfu auto-completion error in Org-mode Jupyter blocks by disabling
+;; the auto-timer while allowing manual completion via the smart TAB function.
+(add-hook 'jupyter-org-interaction-mode-hook
+          (lambda ()
+            (setq-local corfu-auto nil)))
+
+
+;; --- Create a Unified Editing Experience in C-c ' ---
+
+;; 1. Automatically start the LSP client in the special edit buffer.
+(add-hook 'org-babel-edit-prep-hook #'eglot-ensure)
+
+;; 2. Define the function to connect the edit buffer to the live Jupyter kernel.
+(defun ar/connect-org-edit-buffer-to-jupyter (&rest _)
+  "Connect the special org-edit buffer to a live Jupyter kernel."
+  ;; Information is fetched from the *original* Org buffer.
+  (let* ((src-info (org-babel-get-src-block-info '(".")))
+         (lang (nth 0 src-info))
+         (header-args (nth 2 src-info))
+         (session (cdr (assoc :session header-args))))
+
+    ;; Only proceed if we are in a jupyter-python block with a session.
+    (when (and (string-equal lang "python") session)
+      ;; Switch context to the newly created special edit buffer.
+      (with-current-buffer (org-babel-get-special-edit-buffer)
+        ;; Find the running kernel associated with the session name.
+        (when-let ((kernel (jupyter-get-running-kernel-from-session session)))
+          ;; Connect this buffer to that kernel.
+          (jupyter-connect-to-kernel kernel)
+
+          ;; Most importantly, add Jupyter's live completion function to this
+          ;; buffer's list of completion providers.
+          (add-to-list 'completion-at-point-functions #'jupyter-completion-at-point nil t))))))
+
+;; 3. Use `advice-add` to run our function *after* `org-edit-special` has finished.
+;;    This is the robust and correct way to implement this feature.
+(advice-add 'org-edit-special :after #'ar/connect-org-edit-buffer-to-jupyter)
+#+end_src
+
+** Custom Functions
+These helper functions streamline common notebook workflows, like clearing all
+output, exporting to .ipynb, and managing the REPL.
+#+begin_src emacs-lisp
+(defun ar/jupyter-switch-to-repl ()
+  "Switch to the Jupyter REPL buffer and go to the end."
+  (interactive)
+  (jupyter-org-interaction-mode)
+  (with-current-buffer (jupyter-org-repl-buffer)
+    (goto-char (point-max)))
+  (other-window 1))
+
+(defun ar/jupyter-insert-src-block ()
+  "Insert a new python src block at point."
+  (interactive)
+  (org-insert-structure-template "py"))
+
+(defun ar/jupyter-clear-all-results ()
+  "Clear all Jupyter results in the current Org buffer."
+  (interactive)
+  (when (y-or-n-p "Clear all results in this buffer? ")
+    (jupyter-org-clear-all-results)))
+
+(defun ar/jupyter-restart-and-run-all ()
+  "Restart the Jupyter kernel and evaluate all src blocks in the buffer."
+  (interactive)
+  (when (y-or-n-p "Restart kernel and re-evaluate all blocks? ")
+    (jupyter-restart-kernel-then-execute-all)))
+
+(defun ar/jupyter-export-to-notebook ()
+  "Export the current Org buffer to a Jupyter Notebook (.ipynb) file."
+  (interactive)
+  (let ((filename (read-file-name "Export to notebook: " nil nil nil (format "%s.ipynb" (file-name-sans-extension buffer-file-name)))))
+    (jupyter-org-export-to-notebook nil filename)))
+#+end_src
+
+** Evil Integration
+This optional section provides Vim-like keybindings for navigating and
+interacting with the Jupyter REPL buffer, making it consistent with the rest of
+the Evil-powered environment.
+#+begin_src emacs-lisp
+(with-eval-after-load 'evil
+  (evil-define-key 'normal jupyter-repl-interaction-mode-map
+    (kbd "C-j") 'jupyter-repl-next-cell-and-execute
+    (kbd "C-k") 'jupyter-repl-previous-cell)
+  (evil-define-key 'insert jupyter-repl-interaction-mode-map
+    (kbd "C-c C-c") 'jupyter-repl-send-buffer))
+#+end_src
+
+** Keybindings
+This provides a comprehensive set of global keybindings under the "org jupyter"
+prefix for managing kernels and evaluating code from anywhere.
+#+begin_src emacs-lisp
+(ar/global-leader
+ ;; Org Jupyter Keybindings
+ "j" '(:ignore t :wk "jupyter")
+ "j e" '(jupyter-eval-src-block :wk "Eval src block")
+ "j n" '(ar/jupyter-insert-src-block :wk "New src block")
+ "j v" '(ar/jupyter-switch-to-repl :wk "View REPL")
+ "j C" '(ar/jupyter-clear-all-results :wk "Clear all results")
+ "j R" '(ar/jupyter-restart-and-run-all :wk "Restart & Run All")
+ "j X" '(ar/jupyter-export-to-notebook :wk "Export to .ipynb")
+ "j r" '(jupyter-restart-kernel :wk "Restart kernel")
+ "j i" '(jupyter-interrupt-kernel :wk "Interrupt kernel")
+ "j c" '(jupyter-connect-to-kernel :wk "Connect to kernel")
+ "j l" '(jupyter-list-kernels :wk "List kernels")
+ "j s" '(jupyter-switch-kernel :wk "Switch kernel")
+ "j k" '(jupyter-shutdown-kernel :wk "Shutdown kernel")
+ "j d" '(jupyter-doc :wk "View documentation"))
+#+end_src
+
+* Version Control
+** Magit: The Core Git Client
+*magit* is the central hub for all Git operations. This configuration ensures it works seamlessly with a full-frame UI and other packages.
+#+begin_src emacs-lisp
+(use-package magit
+  :ensure t
+  :init
+  (setq magit-auto-revert-mode nil)
+  :commands (magit-status magit-blame)
+  :custom
+  ;; For a focused view, display the Magit status buffer in its own frame.
+  (magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+  ;; Automatically save file-visiting buffers before staging changes.
+  (magit-save-repository-buffers 'dont-confirmk)
+  :config
+  ;; When quitting Magit, this ensures the previous window configuration is restored.
+  ;; The `magit-display-buffer-fullframe-status-v1` function saves the layout
+  ;; to the `:magit-fullscreen` register, which we jump back to.
+  (defun ar/magit-quit-and-restore-windows ()
+    "Kill the Magit buffer and restore the previous window configuration."
+    (interactive)
+    (kill-buffer (current-buffer))
+    (when (get-register :magit-fullscreen)
+      (jump-to-register :magit-fullscreen)))
+
+  ;; Bind "q" in the status buffer to our custom quitting function.
+  (define-key magit-status-mode-map (kbd "q") #'ar/magit-quit-and-restore-windows))
+#+end_src
+
+** Forge: Git Forge Integration
+*forge* provides integration with online Git forges (e.g., GitHub, GitLab).
+#+begin_src emacs-lisp
+(use-package forge
+  :ensure t
+  :after magit)
+#+end_src
+
+** Magit Todos
+*magit-todos* displays TODO items from your project files in the status buffer.
+#+begin_src emacs-lisp
+(use-package magit-todos
+  :ensure t
+  :after magit
+  :hook (magit-mode . magit-todos-mode))
+#+end_src
+
+** Git Timemachine
+#+begin_src emacs-lisp
+(use-package git-timemachine
+  :ensure t
+  :after magit
+  :config
+  (evil-define-key 'normal git-timemachine-mode-map (kbd "C-j") 'git-timemachine-show-previous-revision)
+  (evil-define-key 'normal git-timemachine-mode-map (kbd "C-k") 'git-timemachine-show-next-revision))
+#+end_src
+
+** Git Gutter: Live Diff Highlighting
+git-gutter provides live, inline diff indicators in the fringe, showing
+which lines have been added, modified, or deleted. This is a crucial
+feature for at-a-glance understanding of changes.
+#+begin_src emacs-lisp
+(use-package git-gutter
+  :ensure t
+  :hook (prog-mode . git-gutter-mode)
+  :custom
+  ;; Only update the gutter when the buffer is saved, for performance.
+  (git-gutter:update-on-save t)
+  ;; Use a lighter touch for updates; avoids refreshing on every change.
+  (git-gutter:update-method "idle")
+  :config
+  ;; Define keybindings for evil-mode for navigating between hunks.
+  (with-eval-after-load 'evil
+    (define-key evil-normal-state-map (kbd "]g") 'git-gutter:next-hunk)
+    (define-key evil-normal-state-map (kbd "[g") 'git-gutter:previous-hunk))
+
+  ;; Add a keybinding to stage the current hunk directly.
+  ;; need to fix
+  ;; (define-key git-gutter-mode-map (kbd "C-x C-s") 'git-gutter:stage-hunk)
+
+)
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp
+(ar/global-leader
+ "g" '(:ignore t :wk "git")
+ "g s" '(magit-status :wk "status")
+ "g c" '(magit-commit :wk "commit")
+ "g C" '(magit-commit-amend :wk "commit amend")
+ "g p" '(magit-push-current-to-pushremote :wk "push")
+ "g P" '(magit-pull-from-upstream :wk "pull")
+ "g b" '(magit-branch :wk "branches")
+ "g l" '(magit-log-buffer-file :wk "log current file")
+ "g L" '(magit-log-current :wk "log current branch")
+ "g d" '(magit-diff-unstaged :wk "diff")
+ "g f" '(magit-fetch :wk "fetch")
+ "g m" '(magit-merge :wk "merge")
+ "g r" '(magit-rebase :wk "rebase")
+ "g n" '(git-gutter:next-hunk :wk "next hunk")
+ "g N" '(git-gutter:previous-hunk :wk "previous hunk")
+ "g S" '(git-gutter:stage-hunk :wk "stage hunk"))
+#+end_src
+
+* PDF-Tools
+** Core
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :ensure t
+  :magic ("%PDF" . pdf-view-mode)
+  :hook (pdf-view-mode . pdf-view-midnight-minor-mode)
+
+  ;; Theme customization to match doom-tokyo-night.
+  :custom
+  ;; Use the specific Tokyonight background and foreground colors for the PDF view.
+  (pdf-view-midnight-colors '("#1a1b26" . "#c0caf5"))
+  ;; Enable continuous scrolling for a smoother experience.
+  (pdf-view-continuous t)
+
+  :custom-face
+  ;; Customize other faces to match the Tokyonight aesthetic.
+  (pdf-view-highlight-face ((t (:background "#e0af68" :foreground "#1a1b26")))) ; Yellow
+  (pdf-view-link-face ((t (:foreground "#7aa2f7"))))      ; Blue
+  (pdf-view-active-link-face ((t (:foreground "#bb9af7")))); Magenta
+
+  :config
+
+  ;; Ensure Org mode integration is set up after Org itself is loaded.
+  (with-eval-after-load 'org
+    (add-to-list 'org-open-at-point-functions 'org-pdftools-open-link)
+    (setq org-pdftools-link-prefix "pdf")))
+#+end_src
+
+** org-noter
+#+begin_src emacs-lisp
+(use-package org-noter
+  :ensure t
+  :after (org pdf-view)
+  :custom
+  ;; Store all notes inside the dedicated `noter` directory.
+  (org-noter-notes-search-path (list my/org-noter-directory))
+  ;; Use a consistent naming scheme for note files.
+  (org-noter-notes-file-name "%s.org")
+  ;; Automatically create a new heading for each note.
+  (org-noter-insert-note-no-questions t)
+  ;; Keep the notes window focused after creating a note.
+  (org-noter-always-focus-on-notes-buffer t)
+  ;; Customize the note heading template.
+  (org-noter-heading-application-function 'org-noter-insert-heading-at-point)
+  (org-noter-note-heading-template "* %s\n:PROPERTIES:\n:NOTER_PAGE: %p\n:NOTER_LEFT: %l\n:NOTER_RIGHT: %r\n:END:\n\n")
+
+  :config
+  ;; Custom function to create a new notes file if one doesn't exist
+  ;; or find the existing one and open it side-by-side.
+  (defun ar/org-noter-find-or-create-notes ()
+    "Find the notes for the current PDF or create a new notes file.
+Opens the notes in a split window to the right."
+    (interactive)
+    (let ((pdf-path (buffer-file-name)))
+      (unless pdf-path
+        (error "Current buffer is not visiting a file"))
+      (let* ((pdf-name (file-name-nondirectory pdf-path))
+             (notes-file (expand-file-name (format "%s.org" (file-name-sans-extension pdf-name)) my/org-noter-directory)))
+        (if (file-exists-p notes-file)
+            (find-file notes-file)
+          (progn
+            (find-file notes-file)
+            (insert (format "#+title: Notes on %s\n\n" pdf-name))))
+        (delete-other-windows)
+        (split-window-right)
+        (windmove-right)
+        (find-file pdf-path)))))
+#+end_src
+
+* Snippets
+** Directory
+#+begin_src emacs-lisp
+;; This is the directory where you will store your personal snippets.
+(defvar my/snippets-directory (expand-file-name "snippets" user-emacs-directory)
+  "Directory for personal yasnippet snippets.")
+
+;; Create the custom snippets directory if it doesn't exist.
+(unless (file-directory-p my/snippets-directory)
+  (make-directory my/snippets-directory t))
+#+end_src
+
+** Yasnippet-Snippets
+*yasnippet-snippets* has to be loaded before *yasnippet* for user snippets to override the pre-built ones
+#+begin_src emacs-lisp
+(use-package yasnippet-snippets :ensure t :demand t)
+#+end_src
+
+** Yasnippet
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :ensure t
+  :defer t
+  :hook (after-init . yas-global-mode)
+  :custom
+  (yas-prompt-functions '(yas-completing-prompt))
+  :config
+
+  ;; --- Add Personal Snippets Directory ---
+  (add-to-list 'yas-snippet-dirs my/snippets-directory)
+  (defun ar/yas-reload-snippets-on-save ()
+    "Reload all snippets if a snippet file is being saved."
+    (when (string-prefix-p my/snippets-directory (buffer-file-name))
+      (yas-reload-all)
+      (message "Yasnippet collection reloaded.")))
+
+  (add-hook 'after-save-hook #'ar/yas-reload-snippets-on-save))
+#+end_src
+
+** Consult Integration
+#+begin_src emacs-lisp
+(use-package consult-yasnippet
+  :ensure t
+  :after (consult yasnippet)
+  :config
+  ;; You can customize the preview behavior if desired.
+  (consult-customize consult-yasnippet :preview-key 'any))
+#+end_src
+
+** Cape Integration
+#+begin_src emacs-lisp
+(use-package yasnippet-capf
+  :ensure t
+  :after cape
+  :config
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+#+end_src
+** Keybindings
+#+begin_src emacs-lisp
+(ar/global-leader
+  "s" '(:ignore t :wk "snippets")
+  "s i" '(consult-yasnippet :wk "insert snippet (consult)")
+  "s n" '(yas-new-snippet :wk "new snippet")
+  "s v" '(yas-visit-snippet-file :wk "visit snippet file"))
+#+end_src
+
+* LaTeX Writing Environment
+** Core Backend: AUCTeX and Tectonic
+This configures the foundational packages. *AUCTeX* is the primary editing environment, enhanced with *Tectonic* as the default compiler for its modern, all-in-one approach.
+#+begin_src emacs-lisp
+(use-package tex
+  :ensure auctex
+  :defer t
+  :config
+  ;; Set the default TeX engine to Tectonic.
+  (setq TeX-engine 'tectonic)
+  (add-to-list 'TeX-engine-alist
+               '(tectonic "Tectonic" "tectonic -X compile %s -o %o" "tectonic -X compile %s -o %o" "tectonic -X compile %s -o %o"))
+
+  ;; Add commands for single compilation and continuous watching.
+  (setq TeX-command-list
+        '(("Tectonic" "tectonic -X compile %s" TeX-run-command nil (latex-mode) :help "Compile with Tectonic")
+          ("Tectonic Watch" "tectonic -X watch %s" TeX-run-command nil (latex-mode) :help "Continuously compile with Tectonic")))
+
+  ;; Use PDF-Tools as the default viewer and enable source correlation (SyncTeX).
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+  (setq TeX-source-correlate-mode t)
+  (setq TeX-PDF-mode t)
+
+  ;; Enable folding of macros and environments, which is built into AUCTeX.
+  (add-hook 'LaTeX-mode-hook #'TeX-fold-mode))
+
+;; Provides evil-mode integration for AUCTeX environments.
+(use-package evil-tex
+  :ensure t
+  :after (tex evil)
+  :defer t)
+#+end_src
+
+** LSP, Completion, and Diagnostics
+This section integrates modern tooling for a responsive and intelligent editing experience.
+- *Eglot + Texlab:* Provides Language Server Protocol features.
+- *Completion:* Merges candidates from Eglot (LSP) and AUCTeX for the most comprehensive suggestions.
+- *Flymake + ChkTeX:* Offers on-the-fly syntax and style checking.
+#+begin_src emacs-lisp
+;; Integrate texlab with Eglot for LSP support.
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '((latex-mode tex-mode plain-tex-mode) . ("texlab"))))
+
+;; This function correctly merges AUCTeX's completion functions with the
+;; LSP-provided functions from Eglot. Cape and Corfu will display the merged list.
+(defun ar/latex-completion-setup ()
+  "Add AUCTeX completion backend to the local completion functions."
+  (add-to-list 'completion-at-point-functions #'TeX-completion-at-point-function nil t))
+(add-hook 'LaTeX-mode-hook #'ar/latex-completion-setup)
+
+;; Enable the built-in ChkTeX support from AUCTeX for style checking.
+;; This requires the `chktex` command-line tool to be installed.
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (flymake-add-checker 'tex-chktex)))
+#+end_src
+
+** Auto-formatting: Apheleia and latexindent
+This configures *apheleia* to use the *latexindent* tool for formatting, ensuring consistent and clean source code.
+#+begin_src emacs-lisp
+(with-eval-after-load 'apheleia
+  ;; For standalone `.tex` files.
+  (setf (alist-get 'LaTeX-mode apheleia-formatters)
+        '("latexindent" "-g" "/dev/null"))
+
+  ;; For Org mode "latex" source blocks.
+  (add-to-list 'apheleia-formatters-alist
+               '((latex . ("latexindent" "-g" "/dev/null")))))
+#+end_src
+
+** Citation Ecosystem: Citar and Zotero
+This section configures a streamlined citation workflow centered around **Citar** and Zotero. It removes redundant packages for a simpler, more powerful setup.
+#+begin_src emacs-lisp
+;; RefTeX is still useful for non-citation references (labels, etc.).
+(use-package reftex
+  :ensure nil
+  :after tex
+  :config
+  (add-hook 'LaTeX-mode-hook #'reftex-mode)
+  (setq reftex-plug-into-AUCTeX t)
+  ;; Let Citar handle the bibliography files.
+  (setq reftex-default-bibliography '()))
+
+;; Citar is the core of our citation workflow.
+(use-package citar
+  :ensure t
+  :hook ((latex-mode . citar-capf-setup)
+         (org-mode . citar-capf-setup))
+  :custom
+  ;; --- CRITICAL ---
+  ;; Point this to the `.bib` file that Better BibTeX for Zotero auto-exports.
+  (citar-bibliography '())
+  ;; Point this to your Zotero data directory to find attached PDFs.
+  (citar-library-paths '("~/Zotero/storage"))
+  (citar-notes-paths (list my/org-roam-directory))
+  (citar-symbols
+   `((file ,(nerd-icons-mdicon "nf-md-file_document") . " ")
+     (note ,(nerd-icons-mdicon "nf-md-note_text") . " ")
+     (link ,(nerd-icons-mdicon "nf-md-link") . " "))))
+
+;; Integrates Citar with Org Roam to link literature notes to citations.
+(use-package citar-org-roam
+  :ensure t
+  :after (citar org-roam)
+  :config (citar-org-roam-mode 1))
+
+;; Provides Embark actions for Citar candidates (e.g., open PDF, open notes).
+(use-package citar-embark
+  :ensure t
+  :after (citar embark)
+  :config (citar-embark-mode))
+#+end_src
+
+** Writing UI and Editing Enhancements
+This section improves the interactive writing experience with faster math input
+and aesthetic ligatures.
+#+begin_src emacs-lisp
+(use-package math-symbol-lists :ensure t)
+
+(use-package cdlatex
+  :ensure t
+  :hook (LaTeX-mode . cdlatex-mode))
+
+(use-package laas
+  :ensure t
+  :hook (LaTeX-mode . laas-mode))
+
+;; Use `prettify-symbols-mode` to render LaTeX macros as unicode characters.
+(defun ar/latex-prettify-symbols-setup ()
+  "Enable prettify-symbols-mode and add custom LaTeX ligatures."
+  (prettify-symbols-mode 1)
+  (mapc (lambda (rule) (push rule prettify-symbols-compose-rules))
+        '(("\\sum" . "∑") ("\\int" . "∫") ("\\in" . "∈") ("\\forall" . "∀")
+          ("\\exists" . "∃") ("\\lambda" . "λ") ("\\alpha" . "α") ("\\beta" . "β")
+          ("\\gamma" . "γ") ("\\delta" . "δ") ("\\epsilon" . "ε") ("\\pi" . "π")
+          ("\\rightarrow" . "→") ("\\leftarrow" . "←") ("\\Rightarrow" . "⇒")
+          ("\\leq" . "≤") ("\\geq" . "≥"))))
+(add-hook 'LaTeX-mode-hook #'ar/latex-prettify-symbols-setup)
+#+end_src
+
+** Org Mode Integration
+#+begin_src emacs-lisp
+(with-eval-after-load 'ox-latex
+  ;; Configure Org's citation engine to use our Citar setup.
+  (setq org-cite-global-bibliography '())
+  (setq org-cite-bibliography '())
+  (setq org-cite-follow-processor 'citar)
+  (setq org-cite-activate-processor 'citar)
+
+  ;; Set Tectonic as the default compiler for Org LaTeX exports.
+  (setq org-latex-compiler "tectonic")
+  (setq org-latex-pdf-process
+        '("tectonic -X compile %f -o %o"))
+
+  ;; Define custom LaTeX classes for flexible document creation.
+  (add-to-list 'org-latex-classes
+        '("article"
+           "\\documentclass{article}"
+           ("\\section{%s}" . "\\section*{%s}")
+           ("\\subsection{%s}" . "\\subsection*{%s}")
+           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")) t)
+  (add-to-list 'org-latex-classes
+        '("beamer"
+           "\\documentclass{beamer}"
+           ("\\section{%s}" . "\\section*{%s}")
+           ("\\subsection{%s}" . "\\subsection*{%s}")) t))
+#+end_src
+
+** Custom Snippets for Scientific Writing
+#+begin_src emacs-lisp
+(with-eval-after-load 'yasnippet
+  ;; --- Snippet Definitions ---
+  ;; We define the snippets programmatically to keep the config self-contained.
+  (yas-define-snippets 'latex-mode
+    '(;; -- Templates --
+      ("article"
+       "\\documentclass[11pt,a4paper]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage{amsmath}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{hyperref}
+\\usepackage{siunitx}
+\\usepackage{booktabs}
+
+\\title{${1:Title}}
+\\author{${2:Author}}
+\\date{\\today}
+
+\\begin{document}
+
+\\maketitle
+
+\\begin{abstract}
+  ${3:Abstract}
+\\end{abstract}
+
+\\tableofcontents
+
+\\section{${4:Introduction}}
+
+$0
+
+\\end{document}"
+       "Full Scientific Article Structure"
+       nil nil ("Templates"))
+
+      ;; -- Document Structure & Environments --
+      ("abs" "\\begin{abstract}\n  $0\n\\end{abstract}" "Abstract environment")
+      ("fig"
+       "\\begin{figure}[htbp]
+  \\centering
+  \\includegraphics[width=${1:0.8}\\textwidth]{${2:path/to/image}}
+  \\caption{${3:Caption}}
+  \\label{fig:${4:label}}
+\\end{figure}
+$0"
+       "Figure environment")
+      ("sfig"
+       "\\begin{figure}[htbp]
+  \\centering
+  \\begin{subfigure}[b]{${1:0.45}\\textwidth}
+    \\includegraphics[width=\\textwidth]{${2:img1}}
+    \\caption{${3:Caption 1}}
+    \\label{fig:${4:label1}}
+  \\end{subfigure}
+  \\hfill
+  \\begin{subfigure}[b]{${1:0.45}\\textwidth}
+    \\includegraphics[width=\\textwidth]{${5:img2}}
+    \\caption{${6:Caption 2}}
+    \\label{fig:${7:label2}}
+  \\end{subfigure}
+  \\caption{${8:Overall caption}}
+\\end{figure}
+$0"
+       "Subfigure environment")
+      ("table"
+       "\\begin{table}[htbp]
+  \\centering
+  \\caption{${1:Caption}}
+  \\label{tab:${2:label}}
+  \\begin{tabular}{${3:l c r}}
+    \\toprule
+    ${4:Header 1} & ${5:Header 2} & ${6:Header 3} \\\\
+    \\midrule
+    ${7:data} & ${8:data} & ${9:data} \\\\
+    \\bottomrule
+  \\end{tabular}
+\\end{table}
+$0"
+       "Table with booktabs")
+      ("item" "\\begin{itemize}\n  \\item $0\n\\end{itemize}" "Itemize environment")
+      ("enum" "\\begin{enumerate}\n  \\item $0\n\\end{enumerate}" "Enumerate environment")
+      ("thm" "\\begin{theorem}\n  $0\n\\end{theorem}" "Theorem environment")
+      ("lem" "\\begin{lemma}\n  $0\n\\end{lemma}" "Lemma environment")
+      ("prf" "\\begin{proof}\n  $0\n\\end{proof}" "Proof environment")
+
+      ;; -- Equations & Math --
+      ("eq"
+       "\\begin{equation}
+  ${1:e^{i\\pi} + 1 = 0}
+  \\label{eq:${2:label}}
+\\end{equation}
+$0"
+       "Equation environment")
+      ("ali"
+       "\\begin{align}
+  ${1:a} &= ${2:b} \\\\
+  ${3:c} &= ${4:d}
+  \\label{eq:${5:label}}
+\\end{align}
+$0"
+       "Align environment for multi-line equations")
+      ("mat"
+       "\\begin{pmatrix}\n  ${1:a} & ${2:b} \\\\\n  ${3:c} & ${4:d}\n\\end{pmatrix}"
+       "pmatrix (Matrix)")
+      ("bmat"
+       "\\begin{bmatrix}\n  ${1:a} & ${2:b} \\\\\n  ${3:c} & ${4:d}\n\\end{bmatrix}"
+       "bmatrix (Bracketed Matrix)")
+      ("lrp" "\\\\left( $1 \\\\right) $0" "Left-right parentheses")
+      ("lrb" "\\\\left[ $1 \\\\right] $0" "Left-right brackets")
+      ("lrc" "\\\\left\\{ $1 \\\\right\\} $0" "Left-right curly braces")
+      ("sum" "\\\\sum_{${1:n=1}}^{${2:\\infty}} ${3:x_n}" "Summation")
+      ("prod" "\\\\prod_{${1:n=1}}^{${2:\\infty}} ${3:x_n}" "Product")
+      ("int" "\\\\int_{${1:a}}^{${2:b}} ${3:f(x)\\,dx}" "Integral")
+
+      ;; -- Physics Specific --
+      ("pd" "\\\\frac{\\\\partial ${1:y}}{\\\\partial ${2:x}} $0" "Partial derivative")
+      ("dd" "\\\\frac{d ${1:y}}{d ${2:x}} $0" "Total derivative")
+      ("bra" "\\\\bra{${1:\\psi}}$0" "Bra vector")
+      ("ket" "\\\\ket{${1:\\psi}}$0" "Ket vector")
+      ("braket" "\\\\braket{${1:\\psi}|${2:\\phi}}$0" "Braket inner product")
+      ("h" "\\\\hbar" "hbar symbol")
+
+      ;; -- Greek Letters (Prefix `g` for lowercase, `G` for uppercase) --
+      ("ga" "\\\\alpha" "alpha")
+      ("gb" "\\\\beta" "beta")
+      ("gg" "\\\\gamma" "gamma")
+      ("gd" "\\\\delta" "delta")
+      ("ge" "\\\\epsilon" "epsilon")
+      ("gz" "\\\\zeta" "zeta")
+      ("go" "\\\\omega" "omega")
+      ("GA" "\\\\Alpha" "Alpha")
+      ("GB" "\\\\Beta" "Beta")
+      ("GG" "\\\\Gamma" "Gamma")
+      ("GD" "\\\\Delta" "Delta")
+      ("GO" "\\\\Omega" "Omega")
+
+      ;; -- Referencing & Citations --
+      ("ref" "\\\\ref{${1:fig:label}}$0" "Reference")
+      ("eqref" "\\\\eqref{${1:eq:label}}$0" "Equation Reference")
+      ("citp" "\\\\citep{${1:key}}$0" "Parenthetical citation")
+      )))
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp
+(ar/global-leader
+  "c" '(:ignore t :wk "compile/cite")
+  "c c" '(TeX-command-master :wk "Compile Document")
+  "c v" '(TeX-view :wk "View Output")
+  "c e" '(TeX-clean :wk "Clean Aux Files")
+  "c b" '(citar-insert-citation :wk "Insert Citation")
+  "c o" '(citar-open :wk "Open Reference"))
+#+end_src
+
+* Markdown/Org Conversion
+** md-to-org
+#+begin_src emacs-lisp
+;; <
+(defun md-to-org (md-file &optional org-file)
+  "Convert a Markdown file to Org mode format using pandoc.
+MD-FILE is the input Markdown file path.
+ORG-FILE is the optional output Org file path. If not provided,
+it will use the same name as MD-FILE but with .org extension."
+  (interactive "fMarkdown file: ")
+  (let* ((input-file (expand-file-name md-file))
+         (output-file (or org-file
+                         (concat (file-name-sans-extension input-file) ".org")))
+         (pandoc-cmd (format "pandoc -f markdown -t org %s -o %s"
+                            (shell-quote-argument input-file)
+                            (shell-quote-argument output-file))))
+    (unless (executable-find "pandoc")
+      (error "Pandoc not found. Please install pandoc to use this function"))
+    (unless (file-exists-p input-file)
+      (error "Input file does not exist: %s" input-file))
+    (when (file-exists-p output-file)
+      (unless (y-or-n-p "Output file exists. Overwrite? ")
+        (error "Conversion cancelled")))
+    (message "Converting %s to %s..." input-file output-file)
+    (let ((result (shell-command pandoc-cmd)))
+      (if (= result 0)
+          (progn
+            (message "Successfully converted to %s" output-file)
+            (when (y-or-n-p "Open the converted file? ")
+              (find-file output-file)))
+        (error "Pandoc conversion failed with exit code %d" result)))))
+
+(defun md-to-org-current-buffer ()
+  "Convert the current Markdown buffer to Org mode format.
+Saves the current buffer first if modified, then converts it."
+  (interactive)
+  (unless (buffer-file-name)
+    (error "Buffer is not associated with a file"))
+  (when (buffer-modified-p)
+    (if (y-or-n-p "Buffer modified. Save before converting? ")
+        (save-buffer)
+      (error "Please save the buffer before converting")))
+  (md-to-org (buffer-file-name)))
+
+(defun md-to-org-region (start end)
+  "Convert the selected region from Markdown to Org mode format using pandoc.
+START and END define the region boundaries.
+The converted text replaces the original region."
+  (interactive "r")
+  (unless (executable-find "pandoc")
+    (error "Pandoc not found. Please install pandoc to use this function"))
+  (unless (use-region-p)
+    (error "No region selected"))
+  (when (= start end)
+    (error "Empty region selected"))
+
+  (let* ((md-text (buffer-substring-no-properties start end))
+         (temp-md-file (make-temp-file "md-to-org-" nil ".md"))
+         (temp-org-file (make-temp-file "md-to-org-" nil ".org"))
+         (pandoc-cmd (format "pandoc -f markdown -t org %s -o %s"
+                            (shell-quote-argument temp-md-file)
+                            (shell-quote-argument temp-org-file))))
+    (unwind-protect
+        (progn
+          ;; Write markdown text to temp file with proper encoding
+          (with-temp-file temp-md-file
+            (insert md-text))
+          ;; Convert using pandoc
+          (let ((result (shell-command pandoc-cmd)))
+            (if (= result 0)
+                (if (file-exists-p temp-org-file)
+                    (let ((org-text (with-temp-buffer
+                                     (insert-file-contents temp-org-file)
+                                     (buffer-string))))
+                      ;; Remove trailing newline if original text didn't have one
+                      (when (and (> (length org-text) 0)
+                                 (not (string-suffix-p "\n" md-text))
+                                 (string-suffix-p "\n" org-text))
+                        (setq org-text (substring org-text 0 -1)))
+                      ;; Replace the region
+                      (save-excursion
+                        (delete-region start end)
+                        (goto-char start)
+                        (insert org-text))
+                      (message "Region converted from Markdown to Org mode"))
+                  (error "Pandoc output file not created"))
+              (error "Pandoc conversion failed with exit code %d" result))))
+      ;; Clean up temp files
+      (when (file-exists-p temp-md-file)
+        (delete-file temp-md-file))
+      (when (file-exists-p temp-org-file)
+        (delete-file temp-org-file)))))
+
+(defun md-to-org-region-to-new-buffer (start end)
+  "Convert the selected region from Markdown to Org mode and show in new buffer.
+START and END define the region boundaries.
+Creates a new buffer with the converted content instead of replacing the region."
+  (interactive "r")
+  (unless (executable-find "pandoc")
+    (error "Pandoc not found. Please install pandoc to use this function"))
+  (unless (use-region-p)
+    (error "No region selected"))
+  (when (= start end)
+    (error "Empty region selected"))
+
+  (let* ((md-text (buffer-substring-no-properties start end))
+         (temp-md-file (make-temp-file "md-to-org-" nil ".md"))
+         (temp-org-file (make-temp-file "md-to-org-" nil ".org"))
+         (pandoc-cmd (format "pandoc -f markdown -t org %s -o %s"
+                            (shell-quote-argument temp-md-file)
+                            (shell-quote-argument temp-org-file))))
+    (unwind-protect
+        (progn
+          ;; Write markdown text to temp file
+          (with-temp-file temp-md-file
+            (insert md-text))
+          ;; Convert using pandoc
+          (let ((result (shell-command pandoc-cmd)))
+            (if (= result 0)
+                (if (file-exists-p temp-org-file)
+                    (let ((org-text (with-temp-buffer
+                                     (insert-file-contents temp-org-file)
+                                     (buffer-string))))
+                      ;; Create new buffer with converted content
+                      (with-current-buffer (get-buffer-create "*Markdown to Org Conversion*")
+                        (erase-buffer)
+                        (insert org-text)
+                        (org-mode)
+                        (goto-char (point-min))
+                        (display-buffer (current-buffer)))
+                      (message "Converted text displayed in new buffer"))
+                  (error "Pandoc output file not created"))
+              (error "Pandoc conversion failed with exit code %d" result))))
+      ;; Clean up temp files
+      (when (file-exists-p temp-md-file)
+        (delete-file temp-md-file))
+      (when (file-exists-p temp-org-file)
+        (delete-file temp-org-file)))))
+#+end_src
+
+** org-to-md
+#+begin_src emacs-lisp
+;; --- Org to Markdown Conversion ---
+;; <
+(defun org-to-md (org-file &optional md-file)
+  "Convert an Org mode file to Markdown format using pandoc.
+ORG-FILE is the input Org file path.
+MD-FILE is the optional output Markdown file path. If not provided,
+it will use the same name as ORG-FILE but with .md extension."
+  (interactive "fOrg file: ")
+  (let* ((input-file (expand-file-name org-file))
+         (output-file (or md-file
+                         (concat (file-name-sans-extension input-file) ".md")))
+         (pandoc-cmd (format "pandoc -f org -t markdown %s -o %s"
+                            (shell-quote-argument input-file)
+                            (shell-quote-argument output-file))))
+    (unless (executable-find "pandoc")
+      (error "Pandoc not found. Please install pandoc to use this function"))
+    (unless (file-exists-p input-file)
+      (error "Input file does not exist: %s" input-file))
+    (when (file-exists-p output-file)
+      (unless (y-or-n-p "Output file exists. Overwrite? ")
+        (error "Conversion cancelled")))
+    (message "Converting %s to %s..." input-file output-file)
+    (let ((result (shell-command pandoc-cmd)))
+      (if (= result 0)
+          (progn
+            (message "Successfully converted to %s" output-file)
+            (when (y-or-n-p "Open the converted file? ")
+              (find-file output-file)))
+        (error "Pandoc conversion failed with exit code %d" result)))))
+
+(defun org-to-md-current-buffer ()
+  "Convert the current Org buffer to Markdown format.
+Saves the current buffer first if modified, then converts it."
+  (interactive)
+  (unless (buffer-file-name)
+    (error "Buffer is not associated with a file"))
+  (when (buffer-modified-p)
+    (if (y-or-n-p "Buffer modified. Save before converting? ")
+        (save-buffer)
+      (error "Please save the buffer before converting")))
+  (org-to-md (buffer-file-name)))
+
+(defun org-to-md-region (start end)
+  "Convert the selected region from Org mode to Markdown format using pandoc.
+START and END define the region boundaries.
+The converted text replaces the original region."
+  (interactive "r")
+  (unless (executable-find "pandoc")
+    (error "Pandoc not found. Please install pandoc to use this function"))
+  (unless (use-region-p)
+    (error "No region selected"))
+  (when (= start end)
+    (error "Empty region selected"))
+    ;; <
+  (let* ((org-text (buffer-substring-no-properties start end))
+         (temp-org-file (make-temp-file "org-to-md-" nil ".org"))
+         (temp-md-file (make-temp-file "org-to-md-" nil ".md"))
+         (pandoc-cmd (format "pandoc -f org -t markdown %s -o %s"
+                            (shell-quote-argument temp-org-file)
+                            (shell-quote-argument temp-md-file))))
+    (unwind-protect
+        (progn
+          ;; Write org text to temp file with proper encoding
+          (with-temp-file temp-org-file
+            (insert org-text))
+          ;; Convert using pandoc
+          (let ((result (shell-command pandoc-cmd)))
+            (if (= result 0)
+                (if (file-exists-p temp-md-file)
+                    (let ((md-text (with-temp-buffer
+                                     (insert-file-contents temp-md-file)
+                                     (buffer-string))))
+                      ;; Remove trailing newline if original text didn't have one
+                      (when (and (> (length md-text) 0)
+                                 (not (string-suffix-p "\n" org-text))
+                                 (string-suffix-p "\n" md-text))
+                        (setq md-text (substring md-text 0 -1)))
+                      ;; Replace the region
+                      (save-excursion
+                        (delete-region start end)
+                        (goto-char start)
+                        (insert md-text))
+                      (message "Region converted from Org mode to Markdown"))
+                  (error "Pandoc output file not created"))
+              (error "Pandoc conversion failed with exit code %d" result))))
+      ;; Clean up temp files
+      (when (file-exists-p temp-org-file)
+        (delete-file temp-org-file))
+      (when (file-exists-p temp-md-file)
+        (delete-file temp-md-file)))))
+
+(defun org-to-md-region-to-new-buffer (start end)
+  "Convert the selected region from Org to Markdown and show in new buffer.
+START and END define the region boundaries.
+Creates a new buffer with the converted content instead of replacing the region."
+  (interactive "r")
+  (unless (executable-find "pandoc")
+    (error "Pandoc not found. Please install pandoc to use this function"))
+  (unless (use-region-p)
+    (error "No region selected"))
+  (when (= start end)
+    (error "Empty region selected"))
+
+  (let* ((org-text (buffer-substring-no-properties start end))
+         (temp-org-file (make-temp-file "org-to-md-" nil ".org"))
+         (temp-md-file (make-temp-file "org-to-md-" nil ".md"))
+         (pandoc-cmd (format "pandoc -f org -t markdown %s -o %s"
+                            (shell-quote-argument temp-org-file)
+                            (shell-quote-argument temp-md-file))))
+    (unwind-protect
+        (progn
+          ;; Write org text to temp file
+          (with-temp-file temp-org-file
+            (insert org-text))
+          ;; Convert using pandoc
+          (let ((result (shell-command pandoc-cmd)))
+            (if (= result 0)
+                (if (file-exists-p temp-md-file)
+                    (let ((md-text (with-temp-buffer
+                                     (insert-file-contents temp-md-file)
+                                     (buffer-string))))
+                      ;; Create new buffer with converted content
+                      (with-current-buffer (get-buffer-create "*Org to Markdown Conversion*")
+                        (erase-buffer)
+                        (insert md-text)
+                        (gfm-mode) ; Use gfm-mode for Markdown
+                        (goto-char (point-min))
+                        (display-buffer (current-buffer)))
+                      (message "Converted text displayed in new buffer"))
+                  (error "Pandoc output file not created"))
+              (error "Pandoc conversion failed with exit code %d" result))))
+      ;; Clean up temp files
+      (when (file-exists-p temp-org-file)
+        (delete-file temp-org-file))
+      (when (file-exists-p temp-md-file)
+        (delete-file temp-md-file)))))
+#+end_src
