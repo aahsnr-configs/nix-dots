@@ -242,7 +242,7 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
                                 ("mp4" . "mpv"))))
 #+end_src
 
-* Version Control (Magit)
+* Version Control using Magit
 Configuration for `magit`, the powerful Git client inside Emacs.
 
 #+begin_src emacs-lisp
@@ -256,38 +256,45 @@ Configuration for `magit`, the powerful Git client inside Emacs.
 (setq forge-owned-accounts '(("aahsnr")))
 #+end_src
 
-* Programming
-This section contains all configurations related to software development, including language-specific setups for Python and LaTeX.
-
-** General Tools
-These are tools that apply to most programming languages, such as the LSP client, debugger, and syntax checkers.
-
-*** LSP-UI Configuration
-Configure LSP-UI for better documentation and diagnostics display.
+* General Programming Tools
+** DONE Eglot Configuration
+Eglot provides LSP functionality using built-in Emacs features like eldoc, xref, and flymake.
 #+begin_src emacs-lisp
-(after! lsp-ui
-  (setq lsp-ui-doc-enable t
-        lsp-ui-doc-position 'at-point
-        lsp-ui-doc-max-width 80
-        lsp-ui-doc-max-height 30
-        lsp-ui-doc-show-with-cursor nil
-        lsp-ui-doc-show-with-mouse t
-        lsp-ui-sideline-enable t
-        lsp-ui-sideline-show-hover nil
-        lsp-ui-sideline-show-code-actions t
-        lsp-ui-sideline-show-diagnostics t))
-
+(after! eglot
+  ;; Add basedpyright as the Python language server
+  (add-to-list 'eglot-server-programs
+               '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio"))))
 #+end_src
 
-*** LSP Performance Optimization
-Minimal performance tuning that doesn't conflict with Doom's defaults.
+** DONE Improve flymake UX
 #+begin_src emacs-lisp
-(after! lsp-mode
-  (setq read-process-output-max (* 1024 1024)))  ; 1MB
+(after! flymake
+  (setq flymake-no-changes-timeout 0.3
+        flymake-start-on-save-buffer t))
 #+end_src
 
-*** Snippets (YASnippet)
-We use `yasnippet-capf` to integrate snippet expansion with the Corfu completion framework.
+** DONE Documentation Display (eldoc-box)
+Use eldoc-box to display documentation in a childframe for better visibility.
+#+begin_src emacs-lisp
+(use-package! eldoc-box
+  :commands (eldoc-box-hover-mode eldoc-box-hover-at-point-mode eldoc-box-help-at-point)
+  :init
+  ;; Enable hover documentation in childframe for eglot buffers
+  (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode)
+  :config
+  ;; Customize eldoc-box appearance to match Catppuccin theme
+  (setq eldoc-box-max-pixel-width 800
+        eldoc-box-max-pixel-height 600
+        eldoc-box-clear-with-C-g t)
+
+  ;; Custom faces for eldoc-box
+  (custom-set-faces!
+    '(eldoc-box-border ((t (:background "#45475a"))))
+    '(eldoc-box-body ((t (:background "#1e1e2e" :foreground "#cdd6f4"))))))
+#+end_src
+
+** TODO Snippets (YASnippet)
+We use *yasnippet-capf* to integrate snippet expansion with the Corfu completion framework.
 #+begin_src emacs-lisp
 (use-package! yasnippet-capf
   :after cape
@@ -298,93 +305,94 @@ We use `yasnippet-capf` to integrate snippet expansion with the Corfu completion
 * Python Development Environment
 This section configures a state-of-the-art Python development environment using specialized, standalone tools for formatting, linting, and debugging.
 
-** Language Server Protocol (basedpyright)
-Configure lsp-mode to use basedpyright, which offers more features than the default pyright.
+** DONE Eglot Setup
+Enable Eglot automatically in Python buffers, including org-src-mode.
 #+begin_src emacs-lisp
-(use-package! lsp-pyright
-  :init
-  ;; Disable ruff-lsp BEFORE lsp-mode starts
-  (setq lsp-disabled-clients '(ruff-lsp ruff))
-  ;; Use basedpyright from nix-shell environment
-  (setq lsp-pyright-langserver-command "basedpyright")
-  :hook ((python-mode python-ts-mode) . (lambda ()
-                                           (require 'lsp-pyright)
-                                           (lsp-deferred))))
+(add-hook 'python-mode-hook #'eglot-ensure)
+(add-hook 'python-ts-mode-hook #'eglot-ensure)
+
+;; Enable Eglot in org-src-mode buffers for Python
+(defun my/org-src-python-eglot-setup ()
+  "Enable Eglot in org-src-mode buffers for Python.
+This function ensures LSP features work in code blocks edited via org-edit-special."
+  (when (and (derived-mode-p 'python-mode 'python-ts-mode)
+             (bound-and-true-p org-src-mode)
+             (not (eglot-managed-p)))
+    ;; Delay to allow org-src-mode to fully initialize
+    (run-with-idle-timer 0.3 nil
+      (lambda (buf)
+        (when (buffer-live-p buf)
+          (with-current-buffer buf
+            (when (and (derived-mode-p 'python-mode 'python-ts-mode)
+                       (not (eglot-managed-p)))
+              ;; Eglot requires a file name for project detection
+              ;; Create a temporary file path for org-src buffers
+              (unless buffer-file-name
+                (setq-local buffer-file-name
+                           (expand-file-name
+                            (format "org-src-python-%s.py" (buffer-name))
+                            temporary-file-directory)))
+              ;; Start eglot
+              (eglot-ensure)))))
+      (current-buffer))))
+
+(add-hook 'org-src-mode-hook #'my/org-src-python-eglot-setup)
+
+;; Enable eldoc in org-src-mode for documentation display
+(add-hook 'org-src-mode-hook
+  (lambda ()
+    (when (and (derived-mode-p 'python-mode 'python-ts-mode)
+               (eglot-managed-p))
+      (eldoc-mode 1))))
 #+end_src
 
-** Code Formatting (Apheleia + Ruff)
-Decouple code formatting from LSP and use apheleia with ruff for fast, reliable formatting.
-#+begin_src emacs-lisp
-;; Disable LSP formatting for Python
-(setq-hook! 'python-mode-hook +format-with-lsp nil)
-(setq-hook! 'python-ts-mode-hook +format-with-lsp nil)
+#+RESULTS:
+| #[nil ((when (and (derived-mode-p 'python-mode 'python-ts-mode) (eglot-managed-p)) (eldoc-mode 1))) nil] | my/org-src-python-eglot-setup | org-src-babel-configure-edit-buffer | org-src-mode-configure-edit-buffer | rainbow-delimiters-mode |
 
-;; Configure apheleia to use ruff for Python formatting
-;; Ruff formatter is already built-in to apheleia, we just need to associate it
+** DONE Code Formatting (Apheleia + Ruff)
+Use Apheleia for fast, async code formatting on save with ruff.
+#+begin_src emacs-lisp
 (after! apheleia
   (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff))
   (setf (alist-get 'python-ts-mode apheleia-mode-alist) '(ruff)))
 #+end_src
 
-** Syntax Checking (Flycheck + Ruff + Mypy)
+** DONE Flymake (Ruff + Mypy)
 Replace LSP-based syntax checking with a custom flycheck toolchain for superior performance.
 #+begin_src emacs-lisp
-(after! flycheck
-  (defun my/python-flycheck-setup ()
-    "Set up flycheck for Python with ruff and mypy."
-    ;; Disable LSP diagnostics to avoid conflicts
-    (setq-local lsp-diagnostics-provider :none)
+(after! flymake-collection
+  ;; Python mode configuration
+  (push '(python-mode
+          flymake-collection-ruff      ; Fast linting with ruff
+          flymake-collection-mypy)     ; Type checking with mypy
+        flymake-collection-config)
 
-    ;; Disable LSP checker
-    (add-to-list 'flycheck-disabled-checkers 'lsp)
+  ;; Python tree-sitter mode configuration
+  (push '(python-ts-mode
+          flymake-collection-ruff
+          flymake-collection-mypy)
+        flymake-collection-config)
 
-    ;; Select ruff as the checker
-    (flycheck-select-checker 'python-ruff)
-
-    ;; Chain mypy after ruff
-    (flycheck-add-next-checker 'python-ruff 'python-mypy t))
-
-  (add-hook 'python-mode-hook #'my/python-flycheck-setup)
-  (add-hook 'python-ts-mode-hook #'my/python-flycheck-setup))
+  ;; Enable automatic diagnostic function setup
+  (flymake-collection-hook-setup))
 #+end_src
 
-** Debugging (Dape for Python)
-Dape comes with built-in debug adapter configurations for Python using debugpy. No additional configuration is required for basic debugging functionality. Simply install debugpy (`pip install debugpy`) and use `M-x dape` to start debugging, selecting one of the Python configurations (e.g., `debugpy`).
-
-If you need custom debugging configurations (e.g., with specific arguments or environment variables), you can add them:
-#+begin_src emacs-lisp
-(after! dape
-  ;; Example: Custom Python debugging configuration with arguments
-  (add-to-list 'dape-configs
-               `(debugpy-args
-                 modes (python-mode python-ts-mode)
-                 ensure dape-ensure-command
-                 command "python"
-                 command-args ("-m" "debugpy.adapter")
-                 :request "launch"
-                 :type "python"
-                 :cwd dape-cwd-fn
-                 :program dape-find-file-buffer-default
-                 :args ["arg1" "arg2"])))  ; Your custom arguments here
-#+end_src
-
-** Optimize Org Mode Jupyter Integration
-Disable Jupyter's code completion features within Org mode to avoid conflicts with the new LSP setup.
+** DONE Debugging (Dape for Python)
+Dape comes with built-in debug adapter configurations for Python using debugpy. Simply install debugpy (`pip install debugpy`) and use `M-x dape` to start debugging.
+** DONE Optimize Org Mode Jupyter Integration
+Prevent conflicts between Jupyter and Eglot completion in org-src-mode.
 #+begin_src emacs-lisp
 (after! jupyter
-  ;; Remove jupyter completion from completion-at-point-functions
-  ;; when in org-src-mode for Python to avoid conflicts with LSP completion
+  ;; Remove jupyter completion from completion-at-point-functions in org-src-mode
+  ;; This prevents conflicts with Eglot's LSP-based completion
   (add-hook 'org-src-mode-hook
     (lambda ()
       (when (and (derived-mode-p 'python-mode 'python-ts-mode)
                  (bound-and-true-p jupyter-current-client))
-        ;; Remove jupyter-org-completion-at-point from the list
         (setq-local completion-at-point-functions
                     (delq 'jupyter-org-completion-at-point
                           completion-at-point-functions))))))
 #+end_src
-
-
 
 * Org Mode
 This is the central hub for my personal knowledge management, task tracking, and literate programming.
@@ -662,42 +670,56 @@ This section defines my custom keybindings, primarily using the leader key (`SPC
 
 #+RESULTS:
 
-
-** IDE Keybindings for LSP
-Convenient keybindings for common LSP operations in org-src-mode and regular buffers.
+** DONE IDE Keybindings
+Keybindings for code navigation, documentation, and actions.
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix ("c" . "code")
-       :desc "LSP Format buffer"        "=" #'lsp-format-buffer
-       :desc "LSP Organize imports"     "o" #'lsp-organize-imports
-       :desc "LSP Rename"               "r" #'lsp-rename
-       :desc "LSP Find references"      "R" #'lsp-find-references
-       :desc "LSP Describe at point"    "h" #'lsp-describe-thing-at-point
-       :desc "LSP Code actions"         "a" #'lsp-execute-code-action
-       :desc "LSP Execute code lens"    "l" #'lsp-avy-lens))
+       :desc "Format buffer"            "=" #'apheleia-format-buffer
+       :desc "Organize imports"         "o" #'eglot-code-action-organize-imports
+       :desc "Rename"                   "r" #'eglot-rename
+       :desc "Find references"          "R" #'xref-find-references
+       :desc "Show documentation"       "h" #'eldoc-doc-buffer
+       :desc "Show doc in childframe"   "H" #'eldoc-box-help-at-point
+       :desc "Code actions"             "a" #'eglot-code-actions
+       :desc "Find definition"          "d" #'xref-find-definitions
+       :desc "Find type definition"     "D" #'eglot-find-typeDefinition
+       :desc "Go back"                  "b" #'xref-go-back))
+
+;; Flymake diagnostics navigation
+(map! :after flymake
+      :map flymake-mode-map
+      :n "]d" #'flymake-goto-next-error
+      :n "[d" #'flymake-goto-prev-error
+      :leader
+      (:prefix ("c" . "code")
+       :desc "List diagnostics"        "x" #'flymake-show-buffer-diagnostics
+       :desc "List project diagnostics" "X" #'flymake-show-project-diagnostics))
 
 ;; Org-src-mode specific keybindings
 (map! :map org-src-mode-map
       :localleader
-      :desc "Exit and save" "'" #'org-edit-src-exit
-      :desc "Abort edit" "k" #'org-edit-src-abort
-      :desc "Format buffer" "=" #'lsp-format-buffer)
+      :desc "Exit and save"        "'" #'org-edit-src-exit
+      :desc "Abort edit"           "k" #'org-edit-src-abort
+      :desc "Format buffer"        "=" #'apheleia-format-buffer
+      :desc "Show documentation"   "h" #'eldoc-box-help-at-point
+      :desc "Code actions"         "a" #'eglot-code-actions)
 #+end_src
 
-** Debugging (DAPE)
+** DONE Debugging (DAPE)
 Global keybindings for the Debug Adapter Protocol client.
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix ("d" . "debug/dape")
-       :desc "Debug" "d" #'dape
-       :desc "Toggle breakpoint" "b" #'dape-breakpoint-toggle
-       :desc "Continue" "c" #'dape-continue
-       :desc "Next" "n" #'dape-next
-       :desc "Step in" "i" #'dape-step-in
-       :desc "Step out" "o" #'dape-step-out
-       :desc "Restart" "r" #'dape-restart
-       :desc "Kill debug session" "k" #'dape-kill
-       :desc "Debug REPL" "R" #'dape-repl))
+       :desc "Debug"               "d" #'dape
+       :desc "Toggle breakpoint"   "b" #'dape-breakpoint-toggle
+       :desc "Continue"            "c" #'dape-continue
+       :desc "Next"                "n" #'dape-next
+       :desc "Step in"             "i" #'dape-step-in
+       :desc "Step out"            "o" #'dape-step-out
+       :desc "Restart"             "r" #'dape-restart
+       :desc "Kill debug session"  "k" #'dape-kill
+       :desc "Debug REPL"          "R" #'dape-repl))
 #+end_src
 
 * Miscellaneous

@@ -42,6 +42,8 @@
 (package! dired-open)
 (package! dired-ranger)
 (package! jinx)
+(package! flymake-collection)
+(package! eldoc-box)
 
 ;;; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ;;; Python Development

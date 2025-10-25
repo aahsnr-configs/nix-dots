@@ -48,7 +48,7 @@
        (popup +defaults)   ; tame sudden yet inevitable temporary windows
        ;;smooth-scroll     ; So smooth you won't believe it's not butter
        ;;tabs              ; a tab bar for Emacs
-       (treemacs +lsp)     ; a project drawer, like neotree but cooler
+       treemacs            ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
        (vc-gutter +pretty) ; vcs diff in the fringe
        ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -90,6 +90,7 @@
 
        :checkers
        (syntax             ; tasing you for every semicolon you forget
+        +flymake
         +icons)
        ;;(spell +flyspell) ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
@@ -109,7 +110,8 @@
        lookup              ; navigate your code and its documentation
        llm                 ; when I said you needed friends, I didn't mean...
        (lsp                ; M-x vscode
-        +peek)
+        +eglot
+        +booster)
        (magit              ; a git porcelain for Emacs
         +forge)
        ;;make              ; run make tasks from Emacs
@@ -185,7 +187,6 @@
        ;;purescript        ; javascript, but functional
        (python             ; beautiful is better than ugly
         +lsp
-        +pyright
         +tree-sitter)
        (qt                 ; the 'cutest' gui framework ever
         +lsp
