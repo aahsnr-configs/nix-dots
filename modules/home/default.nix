@@ -72,6 +72,7 @@
     ./schizofox
     ./starship
     ./scripts
+    ./swappy
     ./texlive
     ./theming
     ./tldr

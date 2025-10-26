@@ -156,13 +156,6 @@
       hotspot_padding = 1;
     };
 
-    plugin = {
-      hyprscrolling = {
-        column_width = 0.45;
-        fullscreen_on_one_column = true;
-        focus_fit_method = 1;
-      };
-    };
 
   };
 }

@@ -16,6 +16,14 @@
     ripgrep
     statix
     marksman
+    emacs-lsp-booster
+    texlab
+    texpresso
+    gnuplot
+    hunspell
+    hunspellDicts.en_US
+    gnuplot
+
   ];
 
   programs.direnv = {

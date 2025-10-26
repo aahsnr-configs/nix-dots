@@ -3,28 +3,21 @@
 
   home.packages = [
     (pkgs.emacsWithPackagesFromUsePackage {
-      config = ./Emacs.org;
+      config = ./config.org;
       defaultInitFile = true;
-      package = pkgs.emacs-pgtk;
+      package = pkgs.emacs-unstable-pgtk;
       alwaysEnsure = false;
       alwaysTangle = true;
+      #excludePackages = [ "org" ];
       extraEmacsPackages = epkgs: with epkgs; [
         use-package vterm jupyter      
-      ] ++ [
-          pkgs.emacs-lsp-booster
-          pkgs.texlab
-          pkgs.texpresso
-          pkgs.gnuplot
-        # pkgs.nodePackages.typescript-language-server  # TypeScript LSP
-      ];
-      
+      ];       
       # Override specific package derivations
       # Use this to apply patches, change versions, etc.
-      override = epkgs: epkgs // {
-        # Example: Use a specific version or apply patches
-        # somePackage = epkgs.melpaPackages.somePackage.overrideAttrs (old: {
-        #   patches = [ ./fix.patch ];
-        # });
+      override = final: prev: {
+        org = null;
+        # Also handle org-plus-contrib if it exists
+        org-plus-contrib = null;
       };
     })
   ];

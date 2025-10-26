@@ -36,120 +36,16 @@ A complete desktop environment featuring custom tools and utilities. This config
 
 **Key Features:**
 
-- Complete DE experience
-- Custom Hyprswitch window switcher
-- One-line installation available
+layerrule = ignorealpha 0, quickshell
 
-## **For Both Niri & Hyprland:**
+layerrule = ignorealpha 0, quickshell:bar
+layerrule = blur, quickshell:bar
+layerrule = blurpopups, quickshell:bar
 
-### **1. AvengeMedia/DankMaterialShell**
+layerrule = ignorealpha 0, quickshell:dock
+layerrule = blur, quickshell:dock
+layerrule = blurpopups, quickshell:dock
 
-**Source:** https://github.com/AvengeMedia/DankMaterialShell
-
-A modern Wayland desktop shell built with Quickshell and Go, optimized for niri and Hyprland compositors. Features include a fully customizable bar where widgets can be added and re-arranged, app launcher with fuzzy search, workspace switcher, media player with equalizer, system tray, process monitor, lock screen with embedded virtual keyboard for Niri, and auto-theming for GTK, QT, and terminal apps with matugen.
-
-**Advanced Features:**
-
-- Over 20 widgets that can be added and re-arranged on the bar, notification service with grouping and richtext support, control center with mpris player, weather and calendar integration, clipboard history with image previews, and idle monitoring with configurable auto lock settings
-- Process monitoring with temperatures and resource usage
-- Material Design principles throughout
-
-### **2. noctalia-dev/noctalia-shell (Official Noctalia)**
-
-**Source:** https://github.com/noctalia-dev/noctalia-shell
-
-A sleek and minimal desktop shell for Wayland with a warm lavender aesthetic that's easily customizable. Features include a modular status bar with smooth animations, non-intrusive notifications, centralized control panel, easy WiFi and Bluetooth management, CPU power profile toggles, secure lockscreen, and efficient workspace switching.
-
-**Key Features:**
-
-- Native support for Niri and Hyprland
-- Minimal, "out of your way" philosophy
-- Recommended on the official Niri documentation
-- Active community with Discord support
-
-### **3. Ly-sec/Noctalia (Community Fork)**
-
-**Source:** https://github.com/Ly-sec/Noctalia
-
-A popular community-maintained fork of Noctalia with additional features and customizations. Features the same core functionality with modular status bar, notifications, control panel, connectivity management, power profiles, lockscreen, and application launcher.
-
-### **4. MJBgood/quickshell**
-
-**Source:** https://github.com/MJBgood/quickshell
-
-A custom quickshell setup showcasing modern architecture with service-oriented design, reactive state management, maintainability through clear separation of concerns, extensibility via plugin architecture and comprehensive theming, and performance through efficient updates and lazy loading.
-
-**Key Features:**
-
-- Clean code architecture
-- Well-documented structure
-- Modular component system
-
-## **Recommendations by Use Case:**
-
-**For Maximum Features + Aesthetics (Hyprland):**
-
-- **end-4/dots-hyprland** - Most polished, AI-integrated, active development
-
-**For Theme Variety (Hyprland):**
-
-- **NibrasShell** - Six pre-built themes, easy switching
-
-**For Niri + Hyprland Dual Support:**
-
-- **DankMaterialShell** - Most comprehensive feature set
-- **Noctalia** - Best minimalist experience
-
-**For Learning/Customization:**
-
-- **MJBgood/quickshell** - Best code architecture and documentation
-
-All configurations are actively maintained, have good documentation, and balance aesthetic design with productive workflows. The Material Design-based configurations (end-4, DankMaterialShell) feature automatic color generation from wallpapers, while Noctalia offers a more curated, minimal aesthetic approach.
-
-I'll provide the exact sources for these additional configurations based on my search results:
-
-## **Additional Quickshell Configurations with Sources:**
-
-### **4. caelestia-dots/shell (Soramane)**
-
-**Source:** https://github.com/caelestia-dots/shell
-
-This configuration by soramane is featured on the official Quickshell website. Configuration options are stored in ~/.config/caelestia/shell.json and the shell requires building with CMake.
-
-### **5. axiom-dotfiles/axiom**
-
-**Source:** https://github.com/axiom-dotfiles/axiom
-
-A personal collection of dotfiles featuring grid-based workspace management, wallpaper-based color generation, pinnable AI chat functionality, and application-based OSD.
-
-### **6. Miocasa/niri_quickshell_nixos**
-
-**Source:** https://github.com/Miocasa/niri_quickshell_nixos
-
-A NixOS-specific configuration featuring custom modules for desktop, editors, and programs, including a Quickshell setup created by Rexcrazy804.
-
-### **7. Retro 1990s Theme Configuration**
-
-**Source:** Found in GitHub topics search, but the exact repository URL was not directly accessible in my search results. It's listed on GitHub topics as "A 1990's Retro linux-rice for Hyprland or Sway, based on Quickshell", but I was unable to retrieve the specific GitHub URL.
-
-### **8. Fibreglass**
-
-**Source:** Found in GitHub topics search, but the exact repository URL was not directly accessible. It's listed on GitHub topics as "Fibreglass is a custom desktop shell created in quickshell", but the specific repository link wasn't available in my search results.
-
-### **9. Hypr Drift Desktop Environment**
-
-**Source:** Found in GitHub topics search, but the exact repository URL was not directly accessible. It's listed as "Hypr Drift Desktop Environment built on Hyprland (compositor + window manager) and Quickshell (UI framework), with a custom backend (Drift) handling all core environment functions", but I couldn't retrieve the specific GitHub repository URL.
-
-## **Verified Sources (With Full URLs):**
-
-✅ **caelestia-dots/shell** - https://github.com/caelestia-dots/shell
-✅ **axiom-dotfiles/axiom** - https://github.com/axiom-dotfiles/axiom
-✅ **Miocasa/niri_quickshell_nixos** - https://github.com/Miocasa/niri_quickshell_nixos
-
-## **Partially Verified (Found in GitHub topics but no direct URL):**
-
-⚠️ **Retro 1990s Theme** - Exists on GitHub but exact repository not retrieved
-⚠️ **Fibreglass** - Exists on GitHub but exact repository not retrieved
-⚠️ **Hypr Drift** - Exists on GitHub but exact repository not retrieved
-
-**Note:** For the configurations where I couldn't retrieve exact URLs, they appear in GitHub's Quickshell topics listings but would require direct GitHub search to find the specific repositories. The three configurations with verified sources are fully accessible and documented.
+layerrule = ignorealpha 0, quickshell:popout
+layerrule = blur, quickshell:popout
+layerrule = blurpopups, quickshell:popout

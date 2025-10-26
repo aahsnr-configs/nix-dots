@@ -1,0 +1,4 @@
+- [ ] fix jupyter from being search outside of my project
+- [ ] install dictionaries programs for jinx
+- [ ] I want consult-buffer to not show buffers and only files like the screenshot
+- [ ] doom-modeline does not look like the screenshot; modify doom-modeline to my liking
