@@ -45,7 +45,7 @@
       allowed-users = [ "@wheel" ];
       trusted-users = [ "@wheel" ];
       sandbox = true;
-      max-jobs = "auto";
+      max-jobs = 2;
       cores = 8;
       keep-going = true;
       # Increase download buffer size
@@ -113,7 +113,7 @@
   documentation = {
     enable = true;
     doc.enable = true;
-    man.enable = true;
+    man.enable = false;
     dev.enable = true;
   };
 
