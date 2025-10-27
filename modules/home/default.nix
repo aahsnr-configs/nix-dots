@@ -14,7 +14,7 @@
     sessionVariables = {
       BROWSER = "zen";
       TERMINAL = "footclient";
-      EDITOR = "emacsclient -t -a 'emacs'";
+      # EDITOR = "emacsclient -t -a 'emacs'";
       VISUAL = "emacsclient -c -a 'emacs'";
     };
 
@@ -60,6 +60,7 @@
     ./gammastep
     ./git
     ./hyprland
+    ./hyprpaper
     ./imv
     ./keyring
     ./kitty

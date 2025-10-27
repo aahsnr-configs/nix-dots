@@ -1,4 +1,4 @@
-#+TITLE: Emacs CoNfiguration
+#+TITLE: Emacs Configuration
 #+AUTHOR: Ahsanur Rahman
 #+STARTUP: overview
 #+PROPERTY: header-args:emacs-lisp :tangle config.el :mkdirp yes
@@ -195,29 +195,8 @@ This section incorporates the sensible defaults and settings from the minimal-em
 #+end_src
 
 ** Custom Functions
+*** Jupyter Helper Function
 #+begin_src emacs-lisp
-(defun ar/reload-config ()
-  "Reload the Emacs configuration."
-  (interactive)
-  ;; Assuming config.org is the main configuration file and this config.el is tangled from it.
-  ;; If config.el is the primary config, change to: (load-file (expand-file-name "config.el" user-emacs-directory))
-  (let ((config-file "~/.config/emacs/init.el"))
-    (if (file-exists-p config-file)
-        (progn
-          (message "Reloading Emacs configuration from config.org...")
-          (org-babel-load-file config-file)
-          (message "Configuration reloaded successfully!"))
-      (error "Configuration file %s not found" config-file))))
-
-(defun ar/org-smart-tab ()
-  "Intelligently handle TAB in Org mode.
-Tries to expand an Org structure template first. If that fails,
-it attempts a general completion with Corfu. If both fail,
-it falls back to standard indentation."
-  (interactive)
-  (or (org-tempo-complete-tag)
-      (corfu-complete)
-      (indent-for-tab-command)))
 #+end_src
 
 ** Frame Title Formatting
@@ -270,10 +249,6 @@ it falls back to standard indentation."
   ;; `kill-emacs-hook' by `recentf-mode'.
   (add-hook 'kill-emacs-hook #'recentf-cleanup -90))
 
-;; savehist is an Emacs feature that preserves the minibuffer history between
-;; sessions. It saves the history of inputs in the minibuffer, such as commands,
-;; search strings, and other prompts, to a file. This allows users to retain
-;; their minibuffer history across Emacs restarts.
 (use-package savehist
   :ensure nil
   :commands (savehist-mode savehist-save)
@@ -687,10 +662,9 @@ A small internal border is added around the frame to create visual breathing roo
          (markdown-mode . smartparens-mode)
          (org-mode . smartparens-mode))
   :config
+  (sp-pair "<" ">" :unless '(sp-in-code? sp-in-string?))
   ;; not recommended for use
   ;; (smartparens-global-strict-mode 1)
-  ;; --- Doom Emacs-style Keybindings ---
-  (sp-pair "<" nil :actions :rem)
 
   ;; --- UI and Behavior Customizations ---
   (setq sp-show-pair-delay 0.1
@@ -701,11 +675,10 @@ A small internal border is added around the frame to create visual breathing roo
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :ensure t
-  :defer t
   :hook ((text-mode . rainbow-delimiters-mode)
          (prog-mode . rainbow-delimiters-mode)
          (org-src-mode-hook . rainbow-delimiters-mode))
-
+  :config
   ;; Custom faces updated for the Tokyonight color palette.
   :custom-face
   (rainbow-delimiters-depth-1-face ((t (:foreground "#7aa2f7"))))  ; Blue
@@ -987,10 +960,7 @@ appear, ensuring a consistent and predictable windowing layout.
   ([remap recentf-open-files] . consult-recent-file)
   ([remap yank-pop] . consult-yank-pop)
 
-  ;; Enable automatic preview at point in the *Completions* buffer. This is relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
-
-
   :init
   ;; Tweak the register preview for `consult-register-load',
   ;; `consult-register-store' and the built-in commands.  This improves ;; register formatting, adds thin separator lines, register sorting and hides the window mode line.
@@ -1004,17 +974,20 @@ appear, ensuring a consistent and predictable windowing layout.
   (setq consult-prompt-margin 0)
   (setq consult-preview-key 'any)
 
-  ;; :custom
-  ;; This is the new line that restricts consult-buffer to only show open buffers.
-  ;; (consult-buffer-sources '(consult--source-buffer))
-
   :config
+    (setq consult-buffer-sources
+        '(consult--source-recent-file
+          consult--source-project-recent-file
+          consult--source-bookmark))
   ;; Configure preview keys for various commands.
   ;; A delayed preview is used to avoid performance issues.
   (consult-customize
-   consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file
-   consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+   consult-ripgrep consult-git-grep consult-grep consult-man
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-recent-file consult--source-project-recent-file
+   consult--source-bookmark consult--source-file-register
+   
+    consult--source-project-recent-file
    :preview-key "C-SPC"))
 #+end_src
 
@@ -1046,18 +1019,25 @@ appear, ensuring a consistent and predictable windowing layout.
   (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 
+** Wgrep: Writable Grep
+This package allows you to edit the contents of a grep/search results buffer
+and apply those changes directly to the source files. It is a powerful tool for
+project-wide refactoring.
+#+begin_src emacs-lisp
+(use-package wgrep
+  :defer t
+  :ensure t
+  :config
+  (setq wgrep-auto-save-buffer t))
+#+end_src
+
 ** Corfu: The Core UI with Smart TAB Navigation
 #+begin_src emacs-lisp
 (use-package corfu
   :ensure t
   :hook (after-init . global-corfu-mode)
-
-  ;; Configuration that must run *before* the package is loaded.
   :init
-  ;; Keep a history of completion inputs.
   (corfu-history-mode)
-
-  ;; Enable a popup with documentation for the selected candidate.
   (corfu-popupinfo-mode)
   
   ;; A list of modes where Corfu should be disabled to prevent conflicts.
@@ -1072,9 +1052,7 @@ appear, ensuring a consistent and predictable windowing layout.
       shell-mode
       comint-mode))
 
-  ;; Configuration that runs *after* the package is loaded.
   :config
-  ;; Turn off Corfu in the modes defined in our list.
   (add-hook 'corfu-mode-hook
             (lambda ()
               (when (memq major-mode ar/corfu-disabled-modes)
@@ -1250,9 +1228,8 @@ appear, ensuring a consistent and predictable windowing layout.
    (org-mode . auto-fill-mode)
    (org-mode . (lambda () (setq-local yas-parents '(latex-mode))))
    (org-mode . (lambda ()
-                 (setq-local electric-indent-local-mode nil)
-                 (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
-                 (evil-define-key 'insert org-mode-map (kbd "TAB") #'ar/org-smart-tab)))
+                 (setq-local electric-indent-local-mode nil) ; Prevent aggressive auto-indent
+                 (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)))
    (org-agenda-mode . (lambda ()
                         (visual-line-mode -1)
                         (toggle-truncate-lines 1)
@@ -1595,6 +1572,54 @@ This package streamlines adding images and screenshots to Org mode, using the *s
  "o n i" '(org-noter-insert-note :wk "Insert Note"))
 #+end_src
 
+* Jupyter Notebooks
+** Core Setup
+#+begin_src emacs-lisp
+(use-package jupyter
+  :ensure t
+  :after org
+  :config
+  ;; Configure Org Babel to use Jupyter for python and hy.
+  (with-eval-after-load 'ob-jupyter
+    (org-babel-jupyter-override-src-block "python")
+    (org-babel-jupyter-override-src-block "hy"))
+
+  ;; Define Spacemacs-style keybindings for Jupyter commands.
+  (ar/global-leader
+    "j" '(:ignore t :wk "jupyter")
+    "j c" '(my/jupyter-connect-repl :wk "Connect to REPL")
+    "j q" '(my/jupyter-qtconsole :wk "Open QtConsole")
+    "j C" '(my/jupyter-cleanup-kernels :wk "Cleanup Old Kernels")
+    "j L" '(my/jupyter-refesh-langs :wk "Refresh Languages")))
+
+(use-package ob-async
+  :ensure t
+  :after org
+  :config
+  (setq ob-async-no-async-languages-alist '("python" "jupyter-python")))
+#+end_src
+
+** ANSI Colors
+#+begin_src emacs-lisp
+(defun my/babel-ansi ()
+  "Apply ANSI color codes to the result of an Org Babel block."
+  (when-let ((beg (org-babel-where-is-src-block-result nil nil)))
+    (save-excursion
+      (goto-char beg)
+      (when (looking-at org-babel-result-regexp)
+        (let ((end (org-babel-result-end))
+              (ansi-color-context-region nil))
+          (ansi-color-apply-on-region beg end))))))
+
+(define-minor-mode org-babel-ansi-colors-mode
+  "Apply ANSI color codes to Org Babel results globally."
+  :global t
+  :init-value t
+  (if org-babel-ansi-colors-mode
+      (add-hook 'org-babel-after-execute-hook #'my/babel-ansi)
+    (remove-hook 'org-babel-after-execute-hook #'my/babel-ansi)))
+#+end_src
+
 * Workflow Management
 ** Dired
 #+begin_src emacs-lisp
@@ -1701,7 +1726,7 @@ themed with nerd-icons and integrates with evil-mode for vim-like navigation.
   (evil-define-key 'normal neotree-mode-map "q" 'neotree-hide)
   (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-select-window))
 #+end_src
-
+ 
 ** Keybindings
 #+begin_src emacs-lisp
 (ar/global-leader
@@ -1718,7 +1743,10 @@ themed with nerd-icons and integrates with evil-mode for vim-like navigation.
 #+begin_src emacs-lisp
 (use-package envrc
   :ensure t
-  :hook (after-init . envrc-global-mode))
+  :config
+  ;; Enable envrc globally. By not deferring this package, we ensure it loads
+  ;; before other hooks (like eglot's) need its functions.
+  (envrc-global-mode))
 #+end_src
 
 ** Language Server Protocol
@@ -1730,7 +1758,7 @@ language server from the PATH set by your direnv-managed environment. Boost Eglo
   :defer t
   :hook (prog-mode . eglot-ensure)
   :custom
-  (eglot-autoshutdown t)
+  (eglot-autoshutdown nil)
   (eglot-events-buffer-size 0)
   ;;(eglot-extend-to-xref nil)
   (eglot-ignored-server-capabilities

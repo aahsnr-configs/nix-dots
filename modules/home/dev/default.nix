@@ -5,7 +5,6 @@
     alejandra
     deadnix
     delta
-    fd
     neovim
     nil
     nixfmt
@@ -13,17 +12,8 @@
     nodejs_24
     lua5_1
     luarocks
-    ripgrep
     statix
     marksman
-    emacs-lsp-booster
-    texlab
-    texpresso
-    gnuplot
-    hunspell
-    hunspellDicts.en_US
-    gnuplot
-
   ];
 
   programs.direnv = {
