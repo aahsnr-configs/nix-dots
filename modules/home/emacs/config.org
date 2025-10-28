@@ -662,7 +662,6 @@ A small internal border is added around the frame to create visual breathing roo
          (markdown-mode . smartparens-mode)
          (org-mode . smartparens-mode))
   :config
-  (sp-pair "<" ">" :unless '(sp-in-code? sp-in-string?))
   ;; not recommended for use
   ;; (smartparens-global-strict-mode 1)
 
@@ -977,9 +976,8 @@ appear, ensuring a consistent and predictable windowing layout.
   :config
     (setq consult-buffer-sources
         '(consult--source-recent-file
-          consult--source-project-recent-file
           consult--source-bookmark))
-  ;; Configure preview keys for various commands.
+    ;; Configure preview keys for various commands.
   ;; A delayed preview is used to avoid performance issues.
   (consult-customize
    consult-ripgrep consult-git-grep consult-grep consult-man
@@ -1744,8 +1742,6 @@ themed with nerd-icons and integrates with evil-mode for vim-like navigation.
 (use-package envrc
   :ensure t
   :config
-  ;; Enable envrc globally. By not deferring this package, we ensure it loads
-  ;; before other hooks (like eglot's) need its functions.
   (envrc-global-mode))
 #+end_src
 
@@ -1783,7 +1779,6 @@ Display eldoc documentation in a popup frame at point.
 #+begin_src emacs-lisp
 (use-package eldoc-box
   :ensure t
-  :defer t
   :config
   (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
   :custom
@@ -1842,7 +1837,6 @@ We use *dape* for debugging. The UI for debugger windows is cleanly managed by t
 This setup uses the built-in *flymake* for live diagnostics, enhanced by *flymake-collection* for easy linter integration, and *apheleia* for automatic, on-save formatting.
 #+begin_src emacs-lisp
 (use-package flymake
-  :defer t
   :ensure t
   :hook (prog-mode . flymake-mode)
   :custom
@@ -1863,8 +1857,7 @@ This setup uses the built-in *flymake* for live diagnostics, enhanced by *flymak
   :ensure t
   :hook (flymake-mode . sideline-mode)
   :init
-  (setq sideline-flymake-display-mode 'point) ; 'point to show errors only on point
-                                              ; 'line to show errors on the current line
+  (setq sideline-flymake-display-mode 'point)
   (setq sideline-backends-right '(sideline-flymake)))
 #+end_src
 
@@ -1943,9 +1936,6 @@ This setup uses the built-in *flymake* for live diagnostics, enhanced by *flymak
 
 * Python Development
 ** LSP: Eglot with Pyright
-We use *pyright-langserver* for core LSP features like code completion,
-navigation, and documentation. Crucially, we disable pyright's built-in type checking diagnostics to avoid conflicts with our dedicated *mypy* checker, ensuring we get
-a single, authoritative source for type errors.
 #+begin_src emacs-lisp
 (with-eval-after-load 'eglot
   ;; Register pyright-langserver for Python modes.
@@ -1955,15 +1945,12 @@ a single, authoritative source for type errors.
 
 ** Diagnostics: Flymake with Ruff, Mypy, and Bandit
 #+begin_src emacs-lisp
-(defun ar/python-diagnostics-setup ()
-  "Configure Flymake checkers for Python mode.
-This function enables the checkers provided by the flymake-collection package."
-  (setq-local flymake-checkers
-              '(flymake-collection-ruff
-                flymake-collection-mypy
-                flymake-collection-bandit)))
-
-(add-hook 'python-ts-mode-hook #'ar/python-diagnostics-setup)
+(push
+ '(python-ts-mode
+   flymake-collection-ruff
+   (flymake-collection-mypy)
+   (flymake-collection-bandit))
+ flymake-collection-config)
 #+end_src
 
 ** Formatting: Apheleia with Ruff

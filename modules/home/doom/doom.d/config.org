@@ -337,9 +337,6 @@ This function ensures LSP features work in code blocks edited via org-edit-speci
               (eldoc-mode 1))))
 #+end_src
 
-#+RESULTS:
-| #[nil ((when (and (derived-mode-p 'python-mode 'python-ts-mode) (eglot-managed-p)) (eldoc-mode 1))) nil] | my/org-src-python-eglot-setup | org-src-babel-configure-edit-buffer | org-src-mode-configure-edit-buffer | rainbow-delimiters-mode |
-
 ** DONE Code Formatting (Apheleia + Ruff)
 Use Apheleia for fast, async code formatting on save with ruff.
 #+begin_src emacs-lisp

@@ -36,6 +36,16 @@
     wget
     wl-clipboard
     libvterm
+    aubio
+    brightnessctl
+    ddcutil
+    lm_sensors
+    libqalculate
+    app2unit
+    fftw
+    xkeyboard-config
     cmake
+    ninja
+    pkg-config
   ];
 }
