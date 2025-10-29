@@ -29,6 +29,12 @@
 
     devshell.url = "github:numtide/devshell";
 
+    # Required, nvf works best and only directly supports flakes
+    nvf = {
+      url = "github:NotAShelf/nvf";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -60,7 +66,7 @@
       url = "github:thrombe/hyprkool";
       inputs.hyprland.follows = "hyprland";
     };
-
+#
     hyprland = {
       url = "git+https://github.com/hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -200,7 +206,7 @@
     pyprland,
     anyrun,
     chaotic,
-    nixvim,
+    nvf,
     ...
   } @ inputs: let
     system = "x86_64-linux";

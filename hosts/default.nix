@@ -4,6 +4,7 @@
   catppuccin,
   chaotic,
   nixos-hardware,
+  nvf,
   ...
 }:
 let
@@ -40,6 +41,7 @@ in
       system
       hmModule
       caTppuccin
+      chaotic_nix
       { inherit home-manager; }
     ];
     specialArgs = { inherit inputs; };

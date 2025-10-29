@@ -5,7 +5,6 @@
     alejandra
     deadnix
     delta
-    neovim
     nil
     nixfmt
     nixpkgs-fmt
