@@ -1,32 +1,35 @@
-{inputs, pkgs, ...}:{
-imports = [ inputs.nvf.homeManagerModules.default ];
-
+{
+  inputs,
+  pkgs,
+  ...
+}: {
+  imports = [inputs.nvf.homeManagerModules.default];
 
   programs.nvf = {
     enable = true;
-    
+
     settings = {
       vim = {
         # Basic vim options
         viAlias = false;
         vimAlias = true;
-        
+
         # Enable line numbers
         lineNumberMode = "relNumber";
-              
+
         # Enable useful optioss
         preventJunkFiles = true;
         clipboard = {
           providers = {
-           wl-copy.enable = true; # For Wayland
+            wl-copy.enable = true; # For Wayland
           };
-        };       
-       
+        };
+
         # Enable treesitter for better syntax highlighting
         treesitter = {
           enable = true;
           fold = true;
-          
+
           grammars = with pkgs.vimPlugins.nvim-treesitter-parsers; [
             nix
             python
@@ -41,14 +44,14 @@ imports = [ inputs.nvf.homeManagerModules.default ];
             toml
           ];
         };
-        
+
         # LSP Configuration
         lsp = {
           enable = true;
-          
+
           # Format on save
           formatOnSave = true;
-          
+
           # LSP keybindings
           mappings = {
             goToDefinition = "gd";
@@ -58,94 +61,95 @@ imports = [ inputs.nvf.homeManagerModules.default ];
             nextDiagnostic = "]d";
             previousDiagnostic = "[d";
             openDiagnosticFloat = "<leader>e";
-             hover = "K";
+            hover = "K";
             renameSymbol = "<leader>rn";
             codeAction = "<leader>ca";
           };
         };
-        
+
         # Language-specific configurations
         languages = {
           # Nix language support
           nix = {
             enable = true;
-            
+
             lsp = {
               enable = true;
-              server = "nixd"; # or "nil" for nil LSP
+              server = "nil"; # or "nil" for nil LSP
             };
-            
+
             treesitter = {
               enable = true;
             };
-            
+
             format = {
               enable = true;
               type = "alejandra"; # Nix formatter
             };
           };
-          
+
           # Python language support
           python = {
             enable = true;
-            
+
             lsp = {
               enable = true;
-              server = "pyright"; # Python LSP server
+              server = "basedpyright"; # Python LSP server
             };
-            
+
             treesitter = {
               enable = true;
             };
-            
+
             format = {
               enable = true;
-              type = "black"; # Python formatter
+              type = "ruff"; # Python formatter
             };
-            
+
             # Enable DAP for debugging
             dap = {
               enable = true;
               debugger = "debugpy";
             };
           };
-          
+
           # Markdown support
           markdown = {
             enable = true;
-            
+
             treesitter = {
               enable = true;
             };
-            
           };
         };
-        
+
         # Autocomplete configuration
         autocomplete = {
           nvim-cmp.enable = true;
         };
-        
+
         # File tree
         filetree = {
           nvimTree = {
             enable = true;
+            openOnSetup = false;
+
             mappings = {
               toggle = "<leader>e";
               focus = "<leader>o";
               findFile = "<leader>f";
             };
-            
+
             setupOpts = {
               auto_reload_on_write = true;
               hijack_netrw = true;
               sync_root_with_cwd = true;
-              
+
               view = {
                 width = 30;
                 side = "left";
               };
-              
+
               renderer = {
                 highlight_git = true;
                 icons = {
@@ -157,19 +161,19 @@ imports = [ inputs.nvf.homeManagerModules.default ];
                   };
                 };
               };
-              
+
               filters = {
                 dotfiles = false;
-               # custom = [ ".git" "node_modules" "__pycache__" ];
+                # custom = [ ".git" "node_modules" "__pycache__" ];
               };
             };
           };
         };
-        
+
         # Telescope for fuzzy finding
         telescope = {
           enable = true;
-          
+
           mappings = {
             findFiles = "<leader>ff";
             liveGrep = "<leader>fg";
@@ -181,7 +185,7 @@ imports = [ inputs.nvf.homeManagerModules.default ];
             gitStatus = "<leader>gs";
           };
         };
-        
+
         # Status line
         statusline = {
           lualine = {
@@ -189,7 +193,7 @@ imports = [ inputs.nvf.homeManagerModules.default ];
             theme = "auto";
           };
         };
-        
+
         # Tab line for buffers
         tabline = {
           nvimBufferline = {
@@ -201,7 +205,7 @@ imports = [ inputs.nvf.homeManagerModules.default ];
             };
           };
         };
-        
+
         # Git integration
         git = {
           enable = true;
@@ -217,7 +221,7 @@ imports = [ inputs.nvf.homeManagerModules.default ];
             };
           };
         };
-        
+
         # Terminal integration
         terminal = {
           toggleterm = {
@@ -231,7 +235,7 @@ imports = [ inputs.nvf.homeManagerModules.default ];
             };
           };
         };
-        
+
         # Comments plugin
         comments = {
           comment-nvim = {
@@ -244,21 +248,20 @@ imports = [ inputs.nvf.homeManagerModules.default ];
             };
           };
         };
-        
+
         # Autopairs
         autopairs = {
           nvim-autopairs = {
             enable = true;
           };
         };
-        
+
         # Indentation guides
         visuals = {
-          
           nvim-web-devicons = {
             enable = true;
           };
-          
+
           indent-blankline = {
             enable = true;
             setupOpts = {
@@ -272,53 +275,53 @@ imports = [ inputs.nvf.homeManagerModules.default ];
               };
             };
           };
-          
+
           # Smooth scrolling
           nvim-scrollbar = {
             enable = true;
           };
         };
-        
+
         # UI improvements
         ui = {
           noice = {
             enable = true;
           };
-          
+
           borders = {
             enable = true;
             globalStyle = "rounded";
           };
         };
-        
+
         # Theme
         theme = {
           enable = true;
           name = "catppuccin"; # or "gruvbox", "tokyonight", etc.
           style = "mocha"; # for catppuccin: latte, frappe, macchiato, mocha
         };
-        
+
         # Snippets
         snippets = {
           luasnip = {
             enable = true;
           };
         };
-        
+
         # Which-key for keybinding hints
         binds = {
           whichKey = {
             enable = true;
           };
         };
-        
+
         # Utility plugins
         utility = {
           # vim-surround for surrounding text
           surround = {
             enable = true;
           };
-          
+
           preview.glow.enable = true;
 
           # Better diffing
@@ -326,7 +329,7 @@ imports = [ inputs.nvf.homeManagerModules.default ];
             enable = true;
           };
         };
-        
+
         # Notes (optional, useful for markdown)
         notes = {
           # obsidian-nvim = {
@@ -340,13 +343,13 @@ imports = [ inputs.nvf.homeManagerModules.default ];
           #     ];
           #   };
           # };
-          
+
           # Or use mind-nvim for simpler note-taking
           mind-nvim = {
             enable = true;
           };
         };
-        
+
         # Custom keymaps
         maps = {
           normal = {
@@ -356,85 +359,85 @@ imports = [ inputs.nvf.homeManagerModules.default ];
               desc = "Save file";
               silent = true;
             };
-            
+
             # Quit
             "<leader>q" = {
               action = ":q<CR>";
               desc = "Quit";
               silent = true;
             };
-            
+
             # Clear search highlight
             "<leader>h" = {
               action = ":nohlsearch<CR>";
               desc = "Clear search highlight";
               silent = true;
             };
-            
+
             # Split windows
             "<leader>sv" = {
               action = ":vsplit<CR>";
               desc = "Split window vertically";
               silent = true;
             };
-            
+
             "<leader>sh" = {
               action = ":split<CR>";
               desc = "Split window horizontally";
               silent = true;
             };
-            
+
             # Navigate between windows
             "<C-h>" = {
               action = "<C-w>h";
               desc = "Move to left window";
               silent = true;
             };
-            
+
             "<C-j>" = {
               action = "<C-w>j";
               desc = "Move to bottom window";
               silent = true;
             };
-            
+
             "<C-k>" = {
               action = "<C-w>k";
               desc = "Move to top window";
               silent = true;
             };
-            
+
             "<C-l>" = {
               action = "<C-w>l";
               desc = "Move to right window";
               silent = true;
             };
-            
+
             # Resize windows
             "<C-Up>" = {
               action = ":resize +2<CR>";
               desc = "Increase window height";
               silent = true;
             };
-            
+
             "<C-Down>" = {
               action = ":resize -2<CR>";
               desc = "Decrease window height";
               silent = true;
             };
-            
+
             "<C-Left>" = {
               action = ":vertical resize -2<CR>";
               desc = "Decrease window width";
               silent = true;
             };
-            
+
             "<C-Right>" = {
               action = ":vertical resize +2<CR>";
               desc = "Increase window width";
               silent = true;
             };
           };
-          
+
           visual = {
             # Move selected lines
             "J" = {
@@ -442,27 +445,27 @@ imports = [ inputs.nvf.homeManagerModules.default ];
               desc = "Move selection down";
               silent = true;
             };
-            
+
             "K" = {
               action = ":m '<-2<CR>gv=gv";
               desc = "Move selection up";
               silent = true;
             };
-            
+
             # Better indenting
             "<" = {
               action = "<gv";
               desc = "Indent left";
               silent = true;
             };
-            
+
             ">" = {
               action = ">gv";
               desc = "Indent right";
               silent = true;
             };
           };
-          
+
           insert = {
             # Quick escape
             "jk" = {
@@ -472,47 +475,47 @@ imports = [ inputs.nvf.homeManagerModules.default ];
             };
           };
         };
-        
+
         # Optional: Add custom globals
         globals = {
           # Python settings
           python3_host_prog = "/usr/bin/python3"; # or use Nix path
-          mapleader = " "; 
+          mapleader = " ";
           # Disable providers you don't use for faster startup
           loaded_ruby_provider = 0;
           loaded_perl_provider = 0;
           loaded_node_provider = 0;
         };
-        
+
         # Optional: Add custom options
         options = {
           # Tab settings
           tabstop = 2;
           shiftwidth = 2;
           expandtab = true;
-         
-          mouse = "a"; 
+
+          mouse = "a";
           # UI settings
           number = true;
           relativenumber = true;
           signcolumn = "yes";
           cursorline = true;
           wrap = false;
-          
+
           # Undo settings
           undofile = true;
           undolevels = 10000;
-          
+
           # Update time
           updatetime = 200;
-          
+
           # Completion settings
           completeopt = "menu,menuone,noselect";
-          
+
           # Split settings
           splitright = true;
           splitbelow = true;
-          
+
           # Scroll offset
           scrolloff = 8;
           sidescrolloff = 8;
@@ -520,5 +523,4 @@ imports = [ inputs.nvf.homeManagerModules.default ];
       };
     };
   };
-
 }

@@ -1,6 +1,5 @@
 # ~/.config/home-manager/dev/default.nix
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
     alejandra
     deadnix

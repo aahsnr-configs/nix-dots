@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home = {
     username = "ahsan";
     homeDirectory = "/home/ahsan";
@@ -50,8 +49,8 @@
     ./catppuccin
     ./cliphist
     ./dev
-    # ./doom-emacs
-    ./emacs
+    ./doom
+    #./emacs
     ./eza
     ./fd-find
     ./fish

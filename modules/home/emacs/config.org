@@ -131,7 +131,7 @@ This section incorporates the sensible defaults and settings from the minimal-em
   (setq scroll-error-top-bottom t)
 
   ;; If `scroll-conservatively' is set above 100, the window is never automatically recentered.
-  (setq scroll-conservatively 120)
+  (setq scroll-conservatively 101)
 
   ;; Number of lines of margin at the top and bottom of a window.
   (setq scroll-margin 0)
@@ -310,11 +310,11 @@ issues when running the Pure GTK (PGTK) build of Emacs on Wayland.
 ;; text reordering can improve responsiveness. This setting is safe to call
 ;; early as it does not depend on a graphical frame.
 (setq-default bidi-display-reordering nil)
-
-;; Mitigate Input Lag by disabling GTK input methods.
-;; The function `pgtk-use-im-context` MUST be called after a frame is
-;; created, otherwise it will error. We hook it into `after-make-frame-functions`
-;; to ensure it runs at the correct time, both on startup and for new frames
+;; 
+;; ;; Mitigate Input Lag by disabling GTK input methods.
+;; ;; The function `pgtk-use-im-context` MUST be called after a frame is
+;; ;; created, otherwise it will error. We hook it into `after-make-frame-functions`
+;; ;; to ensure it runs at the correct time, both on startup and for new frames
 ;; created by emacsclient in daemon mode.
 (when (fboundp 'pgtk-use-im-context)
   (add-hook 'after-make-frame-functions
@@ -1618,6 +1618,32 @@ This package streamlines adding images and screenshots to Org mode, using the *s
     (remove-hook 'org-babel-after-execute-hook #'my/babel-ansi)))
 #+end_src
 
+* LSP Bridge
+#+begin_src emacs-lisp
+(use-package lsp-bridge
+  :ensure t
+  :config
+  (global-lsp-bridge-mode)
+
+  ;; This provides: basedpyright for completion/navigation + ruff for linting/formatting
+  (setq lsp-bridge-python-multi-lsp-server "basedpyright_ruff"
+        lsp-bridge-tex-lsp-server "texlab"
+        lsp-bridge-nix-lsp-server "nil")
+
+  ;; Asynchronous Completion
+  (setq acm-enable-doc t
+        acm-enable-doc-markdown-render 'async
+        acm-enable-icon t
+        acm-enable-citre t
+        acm-candidate-match-function 'orderless-literal
+        acm-backend-search-file-words-enable-fuzzy-match t)
+
+  (setq lsp-bridge-enable-inlay-hint t
+        lsp-bridge-enable-hover-diagnostic t
+        lsp-bridge-enable-auto-format-code t
+        lsp-bridge-enable-org-babel t))
+#+end_src
+
 * Workflow Management
 ** Dired
 #+begin_src emacs-lisp
@@ -1745,61 +1771,61 @@ themed with nerd-icons and integrates with evil-mode for vim-like navigation.
   (envrc-global-mode))
 #+end_src
 
-** Language Server Protocol
+** Eglot
 Eglot is the built-in LSP client but since managed by nix, *:ensure t* is needed. It will automatically use the correct
 language server from the PATH set by your direnv-managed environment. Boost Eglot performance using eglot booster
 #+begin_src emacs-lisp
-(use-package eglot
-  :ensure t
-  :defer t
-  :hook (prog-mode . eglot-ensure)
-  :custom
-  (eglot-autoshutdown nil)
-  (eglot-events-buffer-size 0)
-  ;;(eglot-extend-to-xref nil)
-  (eglot-ignored-server-capabilities
-   '(:hoverProvider
-     :documentHighlightProvider
-     :documentFormattingProvider
-     :documentRangeFormattingProvider
-     :documentOnTypeFormattingProvider
-     :colorProvider
-     :foldingRangeProvider))
-  (eglot-stay-out-of '(yasnippet)))
-
-(use-package eglot-booster
-  :ensure t
-  :after eglot
-  :config
-  (eglot-booster-mode))
+;; (use-package eglot
+;;   :ensure t
+;;   :defer t
+;;   :hook (prog-mode . eglot-ensure)
+;;   :custom
+;;   (eglot-autoshutdown nil)
+;;   (eglot-events-buffer-size 0)
+;;   ;;(eglot-extend-to-xref nil)
+;;   (eglot-ignored-server-capabilities
+;;    '(:hoverProvider
+;;      :documentHighlightProvider
+;;      :documentFormattingProvider
+;;      :documentRangeFormattingProvider
+;;      :documentOnTypeFormattingProvider
+;;      :colorProvider
+;;      :foldingRangeProvider))
+;;   (eglot-stay-out-of '(yasnippet)))
+;; 
+;; (use-package eglot-booster
+;;   :ensure t
+;;   :after eglot
+;;   :config
+;;   (eglot-booster-mode))
 #+end_src
 
 ** Eldoc Box
 Display eldoc documentation in a popup frame at point.
 #+begin_src emacs-lisp
-(use-package eldoc-box
-  :ensure t
-  :config
-  (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
-  :custom
-  (eldoc-box-show-if-no-doc nil)
-  (eldoc-echo-area-display-truncation-p nil)
-  :custom-face
-  (eldoc-box-border ((t (:foreground "#3b4261"))))
-  (eldoc-highlight-symbol-face ((t (:foreground "#7aa2f7" :weight bold)))))
+;; (use-package eldoc-box
+;;   :ensure t
+;;   :config
+;;   (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
+;;   :custom
+;;   (eldoc-box-show-if-no-doc nil)
+;;   (eldoc-echo-area-display-truncation-p nil)
+;;   :custom-face
+;;   (eldoc-box-border ((t (:foreground "#3b4261"))))
+;;   (eldoc-highlight-symbol-face ((t (:foreground "#7aa2f7" :weight bold)))))
 #+end_src
 
 ** Consult Integration
 #+begin_src emacs-lisp
-;; Provides a powerful consult interface for Eglot's LSP features.
-(use-package consult-eglot
-  :ensure t
-  :after (consult eglot))
-
-;; Integrates consult-eglot sources with Embark actions.
-(use-package consult-eglot-embark
-  :ensure t
-  :after (consult-eglot embark))
+;; ;; Provides a powerful consult interface for Eglot's LSP features.
+;; (use-package consult-eglot
+;;   :ensure t
+;;   :after (consult eglot))
+;; 
+;; ;; Integrates consult-eglot sources with Embark actions.
+;; (use-package consult-eglot-embark
+;;   :ensure t
+;;   :after (consult-eglot embark))
 #+end_src
 
 ** Robust Debugger UI
@@ -1836,29 +1862,29 @@ We use *dape* for debugging. The UI for debugger windows is cleanly managed by t
 ** Syntax Checking
 This setup uses the built-in *flymake* for live diagnostics, enhanced by *flymake-collection* for easy linter integration, and *apheleia* for automatic, on-save formatting.
 #+begin_src emacs-lisp
-(use-package flymake
-  :ensure t
-  :hook (prog-mode . flymake-mode)
-  :custom
-  (flymake-check-syntax-automatically '(save mode-enabled))
-  (flymake-idle-change-delay 0.1)
-  :custom-face
-  (flymake-error   ((t (:underline (:style wave :color "#f7768e") :inherit nil))))  (flymake-warning ((t (:underline (:style wave :color "#e0af68") :inherit nil))))  (flymake-note    ((t (:underline (:style wave :color "#73daca") :inherit nil)))))
-
-;; A much cleaner way to add support for checkers like pylint and flake8.
-(use-package flymake-collection
-  :ensure t
-  :after flymake)
-  ;; will use use-package setup
-  ;; :config
-  ;; (flymake-collection-hook-setup)
-
-(use-package sideline-flymake
-  :ensure t
-  :hook (flymake-mode . sideline-mode)
-  :init
-  (setq sideline-flymake-display-mode 'point)
-  (setq sideline-backends-right '(sideline-flymake)))
+;; (use-package flymake
+;;   :ensure t
+;;   :hook (prog-mode . flymake-mode)
+;;   :custom
+;;   (flymake-check-syntax-automatically '(save mode-enabled))
+;;   (flymake-idle-change-delay 0.1)
+;;   :custom-face
+;;   (flymake-error   ((t (:underline (:style wave :color "#f7768e") :inherit nil))))  (flymake-warning ((t (:underline (:style wave :color "#e0af68") :inherit nil))))  (flymake-note    ((t (:underline (:style wave :color "#73daca") :inherit nil)))))
+;; 
+;; ;; A much cleaner way to add support for checkers like pylint and flake8.
+;; (use-package flymake-collection
+;;   :ensure t
+;;   :after flymake)
+;;   ;; will use use-package setup
+;;   ;; :config
+;;   ;; (flymake-collection-hook-setup)
+;; 
+;; (use-package sideline-flymake
+;;   :ensure t
+;;   :hook (flymake-mode . sideline-mode)
+;;   :init
+;;   (setq sideline-flymake-display-mode 'point)
+;;   (setq sideline-backends-right '(sideline-flymake)))
 #+end_src
 
 ** Formatting
@@ -1937,27 +1963,27 @@ This setup uses the built-in *flymake* for live diagnostics, enhanced by *flymak
 * Python Development
 ** LSP: Eglot with Pyright
 #+begin_src emacs-lisp
-(with-eval-after-load 'eglot
-  ;; Register pyright-langserver for Python modes.
-  (add-to-list 'eglot-server-programs
-               '((python-ts-mode) . ("basedpyright-langserver" "--stdio"))))
+;; (with-eval-after-load 'eglot
+;;   ;; Register pyright-langserver for Python modes.
+;;   (add-to-list 'eglot-server-programs
+;;                '((python-ts-mode) . ("basedpyright-langserver" "--stdio"))))
 #+end_src
 
 ** Diagnostics: Flymake with Ruff, Mypy, and Bandit
 #+begin_src emacs-lisp
-(push
- '(python-ts-mode
-   flymake-collection-ruff
-   (flymake-collection-mypy)
-   (flymake-collection-bandit))
- flymake-collection-config)
+;; (push
+;;  '(python-ts-mode
+;;    flymake-collection-ruff
+;;    (flymake-collection-mypy)
+;;    (flymake-collection-bandit))
+;;  flymake-collection-config)
 #+end_src
 
 ** Formatting: Apheleia with Ruff
 We use *apheleia* to automatically format Python code on save. By using *ruff* as the backend, we ensure that formatting is consistent with our linter rules.
 #+begin_src emacs-lisp
 (with-eval-after-load 'apheleia
-  (setf (alist-get 'python-ts-mode apheleia-formatters)
+  (setf (alist-get 'python-mode apheleia-formatters)
         '("ruff" "format" "-")))
 #+end_src
 
@@ -2272,22 +2298,22 @@ This section integrates modern tooling for a responsive and intelligent editing 
 - *Flymake + ChkTeX:* Offers on-the-fly syntax and style checking.
 #+begin_src emacs-lisp
 ;; Integrate texlab with Eglot for LSP support.
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-               '((latex-mode tex-mode plain-tex-mode) . ("texlab"))))
-
-;; This function correctly merges AUCTeX's completion functions with the
-;; LSP-provided functions from Eglot. Cape and Corfu will display the merged list.
-(defun ar/latex-completion-setup ()
-  "Add AUCTeX completion backend to the local completion functions."
-  (add-to-list 'completion-at-point-functions #'TeX-completion-at-point-function nil t))
-(add-hook 'LaTeX-mode-hook #'ar/latex-completion-setup)
-
-;; Enable the built-in ChkTeX support from AUCTeX for style checking.
-;; This requires the `chktex` command-line tool to be installed.
-(add-hook 'LaTeX-mode-hook
-          (lambda ()
-            (flymake-add-checker 'tex-chktex)))
+;; (with-eval-after-load 'eglot
+;;   (add-to-list 'eglot-server-programs
+;;                '((latex-mode tex-mode plain-tex-mode) . ("texlab"))))
+;; 
+;; ;; This function correctly merges AUCTeX's completion functions with the
+;; ;; LSP-provided functions from Eglot. Cape and Corfu will display the merged list.
+;; (defun ar/latex-completion-setup ()
+;;   "Add AUCTeX completion backend to the local completion functions."
+;;   (add-to-list 'completion-at-point-functions #'TeX-completion-at-point-function nil t))
+;; (add-hook 'LaTeX-mode-hook #'ar/latex-completion-setup)
+;; 
+;; ;; Enable the built-in ChkTeX support from AUCTeX for style checking.
+;; ;; This requires the `chktex` command-line tool to be installed.
+;; (add-hook 'LaTeX-mode-hook
+;;           (lambda ()
+;;             (flymake-add-checker 'tex-chktex)))
 #+end_src
 
 ** Auto-formatting: Apheleia and latexindent

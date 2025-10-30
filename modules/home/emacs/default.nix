@@ -1,6 +1,4 @@
-{ pkgs, ...}:
-{
-
+{pkgs, ...}: {
   home.packages = [
     (pkgs.emacsWithPackagesFromUsePackage {
       config = ./config.org;
@@ -8,19 +6,19 @@
       package = pkgs.emacs-pgtk;
       alwaysEnsure = false;
       alwaysTangle = true;
-      extraEmacsPackages = epkgs: with epkgs; [
-        use-package 
-        vterm 
-        jupyter
-        treesit-grammars.with-all-grammars
-      ];       
+      extraEmacsPackages = epkgs:
+        with epkgs; [
+          use-package
+          vterm
+          jupyter
+          treesit-grammars.with-all-grammars
+        ];
       # Override specific package derivations
       # Use this to apply patches, change versions, etc.
       override = final: prev: {
         org = null;
       };
     })
-    pkgs.emacs-lsp-booster
     pkgs.texlab
     pkgs.texpresso
     pkgs.gnuplot

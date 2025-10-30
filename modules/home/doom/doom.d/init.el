@@ -22,10 +22,6 @@
 
        :completion
        ;;company           ; the ultimate code completion backend
-       (corfu              ; complete with cap(f), cape and a flying feather!
-        +orderless
-        +icons
-        +dabbrev)
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;;ivy               ; a search engine for love and life
@@ -83,15 +79,15 @@
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
-       eshell            ; the elisp shell that works everywhere
+       ;;eshell            ; the elisp shell that works everywhere
        ;;shell             ; simple shell REPL for Emacs
        ;;term              ; basic terminal emulator for Emacs
        vterm             ; the best terminal emulation in Emacs
 
        :checkers
-       (syntax             ; tasing you for every semicolon you forget
-        +flymake
-        +icons)
+       ;; (syntax             ; tasing you for every semicolon you forget
+       ;;  +flymake
+       ;;  +icons)
        ;;(spell +flyspell) ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
@@ -102,16 +98,12 @@
        debugger            ; FIXME stepping through code, to help you add bugs
        direnv
        (docker
-        +lsp
         +tree-sitter)
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
        lookup              ; navigate your code and its documentation
-       llm                 ; when I said you needed friends, I didn't mean...
-       (lsp                ; M-x vscode
-        +eglot
-        +booster)
+       ;;llm                 ; when I said you needed friends, I didn't mean...
        (magit              ; a git porcelain for Emacs
         +forge)
        ;;make              ; run make tasks from Emacs
@@ -162,34 +154,30 @@
        ;;kotlin            ; a better, slicker Java(Script)
        (latex              ; writing papers in Emacs has never been so fun
         +cdlatex
-        +fold
-        +lsp)
+        +fold)
        ;;lean              ; for folks with too much to prove
        ;;ledger            ; be audit you can be
        ;;lua               ; one-based indices? one-based indices
        markdown            ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
        (nix                ; I hereby declare "nix geht mehr!"
-        +lsp
         +tree-sitter)
        ;;ocaml             ; an objective camel
        (org                ; organize your plain life in plain text
         +dragndrop
         +gnuplot
+        +jupyter
         +notes
         +pandoc
         +pretty
-        +jupyter
         +roam)
        ;;php               ; perl's insecure younger brother
-       plantuml          ; diagrams for confusing people more
+       ;;plantuml          ; diagrams for confusing people more
        ;;graphviz          ; diagrams for confusing yourself even more
        ;;purescript        ; javascript, but functional
        (python             ; beautiful is better than ugly
-        +lsp
         +tree-sitter)
        (qt                 ; the 'cutest' gui framework ever
-        +lsp
         +tree-sitter)
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
@@ -200,7 +188,6 @@
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
        (sh                 ; she sells {ba,z,fi}sh shells on the C xor
-        +lsp
         +fish)
        ;;sml
        ;;solidity          ; do you need a blockchain? No.
@@ -211,12 +198,12 @@
        ;;zig               ; C, but simpler
 
        :email
-       (mu4e +org +gmail)
+       ;;(mu4e +org +gmail)
        ;;notmuch
        ;;(wanderlust +gmail)
 
        :app
-       calendar
+       ;;calendar
        ;;emms
        ;;everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize

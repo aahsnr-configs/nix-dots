@@ -4,11 +4,10 @@
   lib,
   inputs,
   ...
-}:
-{
+}: {
   environment = {
-    systemPackages = [ pkgs.git ];
-    defaultPackages = [ ];
+    systemPackages = [pkgs.git];
+    defaultPackages = [];
   };
 
   nix = {
@@ -23,7 +22,7 @@
     daemonIOSchedClass = "idle";
 
     # pin the registry to avoid downloading and evaling a new nixpkgs version every time
-    registry = lib.mapAttrs (_: v: { flake = v; }) inputs;
+    registry = lib.mapAttrs (_: v: {flake = v;}) inputs;
 
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
@@ -42,8 +41,8 @@
       flake-registry = "/etc/nix/registry.json";
       auto-optimise-store = true;
       builders-use-substitutes = true;
-      allowed-users = [ "@wheel" ];
-      trusted-users = [ "@wheel" ];
+      allowed-users = ["@wheel"];
+      trusted-users = ["@wheel"];
       sandbox = true;
       max-jobs = 2;
       cores = 8;
@@ -110,12 +109,12 @@
     # };
   };
 
-  documentation = {
-    enable = true;
-    doc.enable = true;
-    man.enable = false;
-    dev.enable = true;
-  };
+  # documentation = {
+  #   enable = true;
+  #   doc.enable = true;
+  #   man.enable = false;
+  #   dev.enable = true;
+  # };
 
   system = {
     autoUpgrade.enable = true;

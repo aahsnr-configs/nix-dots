@@ -1,69 +1,7 @@
-#+title: My Doom Emacs Config
-#+author: Ahsanur Rahman
+#+TITLE: My Doom Emacs Config
+#+AUTHOR: Ahsanur Rahman
 
-This is my personal Doom Emacs configuration, organized in a literate programming style using Org mode. This file is the single source of truth; the actual `config.el` is generated ("tangled") from the source blocks herein.
-
-* Personal Information
-This section sets my personal details, which are used by various Emacs packages (e.g., for sending emails or creating file headers).
-
-#+begin_src emacs-lisp
-;; User Information
-(setq user-full-name "Ahsanur Rahman"
-      user-mail-address "ahsanur041@proton.me")
-#+end_src
-
-* Core Emacs Settings
-These are fundamental settings that control the basic behavior of Emacs, such as scrolling, indentation, and window management. They are set first to establish a consistent foundation for the rest of the configuration.
-
-** Scrolling and Display
-These settings provide a smoother and more predictable scrolling experience.
-#+begin_src emacs-lisp
-(setq-default scroll-conservatively 101
-              scroll-margin 0
-              scroll-preserve-screen-position t)
-#+end_src
-
-** Indentation and Text
-We enforce spaces over tabs and a standard line width of 80 characters. A small amount of line spacing is added for readability.
-#+begin_src emacs-lisp
-(setq-default ;; Indentation
-              indent-tabs-mode nil
-              tab-width 2
-              fill-column 80
-
-              ;; Line spacing
-              line-spacing 0.02)
-#+end_src
-
-** Window Management
-This configuration dictates how Emacs splits windows, preferring vertical splits for wider screens.
-#+begin_src emacs-lisp
-(setq split-width-threshold 170
-      split-height-threshold nil)
-#+end_src
-
-** Frame Title
-This customizes the title bar of the Emacs window to show the current buffer name and system name for easy identification.
-#+begin_src emacs-lisp
-(setq frame-title-format
-      '((:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name))
-                 "%b"))
-        " - Doom Emacs"))
-#+end_src
-
-* UI & Theming
-This section covers the visual appearance of Emacs, including themes, fonts, the modeline, and other aesthetic elements.
-
-** Fonts
-#+begin_src emacs-lisp
-(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.0 :weight 'medium)
-      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14.0)
-      doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 25))
-#+end_src
-
-** Catppuccin Theme Customization
-Override specific colors for better contrast and visual improvements, with special attention to background shades for different UI elements.
+* Catppuccin Theme
 #+begin_src emacs-lisp
 (use-package! catppuccin-theme
   :config
@@ -95,139 +33,15 @@ Override specific colors for better contrast and visual improvements, with speci
     '(minibuffer-prompt :foreground "#89dceb" :weight bold)))
 #+end_src
 
-** Frame Padding
-A small internal border is added around the frame to create visual breathing room between the text and the window edge.
+* Code Formatting
+*Disable for now*
 #+begin_src emacs-lisp
-(setq-default internal-border-width 5)
-(add-to-list 'default-frame-alist '(internal-border-width . 5))
+;; (after! apheleia
+;;   (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff))
+;;   (setf (alist-get 'python-ts-mode apheleia-mode-alist) '(ruff)))
 #+end_src
 
-** Modeline
-The modeline is the information bar at the bottom of each window. We use `doom-modeline` and customize its appearance for better readability and information density.
-#+begin_src emacs-lisp
-(after! doom-modeline
-  (setq doom-modeline-height 28
-        doom-modeline-bar-width 3))
-#+end_src
-
-** Line Numbers
-Line numbers are enabled globally by default, which is useful for programming. We then selectively disable them in modes where they are distracting, such as Org, Dired, and Magit.
-#+begin_src emacs-lisp
-;; Enable absolute line numbers globally by default.
-(setq display-line-numbers-type t)
-
-;; Disable line numbers in modes where they aren't useful.
-(add-hook! '(org-mode-hook
-             dired-mode-hook
-             magit-status-mode-hook
-             eshell-mode-hook
-             vterm-mode-hook
-             help-mode-hook
-             doom-dashboard-mode-hook)
-           #'(lambda () (display-line-numbers-mode -1)))
-#+end_src
-
-** Which-key
-`which-key` displays available keybindings after a prefix key is pressed. We configure a short delay for responsiveness.
-#+begin_src emacs-lisp
-(setq which-key-idle-delay 0.3
-      which-key-allow-imprecise-window-fit nil)
-#+end_src
-
-** Rainbow Delimiters
-Catppuccin theme provides rainbow-delimiters colors using its native palette for perfect color harmony.
-#+begin_src emacs-lisp
-(use-package! rainbow-delimiters
-  :hook ((prog-mode . rainbow-delimiters-mode)
-         (org-src-mode . rainbow-delimiters-mode)
-         (treesit-auto-mode-hook . rainbow-delimiters-mode))
-
-  ;; Catppuccin Mocha palette - these are already defined by the theme
-  ;; but we customize for optimal nesting visibility
-  :custom-face
-  (rainbow-delimiters-depth-1-face ((t (:foreground "#f38ba8"))))  ; Red
-  (rainbow-delimiters-depth-2-face ((t (:foreground "#fab387"))))  ; Peach
-  (rainbow-delimiters-depth-3-face ((t (:foreground "#f9e2af"))))  ; Yellow
-  (rainbow-delimiters-depth-4-face ((t (:foreground "#a6e3a1"))))  ; Green
-  (rainbow-delimiters-depth-5-face ((t (:foreground "#74c7ec"))))  ; Sapphire
-  (rainbow-delimiters-depth-6-face ((t (:foreground "#b4befe"))))  ; Lavender
-  (rainbow-delimiters-depth-7-face ((t (:foreground "#cba6f7"))))  ; Mauve
-  (rainbow-delimiters-unmatched-face ((t (:foreground "#f38ba8" :weight bold)))))
-#+end_src
-
-** Markdown Styling
-We customize the faces for Markdown headers to make them larger and more distinct. A helper function is also defined to easily toggle between the raw Markdown and a rendered preview.
-#+begin_src emacs-lisp
-;; Headers with Catppuccin colors
-(custom-set-faces
- '(markdown-header-face ((t (:inherit font-lock-function-name-face :weight bold :family "variable-pitch"))))
- '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.6 :foreground "#f38ba8"))))
- '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.5 :foreground "#fab387"))))
- '(markdown-header-face-3 ((t (:inherit markdown-header-face :height 1.4 :foreground "#f9e2af"))))
- '(markdown-header-face-4 ((t (:inherit markdown-header-face :height 1.3 :foreground "#a6e3a1"))))
- '(markdown-header-face-5 ((t (:inherit markdown-header-face :height 1.2 :foreground "#74c7ec"))))
- '(markdown-header-face-6 ((t (:inherit markdown-header-face :height 1.1 :foreground "#b4befe")))))
-
-;; Toggle Markdown View
-(defun dt/toggle-markdown-view-mode ()
-  "Toggle between `markdown-mode' and `markdown-view-mode'."
-  (interactive)
-  (if (eq major-mode 'markdown-view-mode)
-      (markdown-mode)
-    (markdown-view-mode)))
-#+end_src
-
-* Evil Mode
-This section configures `evil-mode`, the Vim emulation layer that provides modal editing capabilities within Emacs.
-
-#+begin_src emacs-lisp
-(after! evil
-  (setq evil-want-fine-undo t
-        evil-vsplit-window-right t
-        evil-split-window-below t
-        evil-move-beyond-eol t))
-
-(after! evil-escape
-  (setq evil-escape-key-sequence "jk"
-        evil-escape-delay 0.2))
-
-;; Use visual line navigation, which is more intuitive when working with wrapped lines.
-(map! :nv "j" #'evil-next-visual-line
-      :nv "k" #'evil-previous-visual-line)
-#+end_src
-
-* Completion Framework
-This configures the packages responsible for in-buffer completion (`corfu`) and minibuffer completion (`vertico`), creating a modern and powerful interactive experience.
-
-** Corfu
-*corfu* provides a clean, pop-up completion UI for text being typed directly in a buffer.
-#+begin_src emacs-lisp
-(after! corfu
-  (setq corfu-auto t
-        corfu-auto-delay 0.2
-        corfu-cycle t
-        corfu-preselect 'prompt)
-  (corfu-popupinfo-mode -1))
-#+end_src
-
-** Vertico
-`vertico` provides a vertical, interactive list for minibuffer commands like `find-file` and `M-x`.
-#+begin_src emacs-lisp
-(after! vertico
-  (setq vertico-count 10))
-#+end_src
-
-* Project & File Management
-Settings related to managing projects and navigating the file system.
-
-** Projectile
-`projectile` is a project interaction library for Emacs. We tell it where to look for our projects.
-#+begin_src emacs-lisp
-(after! projectile
-  (setq projectile-project-search-path '("~/projects/" "~/org/")))
-#+end_src
-
-** Dired (Directory Editor)
+* Dired
 Configuration for Emacs's built-in file manager, `dired`. We set custom listing switches and configure it to use the system trash. We also use `dired-open` to specify external applications for certain file types.
 #+begin_src emacs-lisp
 (after! dired
@@ -242,378 +56,81 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
                                 ("mp4" . "mpv"))))
 #+end_src
 
-* Version Control using Magit
-Configuration for `magit`, the powerful Git client inside Emacs.
-
+* Default Settings
 #+begin_src emacs-lisp
-(after! magit
-  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+(after! evil
+  (setq evil-want-fine-undo t
+        evil-vsplit-window-right t
+        evil-split-window-below t
+        evil-move-beyond-eol t))
 
-(use-package! magit-todos
-  :after magit
-  :config (magit-todos-mode 1))
+(after! evil-escape
+  (setq evil-escape-key-sequence "jk"
+        evil-escape-delay 0.2))
 
-(setq forge-owned-accounts '(("aahsnr")))
+;; Use visual line navigation, which is more intuitive when working with wrapped lines.
+(map! :nv "j" #'evil-next-visual-line
+      :nv "k" #'evil-previous-visual-line)
+
+(setq-default internal-border-width 5)
+(add-to-list 'default-frame-alist '(internal-border-width . 5))
+
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))
+        " - Doom Emacs"))
+
+(setq-default ;; Indentation
+              indent-tabs-mode nil
+              tab-width 2
+              fill-column 80
+
+              ;; Line spacing
+              line-spacing 0.02)
+
+(setq confirm-kill-emacs nil)
+
+(setq-default scroll-conservatively 101
+              scroll-margin 0
+              scroll-preserve-screen-position t)
+
+(setq warning-suppress-types '((org-element)))
+
+(setq split-width-threshold 170
+      split-height-threshold nil)
 #+end_src
 
-* General Programming Tools
-** DONE Eglot Configuration
-Eglot provides LSP functionality using built-in Emacs features like eldoc, xref, and flymake.
+* Doom Modeline
 #+begin_src emacs-lisp
-(after! eglot
-  ;; Add basedpyright as the Python language server
-  (add-to-list 'eglot-server-programs
-               '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio"))))
+(after! doom-modeline
+  (setq doom-modeline-height 28
+        doom-modeline-bar-width 3))
 #+end_src
 
-** DONE Improve flymake UX
+* Flymake
 #+begin_src emacs-lisp
 (after! flymake
   (setq flymake-no-changes-timeout 0.3
         flymake-start-on-save-buffer t))
 #+end_src
 
-** DONE Documentation Display (eldoc-box)
-Use eldoc-box to display documentation in a childframe for better visibility.
+* Fonts
 #+begin_src emacs-lisp
-(use-package! eldoc-box
-  :commands (eldoc-box-hover-mode eldoc-box-hover-at-point-mode eldoc-box-help-at-point)
-  :init
-  ;; Enable hover documentation in childframe for eglot buffers
-  (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode)
-  :config
-  ;; Customize eldoc-box appearance to match Catppuccin theme
-  (setq eldoc-box-max-pixel-width 800
-        eldoc-box-max-pixel-height 600
-        eldoc-box-clear-with-C-g t)
-
-  ;; Custom faces for eldoc-box
-  (custom-set-faces!
-    '(eldoc-box-border ((t (:background "#45475a"))))
-    '(eldoc-box-body ((t (:background "#1e1e2e" :foreground "#cdd6f4"))))))
+(setq doom-font (font-spec :family "JetBrains Mono" :size 14.0 :weight 'medium)
+      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 14.0)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 25))
 #+end_src
 
-* Python Development Environment
-This section configures a state-of-the-art Python development environment using specialized, standalone tools for formatting, linting, and debugging.
-
-** DONE Eglot Setup
-Enable Eglot automatically in Python buffers, including org-src-mode.
+* Jupyter
 #+begin_src emacs-lisp
-;; Enable Eglot automatically in Python modes
-(add-hook! (python-mode python-ts-mode) #'eglot-ensure)
+(setq org-babel-default-header-args:jupyter-python '((:async . "yes")
+                                                     (:session . "py")
+                                                     (:kernel . "python3")))
 
-;; Enable Eglot in org-src-mode buffers for Python
-(defun my/org-src-python-eglot-setup ()
-  "Enable Eglot in org-src-mode buffers for Python.
-This function ensures LSP features work in code blocks edited via org-edit-special."
-  (when (and (derived-mode-p 'python-mode 'python-ts-mode)
-             (bound-and-true-p org-src-mode)
-             (not (eglot-managed-p)))
-    ;; Delay to allow org-src-mode to fully initialize
-    (run-with-idle-timer 0.3 nil
-      (lambda (buf)
-        (when (buffer-live-p buf)
-          (with-current-buffer buf
-            (when (and (derived-mode-p 'python-mode 'python-ts-mode)
-                       (not (eglot-managed-p)))
-              ;; Eglot requires a file name for project detection
-              ;; Create a temporary file path for org-src buffers
-              (unless buffer-file-name
-                (setq-local buffer-file-name
-                           (expand-file-name
-                            (format "org-src-python-%s.py" (buffer-name))
-                            temporary-file-directory)))
-              ;; Start eglot
-              (eglot-ensure)))))
-      (current-buffer))))
-
-(add-hook 'org-src-mode-hook #'my/org-src-python-eglot-setup)
-
-;; Enable eldoc in org-src-mode for documentation display
-(add-hook 'org-src-mode-hook
-          (defun my/org-src-eldoc-setup ()
-            (when (and (derived-mode-p 'python-mode 'python-ts-mode)
-                       (eglot-managed-p))
-              (eldoc-mode 1))))
+(setq ob-async-no-async-languages-alist '("jupyter-python"))
 #+end_src
-
-** DONE Code Formatting (Apheleia + Ruff)
-Use Apheleia for fast, async code formatting on save with ruff.
-#+begin_src emacs-lisp
-(after! apheleia
-  (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff))
-  (setf (alist-get 'python-ts-mode apheleia-mode-alist) '(ruff)))
-#+end_src
-
-** DONE Flymake (Ruff + Mypy)
-Replace LSP-based syntax checking with a custom flycheck toolchain for superior performance.
-#+begin_src emacs-lisp
-(after! flymake-collection
-  ;; Python mode configuration
-  (push '(python-mode
-          flymake-collection-ruff      ; Fast linting with ruff
-          flymake-collection-mypy)     ; Type checking with mypy
-        flymake-collection-config)
-
-  ;; Python tree-sitter mode configuration
-  (push '(python-ts-mode
-          flymake-collection-ruff
-          flymake-collection-mypy)
-        flymake-collection-config)
-
-  ;; Enable automatic diagnostic function setup
-  (flymake-collection-hook-setup))
-#+end_src
-
-** DONE Debugging (Dape for Python)
-Dape comes with built-in debug adapter configurations for Python using debugpy. Simply install debugpy (`pip install debugpy`) and use `M-x dape` to start debugging.
-** DONE Optimize Org Mode Jupyter Integration
-Prevent conflicts between Jupyter and Eglot completion in org-src-mode.
-#+begin_src emacs-lisp
-(after! jupyter
-  ;; Remove jupyter completion from completion-at-point-functions in org-src-mode
-  ;; This prevents conflicts with Eglot's LSP-based completion
-  (add-hook 'org-src-mode-hook
-    (lambda ()
-      (when (and (derived-mode-p 'python-mode 'python-ts-mode)
-                 (bound-and-true-p jupyter-current-client))
-        (setq-local completion-at-point-functions
-                    (delq 'jupyter-org-completion-at-point
-                          completion-at-point-functions))))))
-#+end_src
-
-* Org Mode
-This is the central hub for my personal knowledge management, task tracking, and literate programming.
-
-** Core Setup
-We define custom directories and set foundational Org mode behaviors. This includes defining agenda files, enabling native fontification of source blocks, and setting custom TODO keywords. We also add a hook to enable parenthesis highlighting in source edit buffers.
-#+begin_src emacs-lisp
-(defvar my/org-directory "~/org/" "The root directory for Org files.")
-(defvar my/org-roam-directory (expand-file-name "roam/" my/org-directory) "The directory for Org Roam files.")
-
-(after! org
-  (setq org-directory my/org-directory
-        org-agenda-files (list (expand-file-name "inbox.org" my/org-directory)
-                               (expand-file-name "projects.org" my/org-directory)
-                               (expand-file-name "habits.org" my/org-directory))
-        org-default-notes-file (expand-file-name "inbox.org" my/org-directory)
-        org-src-fontify-natively t
-        org-src-window-setup 'current-window
-        org-confirm-babel-evaluate nil
-        org-startup-with-inline-images t
-        org-image-actual-width 600
-        org-hide-emphasis-markers t
-        org-pretty-entities t
-        org-archive-location (concat my/org-directory "archive/%s_archive::")
-        org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCEL(c@)")
-          (sequence "PLAN(P)" "ACTIVE(A)" "PAUSED(x)" "|" "ACHIEVED(a)" "DROPPED(D)"))))
-#+end_src
-
-** Inline Images
-#+begin_src emacs-lisp
-;; Auto-refresh inline images after executing code blocks
-(after! org
-  (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images))
-#+end_src
-
-** Jupyter Utilities
-Custom utility functions for managing Jupyter kernels, output formatting, and selective execution.
-
-*** Kernel Management
-Functions to refresh kernelspecs and clean up orphaned kernel files.
-#+begin_src emacs-lisp
-;; (defun my/jupyter-refresh-kernelspecs ()
-;;   "Refresh Jupyter kernelspecs."
-;;   (interactive)
-;;   (jupyter-available-kernelspecs t))
-
-;; (defun my/jupyter-refresh-langs ()
-;;   "Refresh Jupyter languages for org-babel."
-;;   (interactive)
-;;   (org-babel-jupyter-aliases-from-kernelspecs t))
-
-;; (defun my/get-open-ports ()
-;;   "Get list of open ports by parsing netstat output."
-;;   (let ((netstat-output (shell-command-to-string "netstat -tuln")))
-;;     (delq nil
-;;           (mapcar (lambda (line)
-;;                     (when (string-match ":\\([0-9]+\\)" line)
-;;                       (string-to-number (match-string 1 line))))
-;;                   (split-string netstat-output "\n")))))
-
-;; (defun my/list-jupyter-kernel-files ()
-;;   "List Jupyter kernel connection files with their ports."
-;;   (let* ((runtime-dir (or (getenv "JUPYTER_RUNTIME_DIR")
-;;                           (expand-file-name "~/.local/share/jupyter/runtime")))
-;;          (files (when (file-directory-p runtime-dir)
-;;                   (directory-files runtime-dir t "kernel-.*\\.json$"))))
-;;     (delq nil
-;;           (mapcar (lambda (file)
-;;                     (condition-case nil
-;;                         (with-temp-buffer
-;;                           (insert-file-contents file)
-;;                           (goto-char (point-min))
-;;                           (let* ((json-object-type 'alist)
-;;                                  (data (json-read)))
-;;                             (cons file (alist-get 'shell_port data))))
-;;                       (error nil)))
-;;                   files))))
-
-;; (defun my/jupyter-cleanup-kernels ()
-;;   "Clean up orphaned Jupyter kernel connection files."
-;;   (interactive)
-;;   (let* ((ports (my/get-open-ports))
-;;          (files (my/list-jupyter-kernel-files))
-;;          (to-delete (seq-filter
-;;                      (lambda (file)
-;;                        (not (member (cdr file) ports)))
-;;                      files)))
-;;     (when (and (length> to-delete 0)
-;;                (y-or-n-p (format "Delete %d orphaned kernel files?" (length to-delete))))
-;;       (dolist (file to-delete)
-;;         (delete-file (car file))
-;;         (message "Deleted: %s" (car file))))))
-#+end_src
-
-
-*** Selective Execution
-Execute code blocks selectively based on position or markers.
-#+begin_src emacs-lisp
-;; (defun my/org-babel-execute-buffer-below (&optional arg)
-;;   "Execute all source blocks from point to end of buffer."
-;;   (interactive "P")
-;;   (org-babel-eval-wipe-error-buffer)
-;;   (let ((point (point)))
-;;     (org-save-outline-visibility t
-;;       (org-babel-map-executables nil
-;;         (when (>= (point) point)
-;;           (if (memq (org-element-type (org-element-context))
-;;                     '(babel-call inline-babel-call))
-;;               (org-babel-lob-execute-maybe)
-;;             (org-babel-execute-src-block arg)))))))
-
-;; (defun my/org-babel-execute-buffer-above (&optional arg)
-;;   "Execute all source blocks from beginning of buffer to point."
-;;   (interactive "P")
-;;   (org-babel-eval-wipe-error-buffer)
-;;   (let ((point (point)))
-;;     (org-save-outline-visibility t
-;;       (org-babel-map-executables nil
-;;         (when (<= (point) point)
-;;           (if (memq (org-element-type (org-element-context))
-;;                     '(babel-call inline-babel-call))
-;;               (org-babel-lob-execute-maybe)
-;;             (org-babel-execute-src-block arg)))))))
-
-;; (defun my/org-babel-execute-marked (&optional arg)
-;;   "Execute source blocks marked with ':startup t' parameter.
-;; With prefix ARG, only execute marked blocks below point."
-;;   (interactive "P")
-;;   (let (markers)
-;;     (org-element-map (org-element-parse-buffer) 'src-block
-;;       (lambda (elem)
-;;         (let ((params (org-element-property :parameters elem)))
-;;           (when (and params
-;;                      (string-match-p (rx "startup t") params))
-;;             (let ((m (make-marker)))
-;;               (set-marker m (org-element-property :begin elem))
-;;               (set-marker-insertion-type m t)
-;;               (push m markers))))))
-;;     (setq markers (nreverse markers))
-;;     (when arg
-;;       (setq markers
-;;             (seq-filter
-;;              (lambda (m) (> (marker-position m) (point)))
-;;              markers)))
-;;     (dolist (m markers)
-;;       (goto-char m)
-;;       (ignore-errors
-;;         (org-babel-execute-src-block)))))
-#+end_src
-
-** Org Roam
-*org-roam* is a powerful note-taking tool for building a personal knowledge graph, inspired by the Zettelkasten method. We also enable *org-roam-ui* for a visual graph interface.
-#+begin_src emacs-lisp
-(after! org-roam
-  (setq org-roam-directory my/org-roam-directory
-        org-roam-db-gc-threshold most-positive-fixnum
-        org-roam-completion-everywhere t))
-
-(use-package! org-roam-ui
-  :after org-roam
-  :config (setq org-roam-ui-sync-theme t
-                org-roam-ui-follow t
-                org-roam-ui-update-on-save t))
-
-(use-package! consult-org-roam
-  :after org-roam
-  :init (consult-org-roam-mode 1))
-#+end_src
-
-** UI Enhancements
-These packages improve the visual presentation of Org mode. *org-super-agenda* provides powerful grouping for agenda views, while *org-fragtog* and *org-appear* enhance the display of LaTeX fragments and emphasis markers.
-#+begin_src emacs-lisp
-(use-package! org-super-agenda
-  :after org-agenda
-  :hook (org-agenda-mode-hook . org-super-agenda-mode))
-
-(add-hook! 'org-mode-hook #'org-fragtog-mode)
-
-(after! org-appear
-  (setq org-appear-autoemphasis t
-        org-appear-autolinks t
-        org-appear-autosubmarkers t))
-
-(after! org
-  ;; Set custom faces for scaled org headers to improve visual hierarchy.
-  (custom-set-faces!
-    '(org-level-1 :inherit 'variable-pitch :weight bold :height 1.2)
-    '(org-level-2 :inherit 'variable-pitch :weight bold :height 1.13)
-    '(org-level-3 :inherit 'variable-pitch :weight bold :height 1.10)
-    '(org-level-4 :inherit 'variable-pitch :weight bold :height 1.07)
-    '(org-level-5 :inherit 'variable-pitch :weight bold :height 1.05)
-    '(org-level-6 :inherit 'variable-pitch :weight bold :height 1.03)
-    '(org-level-7 :inherit 'variable-pitch :weight bold :height 1.02)
-    '(org-level-8 :inherit 'variable-pitch :weight bold :height 1.0)))
-#+end_src
-
-** Org Modern
-#+begin_src emacs-lisp
-(after! org-modern
-  (setq
-   ;; Override Doom's dynamic star visibility with a consistent character.
-   org-modern-hide-stars "· "
-   ;; Customize the appearance of headline stars/bullets.
-   org-modern-star '("◉" "○" "◈" "◇" "◆" "▷")
-   ;; Customize list item bullets.
-   org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))
-   ;; Adjust table line appearance.
-   org-modern-table-vertical 1
-   org-modern-table-horizontal 0.1
-   ;; Customize the block name delimiters.
-   org-modern-block-name '(("src" "»" "«")
-                           ("example" "»" "«")
-                           ("quote" "❝" "❞"))
-   ;; Define custom checkbox characters.
-   org-modern-checkbox '((todo . "☐") (done . "☑") (cancel . "☒") (priority . "⚑") (on . "◉") (off . "○"))
-   ;; Override Doom's derived tag faces with a specific style for Catppuccin.
-   org-modern-tag-faces `((:foreground ,(face-attribute 'default :foreground) :weight bold :box (:line-width (1 . -1) :color "#45475a")))))
-#+end_src
-
-** Org Structure Templates
-#+begin_src emacs-lisp
-(after! org
-  (require 'org-tempo)
-  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-  (add-to-list 'org-structure-template-alist '("py" . "src jupyter-python"))
-  (add-to-list 'org-structure-template-alist '("sq" . "src sql")))
-#+end_src
-
 * Keybindings
-This section defines my custom keybindings, primarily using the leader key (`SPC`).
-
-** General Toggles and Actions
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix ("t" . "toggle")
@@ -633,10 +150,7 @@ This section defines my custom keybindings, primarily using the leader key (`SPC
 
 (map! :leader
       :desc "M-x" "SPC" #'execute-extended-command)
-#+end_src
 
-** Literate Programming (Org Babel)
-#+begin_src emacs-lisp
 (map! :leader
       (:prefix ("l" . "literate")
        :desc "Tangle file"              "t" #'org-babel-tangle
@@ -644,23 +158,14 @@ This section defines my custom keybindings, primarily using the leader key (`SPC
        :desc "Execute buffer above"     "A" #'my/org-babel-execute-buffer-above
        :desc "Execute buffer below"     "B" #'my/org-babel-execute-buffer-below
        :desc "Execute marked blocks"    "m" #'my/org-babel-execute-marked))
-#+end_src
 
-** Jupyter Management Keybindings
-#+begin_src emacs-lisp
 (map! :leader
       (:prefix ("j" . "jupyter")
        :desc "Refresh kernelspecs"     "r" #'my/jupyter-refresh-kernelspecs
        :desc "Refresh languages"       "l" #'my/jupyter-refresh-langs
        :desc "Cleanup kernels"         "c" #'my/jupyter-cleanup-kernels
        :desc "Toggle raw output"       "o" #'my/emacs-jupyter-raw-output))
-#+end_src
 
-#+RESULTS:
-
-** DONE IDE Keybindings
-Keybindings for code navigation, documentation, and actions.
-#+begin_src emacs-lisp
 (map! :leader
       (:prefix ("c" . "code")
        :desc "Format buffer"            "=" #'apheleia-format-buffer
@@ -692,11 +197,7 @@ Keybindings for code navigation, documentation, and actions.
       :desc "Format buffer"        "=" #'apheleia-format-buffer
       :desc "Show documentation"   "h" #'eldoc-box-help-at-point
       :desc "Code actions"         "a" #'eglot-code-actions)
-#+end_src
 
-** DONE Debugging (DAPE)
-Global keybindings for the Debug Adapter Protocol client.
-#+begin_src emacs-lisp
 (map! :leader
       (:prefix ("d" . "debug/dape")
        :desc "Debug"               "d" #'dape
@@ -710,32 +211,199 @@ Global keybindings for the Debug Adapter Protocol client.
        :desc "Debug REPL"          "R" #'dape-repl))
 #+end_src
 
-* Miscellaneous
-A place for settings that don't fit neatly into the other categories.
+* Line Numbers
+#+begin_src emacs-lisp
+;; Enable absolute line numbers globally by default.
+(setq display-line-numbers-type t)
 
-** PDF Tools
-Default settings for viewing PDF files inside Emacs.
+;; Disable line numbers in modes where they aren't useful.
+(add-hook! '(org-mode-hook
+             dired-mode-hook
+             magit-status-mode-hook
+             eshell-mode-hook
+             vterm-mode-hook
+             help-mode-hook
+             doom-dashboard-mode-hook)
+           #'(lambda () (display-line-numbers-mode -1)))
+#+end_src
+
+* LSP Bridge
+#+begin_src emacs-lisp
+(use-package! lsp-bridge
+  :config
+  (global-lsp-bridge-mode)
+
+  ;; This provides: basedpyright for completion/navigation + ruff for linting/formatting
+  (setq lsp-bridge-python-multi-lsp-server "basedpyright_ruff"
+        lsp-bridge-tex-lsp-server "texlab"
+        lsp-bridge-nix-lsp-server "nil")
+        ;;lsp-bridge-org-babel-lang-list nil)
+
+  ;; Asynchronous Completion
+  (setq acm-enable-doc t
+        ;; acm-enable-jupyter t
+        acm-enable-doc-markdown-render 'async
+        acm-enable-icon t
+        acm-candidate-match-function 'orderless-literal
+        acm-backend-search-file-words-enable-fuzzy-match t)
+
+  (setq lsp-bridge-enable-inlay-hint t
+        lsp-bridge-enable-hover-diagnostic t
+        lsp-bridge-enable-auto-format-code t
+        lsp-bridge-enable-org-babel t))
+#+end_src
+
+* Org Mode
+
+#+begin_src emacs-lisp
+(defvar my/org-directory "~/org/" "The root directory for Org files.")
+(defvar my/org-roam-directory (expand-file-name "roam/" my/org-directory) "The directory for Org Roam files.")
+
+(after! org
+  (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images)
+
+  (setq org-directory my/org-directory
+        org-agenda-files (list (expand-file-name "inbox.org" my/org-directory)
+                               (expand-file-name "projects.org" my/org-directory)
+                               (expand-file-name "habits.org" my/org-directory))
+        org-default-notes-file (expand-file-name "inbox.org" my/org-directory)
+        org-src-fontify-natively t
+        org-src-window-setup 'current-window
+        org-confirm-babel-evaluate nil
+        org-startup-with-inline-images t
+        org-image-actual-width 600
+        org-hide-emphasis-markers t
+        org-pretty-entities t
+        org-archive-location (concat my/org-directory "archive/%s_archive::")
+        org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCEL(c@)")
+          (sequence "PLAN(P)" "ACTIVE(A)" "PAUSED(x)" "|" "ACHIEVED(a)" "DROPPED(D)")))
+
+  ;; Set custom faces for scaled org headers to improve visual hierarchy.
+  (custom-set-faces!
+    '(org-level-1 :inherit 'variable-pitch :weight bold :height 1.2)
+    '(org-level-2 :inherit 'variable-pitch :weight bold :height 1.13)
+    '(org-level-3 :inherit 'variable-pitch :weight bold :height 1.10)
+    '(org-level-4 :inherit 'variable-pitch :weight bold :height 1.07)
+    '(org-level-5 :inherit 'variable-pitch :weight bold :height 1.05)
+    '(org-level-6 :inherit 'variable-pitch :weight bold :height 1.03)
+    '(org-level-7 :inherit 'variable-pitch :weight bold :height 1.02)
+    '(org-level-8 :inherit 'variable-pitch :weight bold :height 1.0))
+
+  (require 'org-tempo)
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("sq" . "src sql")))
+
+
+(use-package! org-super-agenda
+  :after org-agenda
+  :hook (org-agenda-mode-hook . org-super-agenda-mode))
+
+(add-hook! 'org-mode-hook #'org-fragtog-mode)
+#+end_src
+
+* Org Modern
+#+begin_src emacs-lisp
+(after! org-modern
+  (setq
+   ;; Override Doom's dynamic star visibility with a consistent character.
+   org-modern-hide-stars "· "
+   ;; Customize the appearance of headline stars/bullets.
+   org-modern-star '("◉" "○" "◈" "◇" "◆" "▷")
+   ;; Customize list item bullets.
+   org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))
+   ;; Adjust table line appearance.
+   org-modern-table-vertical 1
+   org-modern-table-horizontal 0.1
+   ;; Customize the block name delimiters.
+   org-modern-block-name '(("src" "»" "«")
+                           ("example" "»" "«")
+                           ("quote" "❝" "❞"))
+   ;; Define custom checkbox characters.
+   org-modern-checkbox '((todo . "☐") (done . "☑") (cancel . "☒") (priority . "⚑") (on . "◉") (off . "○"))
+   ;; Override Doom's derived tag faces with a specific style for Catppuccin.
+   org-modern-tag-faces `((:foreground ,(face-attribute 'default :foreground) :weight bold :box (:line-width (1 . -1) :color "#45475a")))))
+#+end_src
+
+* Org Roam
+*org-roam* is a powerful note-taking tool for building a personal knowledge graph, inspired by the Zettelkasten method. We also enable *org-roam-ui* for a visual graph interface.
+#+begin_src emacs-lisp
+(after! org-roam
+  (setq org-roam-directory my/org-roam-directory
+        org-roam-db-gc-threshold most-positive-fixnum
+        org-roam-completion-everywhere t))
+
+(use-package! org-roam-ui
+  :after org-roam
+  :config (setq org-roam-ui-sync-theme t
+                org-roam-ui-follow t
+                org-roam-ui-update-on-save t))
+
+(use-package! consult-org-roam
+  :after org-roam
+  :init (consult-org-roam-mode 1))
+#+end_src
+
+* PDF Tools
 #+begin_src emacs-lisp
 (setq-default pdf-view-display-size 'fit-page)
 (add-hook! 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode)
 #+end_src
 
-** Default Shell
-We set `fish` as the default shell for terminal emulators like `vterm`.
+* Personal Information
 #+begin_src emacs-lisp
-;; (setq-default vterm-shell "/usr/bin/fish"
-;;               explicit-shell-file-name "/usr/bin/fish")
+;; User Information
+(setq user-full-name "Ahsanur Rahman"
+      user-mail-address "ahsanur041@proton.me")
 #+end_src
 
-** Quit Confirmation
-Disable the "Are you sure you want to quit Emacs?" prompt.
+* Projectile
 #+begin_src emacs-lisp
-(setq confirm-kill-emacs nil)
+(after! projectile
+  (setq projectile-project-search-path '("~/projects/" "~/org/")))
 #+end_src
 
-** Suppress Warnings
-Disable annoying warnings that don't affect functionality.
+* Rainbow Delimiters
 #+begin_src emacs-lisp
-;; Suppress org-element warnings in non-org buffers
-(setq warning-suppress-types '((org-element)))
+(use-package! rainbow-delimiters
+  :hook ((prog-mode . rainbow-delimiters-mode)
+         (org-src-mode . rainbow-delimiters-mode)
+         (treesit-auto-mode-hook . rainbow-delimiters-mode))
+
+  ;; Catppuccin Mocha palette - these are already defined by the theme
+  ;; but we customize for optimal nesting visibility
+  :custom-face
+  (rainbow-delimiters-depth-1-face ((t (:foreground "#f38ba8"))))  ; Red
+  (rainbow-delimiters-depth-2-face ((t (:foreground "#fab387"))))  ; Peach
+  (rainbow-delimiters-depth-3-face ((t (:foreground "#f9e2af"))))  ; Yellow
+  (rainbow-delimiters-depth-4-face ((t (:foreground "#a6e3a1"))))  ; Green
+  (rainbow-delimiters-depth-5-face ((t (:foreground "#74c7ec"))))  ; Sapphire
+  (rainbow-delimiters-depth-6-face ((t (:foreground "#b4befe"))))  ; Lavender
+  (rainbow-delimiters-depth-7-face ((t (:foreground "#cba6f7"))))  ; Mauve
+  (rainbow-delimiters-unmatched-face ((t (:foreground "#f38ba8" :weight bold)))))
+#+end_src
+
+* Version Control
+#+begin_src emacs-lisp
+(after! magit
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+(use-package! magit-todos
+  :after magit
+  :config (magit-todos-mode 1))
+
+(setq forge-owned-accounts '(("aahsnr")))
+#+end_src
+
+* Vertico
+#+begin_src emacs-lisp
+(after! vertico
+  (setq vertico-count 10))
+#+end_src
+
+* Which-key
+#+begin_src emacs-lisp
+(setq which-key-idle-delay 0.3
+      which-key-allow-imprecise-window-fit nil)
 #+end_src
