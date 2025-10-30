@@ -1,4 +1,8 @@
-{ config, pkgs, ... }: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   gtk = {
     enable = true;
 
@@ -10,7 +14,7 @@
 
     theme = {
       package = pkgs.adw-gtk3;
-      name = "adw-gtk3"; 
+      name = "adw-gtk3";
     };
 
     iconTheme = {
@@ -53,11 +57,11 @@
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
-      emoji = [ "Noto Color Emoji" ];
-      monospace = [ "JetBrains Mono" ];
-      sansSerif = [ "Rubik Medium"];
+      emoji = ["Noto Color Emoji"];
+      monospace = ["JetBrains Mono"];
+      sansSerif = ["Rubik Medium"];
       serif = [
-        "Noto Serif" 
+        "Noto Serif"
         "Noto Color Emoji"
       ];
     };
@@ -65,11 +69,11 @@
     subpixelRendering = "rgb";
     antialiasing = true;
   };
-    
+
   home.packages = with pkgs; [
     corefonts
     dina-font
-    (google-fonts.override { fonts = [ "Inter" ]; })
+    (google-fonts.override {fonts = ["Inter"];})
     jetbrains-mono
     liberation_ttf
     material-symbols
@@ -81,9 +85,9 @@
     rubik
     powerline-fonts
     terminus_font
-    ubuntu_font_family
+    ubuntu-classic
     ubuntu-sans
-    vistafonts
+    vista-fonts
   ];
 
   # qt = {

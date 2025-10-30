@@ -166,10 +166,10 @@
        (org                ; organize your plain life in plain text
         +dragndrop
         +gnuplot
+        +pretty
         +jupyter
         +notes
         +pandoc
-        +pretty
         +roam)
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more

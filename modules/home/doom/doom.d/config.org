@@ -99,6 +99,8 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 
 (setq split-width-threshold 170
       split-height-threshold nil)
+
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
 #+end_src
 
 * Doom Modeline
@@ -305,25 +307,25 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 
 * Org Modern
 #+begin_src emacs-lisp
-(after! org-modern
-  (setq
-   ;; Override Doom's dynamic star visibility with a consistent character.
-   org-modern-hide-stars "· "
-   ;; Customize the appearance of headline stars/bullets.
-   org-modern-star '("◉" "○" "◈" "◇" "◆" "▷")
-   ;; Customize list item bullets.
-   org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))
-   ;; Adjust table line appearance.
-   org-modern-table-vertical 1
-   org-modern-table-horizontal 0.1
-   ;; Customize the block name delimiters.
-   org-modern-block-name '(("src" "»" "«")
-                           ("example" "»" "«")
-                           ("quote" "❝" "❞"))
-   ;; Define custom checkbox characters.
-   org-modern-checkbox '((todo . "☐") (done . "☑") (cancel . "☒") (priority . "⚑") (on . "◉") (off . "○"))
-   ;; Override Doom's derived tag faces with a specific style for Catppuccin.
-   org-modern-tag-faces `((:foreground ,(face-attribute 'default :foreground) :weight bold :box (:line-width (1 . -1) :color "#45475a")))))
+;; (after! org-modern
+;;   (setq
+;;    ;; Override Doom's dynamic star visibility with a consistent character.
+;;    org-modern-hide-stars "· "
+;;    ;; Customize the appearance of headline stars/bullets.
+;;    org-modern-star '("◉" "○" "◈" "◇" "◆" "▷")
+;;    ;; Customize list item bullets.
+;;    org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))
+;;    ;; Adjust table line appearance.
+;;    org-modern-table-vertical 1
+;;    org-modern-table-horizontal 0.1
+;;    ;; Customize the block name delimiters.
+;;    org-modern-block-name '(("src" "»" "«")
+;;                            ("example" "»" "«")
+;;                            ("quote" "❝" "❞"))
+;;    ;; Define custom checkbox characters.
+;;    org-modern-checkbox '((todo . "☐") (done . "☑") (cancel . "☒") (priority . "⚑") (on . "◉") (off . "○"))
+;;    ;; Override Doom's derived tag faces with a specific style for Catppuccin.
+;;    org-modern-tag-faces `((:foreground ,(face-attribute 'default :foreground) :weight bold :box (:line-width (1 . -1) :color "#45475a")))))
 #+end_src
 
 * Org Roam
@@ -366,22 +368,22 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 
 * Rainbow Delimiters
 #+begin_src emacs-lisp
-(use-package! rainbow-delimiters
-  :hook ((prog-mode . rainbow-delimiters-mode)
-         (org-src-mode . rainbow-delimiters-mode)
-         (treesit-auto-mode-hook . rainbow-delimiters-mode))
+;; (use-package! rainbow-delimiters
+;;   :hook ((prog-mode . rainbow-delimiters-mode)
+;;          (org-src-mode . rainbow-delimiters-mode)
+;;          (treesit-auto-mode-hook . rainbow-delimiters-mode))
 
-  ;; Catppuccin Mocha palette - these are already defined by the theme
-  ;; but we customize for optimal nesting visibility
-  :custom-face
-  (rainbow-delimiters-depth-1-face ((t (:foreground "#f38ba8"))))  ; Red
-  (rainbow-delimiters-depth-2-face ((t (:foreground "#fab387"))))  ; Peach
-  (rainbow-delimiters-depth-3-face ((t (:foreground "#f9e2af"))))  ; Yellow
-  (rainbow-delimiters-depth-4-face ((t (:foreground "#a6e3a1"))))  ; Green
-  (rainbow-delimiters-depth-5-face ((t (:foreground "#74c7ec"))))  ; Sapphire
-  (rainbow-delimiters-depth-6-face ((t (:foreground "#b4befe"))))  ; Lavender
-  (rainbow-delimiters-depth-7-face ((t (:foreground "#cba6f7"))))  ; Mauve
-  (rainbow-delimiters-unmatched-face ((t (:foreground "#f38ba8" :weight bold)))))
+;;   ;; Catppuccin Mocha palette - these are already defined by the theme
+;;   ;; but we customize for optimal nesting visibility
+;;   :custom-face
+;;   (rainbow-delimiters-depth-1-face ((t (:foreground "#f38ba8"))))  ; Red
+;;   (rainbow-delimiters-depth-2-face ((t (:foreground "#fab387"))))  ; Peach
+;;   (rainbow-delimiters-depth-3-face ((t (:foreground "#f9e2af"))))  ; Yellow
+;;   (rainbow-delimiters-depth-4-face ((t (:foreground "#a6e3a1"))))  ; Green
+;;   (rainbow-delimiters-depth-5-face ((t (:foreground "#74c7ec"))))  ; Sapphire
+;;   (rainbow-delimiters-depth-6-face ((t (:foreground "#b4befe"))))  ; Lavender
+;;   (rainbow-delimiters-depth-7-face ((t (:foreground "#cba6f7"))))  ; Mauve
+;;   (rainbow-delimiters-unmatched-face ((t (:foreground "#f38ba8" :weight bold)))))
 #+end_src
 
 * Version Control

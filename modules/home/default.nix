@@ -79,7 +79,7 @@
     ./tmux
     ./udiskie
     ./xdg
-    ./yazi
+    #./yazi
     ./zathura
     ./zen-browser
     ./zoxide

@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     aide
     bleachbit
@@ -24,9 +23,9 @@
     nodejs_24
     openssl
     piper
-    poppler
+    poppler-utils
     resvg
-    python313 
+    python313
     gcc15
     killall
     tree

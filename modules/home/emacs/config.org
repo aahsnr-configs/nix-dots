@@ -13,9 +13,9 @@ This section incorporates the sensible defaults and settings from the minimal-em
 ** Startup Performance
 #+begin_src emacs-lisp
 ;; --- Defer Garbage Collection ---
-;; A major performance boost during startup.
-(setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-threshold 200000000)
 
+(setq read-process-output-max (* 3 1024 1024)) ;; 3mb
 ;; --- Defer UI Elements ---
 ;; Prevent flashes of unstyled content and unnecessary rendering.
 (setq-default mode-line-format nil)
@@ -291,10 +291,8 @@ This section incorporates the sensible defaults and settings from the minimal-em
 (auto-save-visited-mode 1)
 #+end_src
 
-** Performance Tuning Packages
+** Performance Tuning
 #+begin_src emacs-lisp
-;;; Handling Large Files
-;; Prevent slowdowns when opening very large files by disabling expensive modes.
 (use-package so-long
   :ensure t
   :hook (emacs-startup . so-long-mode))
@@ -305,17 +303,7 @@ This section contains settings specifically to mitigate performance and input
 issues when running the Pure GTK (PGTK) build of Emacs on Wayland.
 
 #+begin_src emacs-lisp
-;; Mitigate Rendering Sluggishness:
-;; The PGTK backend relies on CPU-intensive rendering. Disabling bidirectional
-;; text reordering can improve responsiveness. This setting is safe to call
-;; early as it does not depend on a graphical frame.
 (setq-default bidi-display-reordering nil)
-;; 
-;; ;; Mitigate Input Lag by disabling GTK input methods.
-;; ;; The function `pgtk-use-im-context` MUST be called after a frame is
-;; ;; created, otherwise it will error. We hook it into `after-make-frame-functions`
-;; ;; to ensure it runs at the correct time, both on startup and for new frames
-;; created by emacsclient in daemon mode.
 (when (fboundp 'pgtk-use-im-context)
   (add-hook 'after-make-frame-functions
             (lambda (frame)
@@ -1030,113 +1018,117 @@ project-wide refactoring.
 #+end_src
 
 ** Corfu: The Core UI with Smart TAB Navigation
+*disabled in favor of lsp-bridge*
 #+begin_src emacs-lisp
-(use-package corfu
-  :ensure t
-  :hook (after-init . global-corfu-mode)
-  :init
-  (corfu-history-mode)
-  (corfu-popupinfo-mode)
-  
-  ;; A list of modes where Corfu should be disabled to prevent conflicts.
-  (defvar ar/corfu-disabled-modes
-    '(erc-mode
-      circe-mode
-      help-mode
-      gud-mode
-      vterm-mode
-      eshell-mode
-      term-mode
-      shell-mode
-      comint-mode))
+;; (use-package corfu
+;;   :ensure t
+;;   :hook (after-init . global-corfu-mode)
+;;   :init
+;;   (corfu-history-mode)
+;;   (corfu-popupinfo-mode)
 
-  :config
-  (add-hook 'corfu-mode-hook
-            (lambda ()
-              (when (memq major-mode ar/corfu-disabled-modes)
-                (corfu-mode -1))))
+;;   ;; A list of modes where Corfu should be disabled to prevent conflicts.
+;;   (defvar ar/corfu-disabled-modes
+;;     '(erc-mode
+;;       circe-mode
+;;       help-mode
+;;       gud-mode
+;;       vterm-mode
+;;       eshell-mode
+;;       term-mode
+;;       shell-mode
+;;       comint-mode))
 
-  :custom
-  (corfu-cycle t)                       ; Allow cycling from last to first candidate
-  (corfu-auto t)                        ; Enable auto-completion
-  (corfu-auto-resize nil)               ; Do not resize the popup
-  (corfu-auto-delay 0.13)               ; Delay before auto-completion appears
-  (corfu-preselect 'prompt)             ; Pre-select the first candidate
-  (corfu-quit-at-boundary 'separator)   ; Quit completion when you cross a boundary (e.g., space)
-  (corfu-quit-no-match 'separator)      ; Quit if there are no matches
-  (corfu-on-exact-match nil)            ; Do not automatically select an exact match
-  
-  :bind
-  (:map corfu-map
-        ("TAB" . corfu-next)            ; Use TAB to navigate to next candidate
-        ([tab] . corfu-next)            ; Also bind the tab key event
-        ("S-TAB" . corfu-previous)      ; Use Shift-TAB to navigate to previous candidate
-        ([backtab] . corfu-previous)))  ; Alternative binding for Shift-TAB
+;;   :config
+;;   (add-hook 'corfu-mode-hook
+;;             (lambda ()
+;;               (when (memq major-mode ar/corfu-disabled-modes)
+;;                 (corfu-mode -1))))
+
+;;   :custom
+;;   (corfu-cycle t)                       ; Allow cycling from last to first candidate
+;;   (corfu-auto t)                        ; Enable auto-completion
+;;   (corfu-auto-resize nil)               ; Do not resize the popup
+;;   (corfu-auto-delay 0.13)               ; Delay before auto-completion appears
+;;   (corfu-preselect 'prompt)             ; Pre-select the first candidate
+;;   (corfu-quit-at-boundary 'separator)   ; Quit completion when you cross a boundary (e.g., space)
+;;   (corfu-quit-no-match 'separator)      ; Quit if there are no matches
+;;   (corfu-on-exact-match nil)            ; Do not automatically select an exact match
+
+;;   :bind
+;;   (:map corfu-map
+;;         ("TAB" . corfu-next)            ; Use TAB to navigate to next candidate
+;;         ([tab] . corfu-next)            ; Also bind the tab key event
+;;         ("S-TAB" . corfu-previous)      ; Use Shift-TAB to navigate to previous candidate
+;;         ([backtab] . corfu-previous)))  ; Alternative binding for Shift-TAB
 #+end_src
 
 ** Smart TAB Configuration
+*Turned off in favor of lsp-bridge*
 #+begin_src emacs-lisp
-(use-package emacs
-  :ensure nil
-  :custom
-  ;; TAB cycle if there are only few candidates (3 or less)
-  (completion-cycle-threshold 3)
-  
-  ;; Enable indentation+completion using the TAB key.
-  ;; TAB will first try to indent the line. If the line is already indented,
-  ;; it will then trigger completion. This is the recommended approach.
-  (tab-always-indent 'complete)
-  
-  ;; Control when TAB completes on first press vs requiring a second press
-  ;; nil: always complete immediately (if line is already indented)
-  ;; 'eol: only complete if point is at end of line
-  ;; 'word: complete unless next char has word syntax
-  ;; 'word-or-paren: complete unless next char is word or parenthesis
-  (tab-first-completion 'word-or-paren)
-  
-  ;; Hide commands in M-x which do not work in the current mode.
-  ;; Corfu commands are hidden since they are not meant to be used via M-x.
-  (read-extended-command-predicate #'command-completion-default-include-p))
+;; (use-package emacs
+;;   :ensure nil
+;;   :custom
+;;   ;; TAB cycle if there are only few candidates (3 or less)
+;;   (completion-cycle-threshold 3)
+
+;;   ;; Enable indentation+completion using the TAB key.
+;;   ;; TAB will first try to indent the line. If the line is already indented,
+;;   ;; it will then trigger completion. This is the recommended approach.
+;;   (tab-always-indent 'complete)
+
+;;   ;; Control when TAB completes on first press vs requiring a second press
+;;   ;; nil: always complete immediately (if line is already indented)
+;;   ;; 'eol: only complete if point is at end of line
+;;   ;; 'word: complete unless next char has word syntax
+;;   ;; 'word-or-paren: complete unless next char is word or parenthesis
+;;   (tab-first-completion 'word-or-paren)
+
+;;   ;; Hide commands in M-x which do not work in the current mode.
+;;   ;; Corfu commands are hidden since they are not meant to be used via M-x.
+;;   (read-extended-command-predicate #'command-completion-default-include-p))
 #+end_src
 
 ** Nerd Icons for Corfu
 #+begin_src emacs-lisp
-(use-package nerd-icons-corfu
-  :ensure t
-  :after (corfu nerd-icons)
-  :config (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+;; (use-package nerd-icons-corfu
+;;   :ensure t
+;;   :after (corfu nerd-icons)
+;;   :config (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 #+end_src
 
 ** Cape: Completion Backends
+*Disable in favor of lsp-bridge*
 #+begin_src emacs-lisp
-(use-package cape
-  :ensure t
-  :init
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-  :config
-  (advice-add #'comint-completion-at-point :around #'cape-wrap-nonexclusive)
-  (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive)
-  (advice-add #'pcomplete-completions-at-point :around #'cape-wrap-nonexclusive))
+;; (use-package cape
+;;   :ensure t
+;;   :init
+;;   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+;;   (add-to-list 'completion-at-point-functions #'cape-file)
+;;   (add-to-list 'completion-at-point-functions #'cape-keyword)
+;;   (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+;;   :config
+;;   (advice-add #'comint-completion-at-point :around #'cape-wrap-nonexclusive)
+;;   (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive)
+;;   (advice-add #'pcomplete-completions-at-point :around #'cape-wrap-nonexclusive))
 #+end_src
 
 ** Dabbrev
+*Disabled in favor of lsp-bridge*
 #+begin_src emacs-lisp
-(use-package dabbrev
-  ;; Swap M-/ and C-M-/
-  :bind (("M-/" . dabbrev-completion)
-         ("C-M-/" . dabbrev-expand))
-  :config
-  (setq dabbrev-friend-buffer-function #'+corfu-dabbrev-friend-buffer-p
-        dabbrev-ignored-buffer-regexps
-        '("\\` "
-          "\\(?:\\(?:[EG]?\\|GR\\)TAGS\\|e?tags\\|GPATH\\)\\(<[0-9]+>\\)?")
-        dabbrev-upcase-means-case-search t)
-  (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
-  (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
-  (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
+;; (use-package dabbrev
+;;   ;; Swap M-/ and C-M-/
+;;   :bind (("M-/" . dabbrev-completion)
+;;          ("C-M-/" . dabbrev-expand))
+;;   :config
+;;   (setq dabbrev-friend-buffer-function #'+corfu-dabbrev-friend-buffer-p
+;;         dabbrev-ignored-buffer-regexps
+;;         '("\\` "
+;;           "\\(?:\\(?:[EG]?\\|GR\\)TAGS\\|e?tags\\|GPATH\\)\\(<[0-9]+>\\)?")
+;;         dabbrev-upcase-means-case-search t)
+;;   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+;;   (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
+;;   (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
 #+end_src
 
 * Org Mode
@@ -1346,14 +1338,6 @@ This section makes Org mode beautiful and ergonomic, with modern styling and sea
            :box (:line-width (1 . -1) :color "#3b4261")))
 
         org-modern-checkbox '((todo . "☐") (done . "☑") (cancel . "☒"))))
-
-(use-package org-appear
-  :ensure t
-  :hook (org-mode . org-appear-mode)
-  :config
-  (setq org-appear-autoemphasis t
-        org-appear-autolinks t
-        org-appear-autosubmarkers t))
 #+end_src
 
 ** Org Roam: The Knowledge Graph
@@ -1579,8 +1563,7 @@ This package streamlines adding images and screenshots to Org mode, using the *s
   :config
   ;; Configure Org Babel to use Jupyter for python and hy.
   (with-eval-after-load 'ob-jupyter
-    (org-babel-jupyter-override-src-block "python")
-    (org-babel-jupyter-override-src-block "hy"))
+    (org-babel-jupyter-override-src-block "python"))
 
   ;; Define Spacemacs-style keybindings for Jupyter commands.
   (ar/global-leader
@@ -1621,7 +1604,6 @@ This package streamlines adding images and screenshots to Org mode, using the *s
 * LSP Bridge
 #+begin_src emacs-lisp
 (use-package lsp-bridge
-  :ensure t
   :config
   (global-lsp-bridge-mode)
 
@@ -1629,19 +1611,28 @@ This package streamlines adding images and screenshots to Org mode, using the *s
   (setq lsp-bridge-python-multi-lsp-server "basedpyright_ruff"
         lsp-bridge-tex-lsp-server "texlab"
         lsp-bridge-nix-lsp-server "nil")
+        ;;lsp-bridge-org-babel-lang-list nil)
 
   ;; Asynchronous Completion
   (setq acm-enable-doc t
         acm-enable-doc-markdown-render 'async
         acm-enable-icon t
-        acm-enable-citre t
         acm-candidate-match-function 'orderless-literal
         acm-backend-search-file-words-enable-fuzzy-match t)
 
   (setq lsp-bridge-enable-inlay-hint t
         lsp-bridge-enable-hover-diagnostic t
         lsp-bridge-enable-auto-format-code t
-        lsp-bridge-enable-org-babel t))
+        lsp-bridge-enable-org-babel t)
+
+  ;; Performance optimization
+  (setq lsp-bridge-completion-popup-predicates
+        '(lsp-bridge-not-match-stop-commands
+          lsp-bridge-not-match-hide-characters
+          lsp-bridge-not-in-string
+          lsp-bridge-not-in-org-table)))
+
+  )
 #+end_src
 
 * Workflow Management
@@ -1772,8 +1763,7 @@ themed with nerd-icons and integrates with evil-mode for vim-like navigation.
 #+end_src
 
 ** Eglot
-Eglot is the built-in LSP client but since managed by nix, *:ensure t* is needed. It will automatically use the correct
-language server from the PATH set by your direnv-managed environment. Boost Eglot performance using eglot booster
+*Disabled in favor of lsp-bridge*
 #+begin_src emacs-lisp
 ;; (use-package eglot
 ;;   :ensure t
@@ -2242,13 +2232,17 @@ Opens the notes in a split window to the right."
 #+end_src
 
 ** Cape Integration
+*Disable in favor of lsp-bridge*
 #+begin_src emacs-lisp
-(use-package yasnippet-capf
-  :ensure t
-  :after cape
-  :config
-  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+;; (use-package yasnippet-capf
+;;   :ensure t
+;;   :after cape
+;;   :config
+;;   (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 #+end_src
+
+#+RESULTS:
+
 ** Keybindings
 #+begin_src emacs-lisp
 (ar/global-leader
@@ -2271,10 +2265,17 @@ This configures the foundational packages. *AUCTeX* is the primary editing envir
   (add-to-list 'TeX-engine-alist
                '(tectonic "Tectonic" "tectonic -X compile %s -o %o" "tectonic -X compile %s -o %o" "tectonic -X compile %s -o %o"))
 
-  ;; Add commands for single compilation and continuous watching.
+  ;; Add compilation and syntax checking commands
   (setq TeX-command-list
-        '(("Tectonic" "tectonic -X compile %s" TeX-run-command nil (latex-mode) :help "Compile with Tectonic")
-          ("Tectonic Watch" "tectonic -X watch %s" TeX-run-command nil (latex-mode) :help "Continuously compile with Tectonic")))
+        (append TeX-command-list
+                '(("Tectonic" "tectonic -X compile %s" TeX-run-command nil
+                   (latex-mode) :help "Compile with Tectonic")
+                  ("Tectonic Watch" "tectonic -X watch %s" TeX-run-command nil
+                   (latex-mode) :help "Continuously compile with Tectonic")
+                  ("ChkTeX" "chktex -v0 -q -I %s" TeX-run-compile nil
+                   (latex-mode) :help "Check with ChkTeX")
+                  ("Check" "lacheck %s" TeX-run-compile nil
+                   (latex-mode) :help "Check with lacheck"))))
 
   ;; Use PDF-Tools as the default viewer and enable source correlation (SyncTeX).
   (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
@@ -2282,7 +2283,25 @@ This configures the foundational packages. *AUCTeX* is the primary editing envir
   (setq TeX-PDF-mode t)
 
   ;; Enable folding of macros and environments, which is built into AUCTeX.
-  (add-hook 'LaTeX-mode-hook #'TeX-fold-mode))
+  (add-hook 'latex-mode-hook #'tex-fold-mode)
+  (setq tex-newline-function 'newline-and-indent)
+
+  ;; indentation settings
+  (setq latex-indent-level 2
+        latex-item-indent 0
+        tex-brace-indent-level 2))
+
+;; Custom keybindings for syntax checking
+(with-eval-after-load 'latex
+  (define-key LaTeX-mode-map (kbd "C-c C-k")
+              (lambda ()
+                (interactive)
+                (TeX-command "ChkTeX" 'TeX-master-file)))
+
+  (define-key LaTeX-mode-map (kbd "C-c C-l")
+              (lambda ()
+                (interactive)
+                (TeX-command "Check" 'TeX-master-file))))
 
 ;; Provides evil-mode integration for AUCTeX environments.
 (use-package evil-tex
@@ -2290,6 +2309,9 @@ This configures the foundational packages. *AUCTeX* is the primary editing envir
   :after (tex evil)
   :defer t)
 #+end_src
+
+#+RESULTS:
+: Ignoring ’:ensure t’ in ’evil-tex’ config
 
 ** LSP, Completion, and Diagnostics
 This section integrates modern tooling for a responsive and intelligent editing experience.
@@ -2320,268 +2342,238 @@ This section integrates modern tooling for a responsive and intelligent editing 
 This configures *apheleia* to use the *latexindent* tool for formatting, ensuring consistent and clean source code.
 #+begin_src emacs-lisp
 (with-eval-after-load 'apheleia
-  ;; For standalone `.tex` files.
-  (setf (alist-get 'LaTeX-mode apheleia-formatters)
+  ;; For standalone .tex files
+  (setf (alist-get 'LaTeX-mode apheleia-mode-alist)
+        '(latexindent))
+
+  (setf (alist-get 'latexindent apheleia-formatters)
         '("latexindent" "-g" "/dev/null"))
 
-  ;; For Org mode "latex" source blocks.
-  (add-to-list 'apheleia-formatters-alist
-               '((latex . ("latexindent" "-g" "/dev/null")))))
+  ;; For Org mode LaTeX source blocks
+  (add-to-list 'apheleia-formatters
+               '(latex . ("latexindent" "-g" "/dev/null")))
+
+  ;; Enable in LaTeX buffers
+  (add-hook 'LaTeX-mode-hook #'apheleia-mode))
 #+end_src
 
 ** Citation Ecosystem: Citar and Zotero
 This section configures a streamlined citation workflow centered around **Citar** and Zotero. It removes redundant packages for a simpler, more powerful setup.
 #+begin_src emacs-lisp
-;; RefTeX is still useful for non-citation references (labels, etc.).
-(use-package reftex
-  :after tex
-  :config
-  (add-hook 'LaTeX-mode-hook #'reftex-mode)
-  (setq reftex-plug-into-AUCTeX t)
-  ;; Let Citar handle the bibliography files.
-  (setq reftex-default-bibliography '()))
-
-;; Citar is the core of our citation workflow.
 (use-package citar
   :ensure t
-  :hook ((latex-mode . citar-capf-setup)
-         (org-mode . citar-capf-setup))
   :custom
-  ;; --- CRITICAL ---
-  ;; Point this to the `.bib` file that Better BibTeX for Zotero auto-exports.
-  (citar-bibliography '())
-  ;; Point this to your Zotero data directory to find attached PDFs.
-  (citar-library-paths '("~/Zotero/storage"))
-  (citar-notes-paths (list my/org-roam-directory))
+  ;; *** CRITICAL: Set your bibliography files ***
+  (citar-bibliography '("~/path/to/references.bib"))  ;; CHANGE THIS
+  (citar-library-paths '("~/Zotero/storage"))         ;; CHANGE THIS
+  (citar-notes-paths '("~/org-roam/"))                ;; CHANGE THIS
+
+  ;; Icons (requires nerd-icons or all-the-icons)
   (citar-symbols
    `((file ,(nerd-icons-mdicon "nf-md-file_document") . " ")
      (note ,(nerd-icons-mdicon "nf-md-note_text") . " ")
-     (link ,(nerd-icons-mdicon "nf-md-link") . " "))))
+     (link ,(nerd-icons-mdicon "nf-md-link") . " ")))
 
-;; Integrates Citar with Org Roam to link literature notes to citations.
+  :hook
+  ;; Note: NOT using capf setup since acm-enable-capf is disabled
+  ;; Citar will still work via other mechanisms
+  ((LaTeX-mode org-mode) . (lambda ()
+                             ;; Citar keybindings available in these modes
+                             (local-set-key (kbd "C-c b") #'citar-insert-citation))))
+
+;; Citar-Embark for contextual actions
+(use-package citar-embark
+  :ensure t
+  :after (citar embark)
+  :config (citar-embark-mode))
+
+;; Citar-Org-Roam integration
 (use-package citar-org-roam
   :ensure t
   :after (citar org-roam)
   :config (citar-org-roam-mode 1))
 
-;; Provides Embark actions for Citar candidates (e.g., open PDF, open notes).
-(use-package citar-embark
-  :ensure t
-  :after (citar embark)
-  :config (citar-embark-mode))
+;; RefTeX for non-citation references
+(use-package reftex
+  :after tex
+  :config
+  (add-hook 'LaTeX-mode-hook #'reftex-mode)
+  (setq reftex-plug-into-AUCTeX t)
+  ;; Let Citar handle bibliographies
+  (setq reftex-default-bibliography '()))
+
 #+end_src
 
 ** Writing UI and Editing Enhancements
 This section improves the interactive writing experience with faster math input
 and aesthetic ligatures.
 #+begin_src emacs-lisp
-(use-package math-symbol-lists :ensure t)
-
 (use-package cdlatex
   :ensure t
-  :hook (LaTeX-mode . cdlatex-mode))
+  :hook (LaTeX-mode . cdlatex-mode)
+  :config
+  ;; Customize cdlatex snippets
+  (setq cdlatex-math-modify-alist
+        '((?B "\\mathbb" nil t nil nil)
+          (?C "\\mathcal" nil t nil nil)
+          (?F "\\mathfrak" nil t nil nil))))
 
 (use-package laas
   :ensure t
-  :hook (LaTeX-mode . laas-mode))
+  :hook (LaTeX-mode . laas-mode)
+  :config
+  ;; Custom snippets for fast math typing
+  (aas-set-snippets 'laas-mode
+                    ;; Greek letters
+                    ";a" "\\alpha"
+                    ";b" "\\beta"
+                    ";g" "\\gamma"
+                    ";d" "\\delta"
+                    ";e" "\\epsilon"
+                    ";l" "\\lambda"
+                    ";m" "\\mu"
+                    ";p" "\\pi"
+                    ";s" "\\sigma"
+                    ";t" "\\theta"
+                    ";o" "\\omega"
+                    ;; Uppercase Greek
+                    ";G" "\\Gamma"
+                    ";D" "\\Delta"
+                    ";L" "\\Lambda"
+                    ";O" "\\Omega"
+                    ;; Math operators
+                    ";int" (lambda () (interactive)
+                             (insert "\\int_{")
+                             (laas-smart-position))
+                    ";sum" (lambda () (interactive)
+                             (insert "\\sum_{")
+                             (laas-smart-position))
+                    ";prod" (lambda () (interactive)
+                              (insert "\\prod_{")
+                              (laas-smart-position))
+                    ;; Quick environments
+                    ";eq" (lambda () (interactive)
+                            (laas-wrap-previous-object "equation"))
+                    ";ali" (lambda () (interactive)
+                             (laas-wrap-previous-object "align"))))
 
-;; Use `prettify-symbols-mode` to render LaTeX macros as unicode characters.
-(defun ar/latex-prettify-symbols-setup ()
-  "Enable prettify-symbols-mode and add custom LaTeX ligatures."
+(defun my/latex-prettify-symbols-setup ()
+  "Enable prettify-symbols-mode with LaTeX ligatures."
   (prettify-symbols-mode 1)
-  (mapc (lambda (rule) (push rule prettify-symbols-compose-rules))
-        '(("\\sum" . "∑") ("\\int" . "∫") ("\\in" . "∈") ("\\forall" . "∀")
-          ("\\exists" . "∃") ("\\lambda" . "λ") ("\\alpha" . "α") ("\\beta" . "β")
-          ("\\gamma" . "γ") ("\\delta" . "δ") ("\\epsilon" . "ε") ("\\pi" . "π")
-          ("\\rightarrow" . "→") ("\\leftarrow" . "←") ("\\Rightarrow" . "⇒")
-          ("\\leq" . "≤") ("\\geq" . "≥"))))
-(add-hook 'LaTeX-mode-hook #'ar/latex-prettify-symbols-setup)
+  (setq prettify-symbols-alist
+        '(("\\alpha" . "α")
+          ("\\beta" . "β")
+          ("\\gamma" . "γ")
+          ("\\delta" . "δ")
+          ("\\epsilon" . "ε")
+          ("\\lambda" . "λ")
+          ("\\mu" . "μ")
+          ("\\pi" . "π")
+          ("\\sigma" . "σ")
+          ("\\phi" . "φ")
+          ("\\theta" . "θ")
+          ("\\omega" . "ω")
+          ("\\sum" . "∑")
+          ("\\int" . "∫")
+          ("\\infty" . "∞")
+          ("\\in" . "∈")
+          ("\\subset" . "⊂")
+          ("\\subseteq" . "⊆")
+          ("\\rightarrow" . "→")
+          ("\\Rightarrow" . "⇒")
+          ("\\leftarrow" . "←")
+          ("\\Leftarrow" . "⇐")
+          ("\\leq" . "≤")
+          ("\\geq" . "≥")
+          ("\\neq" . "≠")
+          ("\\times" . "×")
+          ("\\cdot" . "·"))))
+
+(add-hook 'LaTeX-mode-hook #'my/latex-prettify-symbols-setup)
 #+end_src
 
 ** Org Mode Integration
 #+begin_src emacs-lisp
 (with-eval-after-load 'ox-latex
-  ;; Configure Org's citation engine to use our Citar setup.
-  (setq org-cite-global-bibliography '())
-  (setq org-cite-bibliography '())
+  ;; Enable LaTeX in org-babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(latex . t))
+
+  ;; Use Citar for citations in Org
+  (setq org-cite-global-bibliography citar-bibliography)
   (setq org-cite-follow-processor 'citar)
   (setq org-cite-activate-processor 'citar)
+  (setq org-cite-insert-processor 'citar)
 
-  ;; Set Tectonic as the default compiler for Org LaTeX exports.
+  ;; Use Tectonic for Org LaTeX exports
   (setq org-latex-compiler "tectonic")
-  (setq org-latex-pdf-process
-        '("tectonic -X compile %f -o %o"))
+  (setq org-latex-pdf-process '("tectonic -X compile %f"))
 
-  ;; Define custom LaTeX classes for flexible document creation.
+  ;; Custom LaTeX classes for Org export
   (add-to-list 'org-latex-classes
-        '("article"
-           "\\documentclass{article}"
-           ("\\section{%s}" . "\\section*{%s}")
-           ("\\subsection{%s}" . "\\subsection*{%s}")
-           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")) t)
+               '("article"
+                 "\\documentclass[11pt,a4paper]{article}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")) t)
+
   (add-to-list 'org-latex-classes
-        '("beamer"
-           "\\documentclass{beamer}"
-           ("\\section{%s}" . "\\section*{%s}")
-           ("\\subsection{%s}" . "\\subsection*{%s}")) t))
+               '("beamer"
+                 "\\documentclass{beamer}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")) t))
 #+end_src
 
 ** Custom Snippets for Scientific Writing
 #+begin_src emacs-lisp
-(with-eval-after-load 'yasnippet
-  ;; --- Snippet Definitions ---
-  ;; We define the snippets programmatically to keep the config self-contained.
-  (yas-define-snippets 'latex-mode
-    '(;; -- Templates --
-      ("article"
-       "\\documentclass[11pt,a4paper]{article}
-\\usepackage[utf8]{inputenc}
-\\usepackage{amsmath}
-\\usepackage{amssymb}
-\\usepackage{graphicx}
-\\usepackage{hyperref}
-\\usepackage{siunitx}
-\\usepackage{booktabs}
+  (with-eval-after-load 'yasnippet
+    (yas-define-snippets 'latex-mode
+                         '(;; Environments
+                           ("beg" "\\begin{${1:env}}\n  $0\n\\end{$1}" "begin-end")
+                           ("eq" "\\begin{equation}\n  ${1:equation}\n  \\label{eq:${2:label}}\n\\end{equation}\n$0" "equation")
+                           ("ali" "\\begin{align}\n  ${1:a} &= ${2:b} \\\\\\\\\n  ${3:c} &= ${4:d}\n  \\label{eq:${5:label}}\n\\end{align}\n$0" "align")
+                           ("fig" "\\begin{figure}[htbp]\n  \\centering\n  \\includegraphics[width=${1:0.8}\\textwidth]{${2:path}}\n  \\caption{${3:caption}}\n  \\label{fig:${4:label}}\n\\end{figure}\n$0" "figure")
+                           ("tab" "\\begin{table}[htbp]\n  \\centering\n  \\caption{${1:caption}}\n  \\label{tab:${2:label}}\n  \\begin{tabular}{${3:lll}}\n    \\toprule\n    ${4:header} \\\\\\\\\n    \\midrule\n    ${5:data} \\\\\\\\\n    \\bottomrule\n  \\end{tabular}\n\\end{table}\n$0" "table")
 
-\\title{${1:Title}}
-\\author{${2:Author}}
-\\date{\\today}
+                           ;; Math
+                           ("frac" "\\frac{${1:num}}{${2:denom}}$0" "fraction")
+                           ("sum" "\\sum_{${1:i=1}}^{${2:n}} ${3:x_i}$0" "sum")
+                           ("int" "\\int_{${1:a}}^{${2:b}} ${3:f(x)} \\, dx$0" "integral")
+                           ("lim" "\\lim_{${1:x \\to \\infty}} ${2:f(x)}$0" "limit")
 
-\\begin{document}
+                           ;; Physics
+                           ("pd" "\\frac{\\partial ${1:f}}{\\partial ${2:x}}$0" "partial derivative")
+                           ("dd" "\\frac{d ${1:f}}{d ${2:x}}$0" "derivative")
+                           ("vv" "\\vec{${1:v}}$0" "vector")
 
-\\maketitle
-
-\\begin{abstract}
-  ${3:Abstract}
-\\end{abstract}
-
-\\tableofcontents
-
-\\section{${4:Introduction}}
-
-$0
-
-\\end{document}"
-       "Full Scientific Article Structure"
-       nil nil ("Templates"))
-
-      ;; -- Document Structure & Environments --
-      ("abs" "\\begin{abstract}\n  $0\n\\end{abstract}" "Abstract environment")
-      ("fig"
-       "\\begin{figure}[htbp]
-  \\centering
-  \\includegraphics[width=${1:0.8}\\textwidth]{${2:path/to/image}}
-  \\caption{${3:Caption}}
-  \\label{fig:${4:label}}
-\\end{figure}
-$0"
-       "Figure environment")
-      ("sfig"
-       "\\begin{figure}[htbp]
-  \\centering
-  \\begin{subfigure}[b]{${1:0.45}\\textwidth}
-    \\includegraphics[width=\\textwidth]{${2:img1}}
-    \\caption{${3:Caption 1}}
-    \\label{fig:${4:label1}}
-  \\end{subfigure}
-  \\hfill
-  \\begin{subfigure}[b]{${1:0.45}\\textwidth}
-    \\includegraphics[width=\\textwidth]{${5:img2}}
-    \\caption{${6:Caption 2}}
-    \\label{fig:${7:label2}}
-  \\end{subfigure}
-  \\caption{${8:Overall caption}}
-\\end{figure}
-$0"
-       "Subfigure environment")
-      ("table"
-       "\\begin{table}[htbp]
-  \\centering
-  \\caption{${1:Caption}}
-  \\label{tab:${2:label}}
-  \\begin{tabular}{${3:l c r}}
-    \\toprule
-    ${4:Header 1} & ${5:Header 2} & ${6:Header 3} \\\\
-    \\midrule
-    ${7:data} & ${8:data} & ${9:data} \\\\
-    \\bottomrule
-  \\end{tabular}
-\\end{table}
-$0"
-       "Table with booktabs")
-      ("item" "\\begin{itemize}\n  \\item $0\n\\end{itemize}" "Itemize environment")
-      ("enum" "\\begin{enumerate}\n  \\item $0\n\\end{enumerate}" "Enumerate environment")
-      ("thm" "\\begin{theorem}\n  $0\n\\end{theorem}" "Theorem environment")
-      ("lem" "\\begin{lemma}\n  $0\n\\end{lemma}" "Lemma environment")
-      ("prf" "\\begin{proof}\n  $0\n\\end{proof}" "Proof environment")
-
-      ;; -- Equations & Math --
-      ("eq"
-       "\\begin{equation}
-  ${1:e^{i\\pi} + 1 = 0}
-  \\label{eq:${2:label}}
-\\end{equation}
-$0"
-       "Equation environment")
-      ("ali"
-       "\\begin{align}
-  ${1:a} &= ${2:b} \\\\
-  ${3:c} &= ${4:d}
-  \\label{eq:${5:label}}
-\\end{align}
-$0"
-       "Align environment for multi-line equations")
-      ("mat"
-       "\\begin{pmatrix}\n  ${1:a} & ${2:b} \\\\\n  ${3:c} & ${4:d}\n\\end{pmatrix}"
-       "pmatrix (Matrix)")
-      ("bmat"
-       "\\begin{bmatrix}\n  ${1:a} & ${2:b} \\\\\n  ${3:c} & ${4:d}\n\\end{bmatrix}"
-       "bmatrix (Bracketed Matrix)")
-      ("lrp" "\\\\left( $1 \\\\right) $0" "Left-right parentheses")
-      ("lrb" "\\\\left[ $1 \\\\right] $0" "Left-right brackets")
-      ("lrc" "\\\\left\\{ $1 \\\\right\\} $0" "Left-right curly braces")
-      ("sum" "\\\\sum_{${1:n=1}}^{${2:\\infty}} ${3:x_n}" "Summation")
-      ("prod" "\\\\prod_{${1:n=1}}^{${2:\\infty}} ${3:x_n}" "Product")
-      ("int" "\\\\int_{${1:a}}^{${2:b}} ${3:f(x)\\,dx}" "Integral")
-
-      ;; -- Physics Specific --
-      ("pd" "\\\\frac{\\\\partial ${1:y}}{\\\\partial ${2:x}} $0" "Partial derivative")
-      ("dd" "\\\\frac{d ${1:y}}{d ${2:x}} $0" "Total derivative")
-      ("bra" "\\\\bra{${1:\\psi}}$0" "Bra vector")
-      ("ket" "\\\\ket{${1:\\psi}}$0" "Ket vector")
-      ("braket" "\\\\braket{${1:\\psi}|${2:\\phi}}$0" "Braket inner product")
-      ("h" "\\\\hbar" "hbar symbol")
-
-      ;; -- Greek Letters (Prefix `g` for lowercase, `G` for uppercase) --
-      ("ga" "\\\\alpha" "alpha")
-      ("gb" "\\\\beta" "beta")
-      ("gg" "\\\\gamma" "gamma")
-      ("gd" "\\\\delta" "delta")
-      ("ge" "\\\\epsilon" "epsilon")
-      ("gz" "\\\\zeta" "zeta")
-      ("go" "\\\\omega" "omega")
-      ("GA" "\\\\Alpha" "Alpha")
-      ("GB" "\\\\Beta" "Beta")
-      ("GG" "\\\\Gamma" "Gamma")
-      ("GD" "\\\\Delta" "Delta")
-      ("GO" "\\\\Omega" "Omega")
-
-      ;; -- Referencing & Citations --
-      ("ref" "\\\\ref{${1:fig:label}}$0" "Reference")
-      ("eqref" "\\\\eqref{${1:eq:label}}$0" "Equation Reference")
-      ("citp" "\\\\citep{${1:key}}$0" "Parenthetical citation")
-      )))
+                           ;; Citations and references
+                           ("cite" "\\cite{${1:key}}$0" "cite")
+                           ("ref" "\\ref{${1:label}}$0" "reference")
+                           ("eqref" "\\eqref{${1:eq:label}}$0" "equation reference"))))
 #+end_src
 
 ** Keybindings
 #+begin_src emacs-lisp
-(ar/global-leader
-  "c" '(:ignore t :wk "compile/cite")
-  "c c" '(TeX-command-master :wk "Compile Document")
-  "c v" '(TeX-view :wk "View Output")
-  "c e" '(TeX-clean :wk "Clean Aux Files")
-  "c b" '(citar-insert-citation :wk "Insert Citation")
-  "c o" '(citar-open :wk "Open Reference"))
+(with-eval-after-load 'latex
+  ;; Compilation
+  (define-key LaTeX-mode-map (kbd "C-c c") #'TeX-command-master)
+  (define-key LaTeX-mode-map (kbd "C-c v") #'TeX-view)
+
+  ;; Syntax checking (compilation buffer approach)
+  (define-key LaTeX-mode-map (kbd "C-c C-k")
+              (lambda () (interactive) (TeX-command "ChkTeX" 'TeX-master-file)))
+  (define-key LaTeX-mode-map (kbd "C-c C-l")
+              (lambda () (interactive) (TeX-command "Check" 'TeX-master-file)))
+
+  ;; Citations
+  (define-key LaTeX-mode-map (kbd "C-c b") #'citar-insert-citation)
+  (define-key LaTeX-mode-map (kbd "C-c o") #'citar-open)
+
+  ;; LSP features (provided by lsp-bridge)
+  (define-key LaTeX-mode-map (kbd "C-c d") #'lsp-bridge-find-def)
+  (define-key LaTeX-mode-map (kbd "C-c r") #'lsp-bridge-find-references)
+  (define-key LaTeX-mode-map (kbd "C-c h") #'lsp-bridge-show-documentation))
 #+end_src
 
 * Markdown/Org Conversion

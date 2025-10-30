@@ -1,10 +1,9 @@
 # ~/.config/home-manager/fzf/default.nix
-{ ... }: {
+{...}: {
   programs.fzf = {
     enable = true;
-    enableZshIntegration = true;
-    defaultCommand =
-      "fd --type f --hidden --follow --exclude .git --exclude node_modules";
+    enableFishIntegration = true;
+    defaultCommand = "fd --type f --hidden --follow --exclude .git --exclude node_modules";
     defaultOptions = [
       "--height 40%"
       "--layout=reverse"
@@ -15,6 +14,6 @@
       "--bind='ctrl-e:execute($EDITOR {})'" # Open in editor
       "--ansi"
     ];
-    fileWidgetOptions = [ "--preview 'bat --style=numbers --color=always {}'" ];
+    fileWidgetOptions = ["--preview 'bat --style=numbers --color=always {}'"];
   };
 }

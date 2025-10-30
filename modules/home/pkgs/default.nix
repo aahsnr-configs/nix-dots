@@ -1,10 +1,13 @@
-{ pkgs, inputs, ... }:
 {
+  pkgs,
+  inputs,
+  ...
+}: {
   # imports = [
   #   inputs.caelestia-shell.homeManagerModules.default
   # ];
   home.packages = with pkgs; [
-    bitwarden
+    bitwarden-desktop
     fastfetch
     ferdium
     nwg-look
@@ -17,7 +20,7 @@
     inputs.hyprpolkitagent.packages.${pkgs.system}.hyprpolkitagent
     # inputs.caelestia-cli.packages.${system}.default
     upscayl
-    qt6ct
+    qt6Packages.qt6ct
     chafa
     trash-cli
     obsidian

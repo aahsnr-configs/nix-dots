@@ -1,11 +1,10 @@
 # ~/nix-dots/modules/home/yazi/default.nix
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # Add dependencies for file previews
   home.packages = with pkgs; [
     rich-cli # For rich text previews
     ouch # For archive previews
+    poppler-utils
   ];
 
   programs.yazi = {
@@ -46,7 +45,7 @@
             block = true; # Wait for nvim to close
           }
         ];
-        image = [ { run = ''imv "$@"''; } ];
+        image = [{run = ''imv "$@"'';}];
         video = [
           {
             run = ''mpv "$@"'';
@@ -54,10 +53,10 @@
             orphan = true; # Detach the mpv process
           }
         ];
-        audio = [ { run = ''mpv "$@"''; } ];
-        document = [ { run = ''zathura "$@"''; } ];
-        archive = [ { run = ''${pkgs.file-roller}/bin/file-roller "$@"''; } ];
-        fallback = [ { run = ''${pkgs.xdg-utils}/bin/xdg-open "$@"''; } ];
+        audio = [{run = ''mpv "$@"'';}];
+        document = [{run = ''zathura "$@"'';}];
+        archive = [{run = ''${pkgs.file-roller}/bin/file-roller "$@"'';}];
+        fallback = [{run = ''${pkgs.xdg-utils}/bin/xdg-open "$@"'';}];
       };
 
       # Rules to associate file types with openers
