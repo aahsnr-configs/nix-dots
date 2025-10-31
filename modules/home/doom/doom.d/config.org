@@ -317,7 +317,6 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 
 * Org
 ** Org Mode
-
 #+begin_src emacs-lisp
 (defvar my/org-directory "~/org/" "The root directory for Org files.")
 (defvar my/org-roam-directory (expand-file-name "roam/" my/org-directory) "The directory for Org Roam files.")
@@ -546,103 +545,103 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 (after! tex
   (setq +latex-prettify-symbols-alist
         '(;; Greek letters
-          ("\\alpha" . "Î±")
-          ("\\beta" . "Î²")
-          ("\\gamma" . "Î³")
-          ("\\delta" . "Î´")
-          ("\\epsilon" . "Îµ")
-          ("\\varepsilon" . "Îµ")
-          ("\\zeta" . "Î¶")
-          ("\\eta" . "Î·")
-          ("\\theta" . "Î¸")
-          ("\\iota" . "Î¹")
-          ("\\kappa" . "Îº")
-          ("\\lambda" . "Î»")
-          ("\\mu" . "Î¼")
-          ("\\nu" . "Î½")
-          ("\\xi" . "Î¾")
-          ("\\pi" . "Ï€")
-          ("\\rho" . "Ï")
-          ("\\sigma" . "Ïƒ")
-          ("\\tau" . "Ï„")
-          ("\\upsilon" . "Ï…")
-          ("\\phi" . "Ï†")
-          ("\\varphi" . "Ï†")
-          ("\\chi" . "Ï‡")
-          ("\\psi" . "Ïˆ")
-          ("\\omega" . "Ï‰")
+          ("\\alpha" . "α")
+          ("\\beta" . "β")
+          ("\\gamma" . "γ")
+          ("\\delta" . "δ")
+          ("\\epsilon" . "ε")
+          ("\\varepsilon" . "ε")
+          ("\\zeta" . "ζ")
+          ("\\eta" . "η")
+          ("\\theta" . "θ")
+          ("\\iota" . "ι")
+          ("\\kappa" . "κ")
+          ("\\lambda" . "λ")
+          ("\\mu" . "μ")
+          ("\\nu" . "ν")
+          ("\\xi" . "ξ")
+          ("\\pi" . "π")
+          ("\\rho" . "ρ")
+          ("\\sigma" . "σ")
+          ("\\tau" . "τ")
+          ("\\upsilon" . "υ")
+          ("\\phi" . "φ")
+          ("\\varphi" . "φ")
+          ("\\chi" . "χ")
+          ("\\psi" . "ψ")
+          ("\\omega" . "ω")
 
           ;; Uppercase Greek
-          ("\\Gamma" . "Î“")
-          ("\\Delta" . "Î”")
-          ("\\Theta" . "Î˜")
-          ("\\Lambda" . "Î›")
-          ("\\Xi" . "Îž")
-          ("\\Pi" . "Î ")
-          ("\\Sigma" . "Î£")
-          ("\\Upsilon" . "Î¥")
-          ("\\Phi" . "Î¦")
-          ("\\Psi" . "Î¨")
-          ("\\Omega" . "Î©")
+          ("\\Gamma" . "Γ")
+          ("\\Delta" . "Δ")
+          ("\\Theta" . "Θ")
+          ("\\Lambda" . "Λ")
+          ("\\Xi" . "Ξ")
+          ("\\Pi" . "Π")
+          ("\\Sigma" . "Σ")
+          ("\\Upsilon" . "Υ")
+          ("\\Phi" . "Φ")
+          ("\\Psi" . "Ψ")
+          ("\\Omega" . "Ω")
 
           ;; Math operators
-          ("\\sum" . "âˆ‘")
-          ("\\prod" . "âˆ")
-          ("\\int" . "âˆ«")
-          ("\\iint" . "âˆ¬")
-          ("\\iiint" . "âˆ­")
-          ("\\oint" . "âˆ®")
-          ("\\partial" . "âˆ‚")
-          ("\\nabla" . "âˆ‡")
-          ("\\infty" . "âˆž")
+          ("\\sum" . "∑")
+          ("\\prod" . "∏")
+          ("\\int" . "∫")
+          ("\\iint" . "∬")
+          ("\\iiint" . "∭")
+          ("\\oint" . "∮")
+          ("\\partial" . "∂")
+          ("\\nabla" . "∇")
+          ("\\infty" . "∞")
 
           ;; Relations
-          ("\\in" . "âˆˆ")
-          ("\\notin" . "âˆ‰")
-          ("\\subset" . "âŠ‚")
-          ("\\supset" . "âŠƒ")
-          ("\\subseteq" . "âŠ†")
-          ("\\supseteq" . "âŠ‡")
-          ("\\cap" . "âˆ©")
-          ("\\cup" . "âˆª")
-          ("\\emptyset" . "âˆ…")
+          ("\\in" . "∈")
+          ("\\notin" . "∉")
+          ("\\subset" . "⊂")
+          ("\\supset" . "⊃")
+          ("\\subseteq" . "⊆")
+          ("\\supseteq" . "⊇")
+          ("\\cap" . "∩")
+          ("\\cup" . "∪")
+          ("\\emptyset" . "∅")
 
           ;; Arrows
-          ("\\rightarrow" . "â†’")
-          ("\\Rightarrow" . "â‡’")
-          ("\\leftarrow" . "â†")
-          ("\\Leftarrow" . "â‡")
-          ("\\leftrightarrow" . "â†”")
-          ("\\Leftrightarrow" . "â‡”")
-          ("\\mapsto" . "â†¦")
+          ("\\rightarrow" . "→")
+          ("\\Rightarrow" . "⇒")
+          ("\\leftarrow" . "←")
+          ("\\Leftarrow" . "⇐")
+          ("\\leftrightarrow" . "↔")
+          ("\\Leftrightarrow" . "⇔")
+          ("\\mapsto" . "↦")
 
           ;; Comparison
-          ("\\leq" . "â‰¤")
-          ("\\geq" . "â‰¥")
-          ("\\neq" . "â‰ ")
-          ("\\approx" . "â‰ˆ")
-          ("\\equiv" . "â‰¡")
-          ("\\sim" . "âˆ¼")
-          ("\\simeq" . "â‰ƒ")
+          ("\\leq" . "≤")
+          ("\\geq" . "≥")
+          ("\\neq" . "≠")
+          ("\\approx" . "≈")
+          ("\\equiv" . "≡")
+          ("\\sim" . "∼")
+          ("\\simeq" . "≃")
 
           ;; Logic
-          ("\\forall" . "âˆ€")
-          ("\\exists" . "âˆƒ")
-          ("\\nexists" . "âˆ„")
-          ("\\neg" . "Â¬")
-          ("\\land" . "âˆ§")
-          ("\\lor" . "âˆ¨")
+          ("\\forall" . "∀")
+          ("\\exists" . "∃")
+          ("\\nexists" . "∄")
+          ("\\neg" . "¬")
+          ("\\land" . "∧")
+          ("\\lor" . "∨")
 
           ;; Misc
-          ("\\times" . "Ã—")
-          ("\\div" . "Ã·")
-          ("\\cdot" . "Â·")
-          ("\\circ" . "âˆ˜")
-          ("\\pm" . "Â±")
-          ("\\mp" . "âˆ“")
-          ("\\sqrt" . "âˆš")
-          ("\\ell" . "â„“")
-          ("\\hbar" . "â„"))))
+          ("\\times" . "×")
+          ("\\div" . "÷")
+          ("\\cdot" . "·")
+          ("\\circ" . "∘")
+          ("\\pm" . "±")
+          ("\\mp" . "∓")
+          ("\\sqrt" . "√")
+          ("\\ell" . "ℓ")
+          ("\\hbar" . "ℏ"))))
 #+end_src
 
 ** Org Mode Integration
@@ -673,6 +672,57 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
                t))
 
 
+;;; Removed fontspec
+(after! org
+  ;; Clean up default packages list - remove fontspec/inputenc/fontenc
+  ;; These will cause issues even with Tectonic if not handled properly
+  (setq org-latex-default-packages-alist
+        '(("" "graphicx" t)
+          ("" "longtable" nil)
+          ("" "wrapfig" nil)
+          ("" "rotating" nil)
+          ("normalem" "ulem" t)
+          ("" "amsmath" t)
+          ("" "amssymb" t)
+          ("" "capt-of" nil)
+          ("" "hyperref" nil)))
+
+  ;; Add Tectonic to preview process list with corrected configuration
+  (add-to-list 'org-preview-latex-process-alist
+               '(tectonic
+                 :programs ("tectonic" "convert")
+                 :description "pdf > png (via Tectonic)"
+                 :message "You need: tectonic and imagemagick"
+                 :image-input-type "pdf"
+                 :image-output-type "png"
+                 :image-size-adjust (1.0 . 1.0)
+                 ;; Compile with Tectonic - use %O for output directory
+                 :latex-compiler
+                 ("tectonic -X compile -f plain --outdir %o %f")
+                 ;; Convert PDF to PNG - the PDF will be in %o with same basename as %f
+                 :image-converter
+                 ("convert -density %D -trim -antialias %o/%b.pdf -quality 100 %O")))
+
+  ;; Set Tectonic as default
+  (setq org-preview-latex-default-process 'tectonic)
+
+  ;; Increase preview scale
+  (setq org-format-latex-options
+        (plist-put org-format-latex-options :scale 1.5))
+
+  ;; LaTeX header for preview - keep it minimal, no fontspec
+  (setq org-format-latex-header
+        "\\documentclass{article}
+\\usepackage[usenames]{color}
+\\usepackage{amsmath}
+\\usepackage{physics}
+\\usepackage{siunitx}
+\\usepackage{amssymb}
+\\usepackage[mathscr]{euscript}
+\\pagestyle{empty}
+[DEFAULT-PACKAGES]
+[PACKAGES]
+\\begin{document}"))
 ;; (after! org
 ;;   ;; Use dvipng for now (simpler, more reliable)
 ;;   (setq org-preview-latex-default-process 'dvipng)
@@ -696,50 +746,50 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 ;; \\begin{document}"))
 
 ;; Configure Org preview with Tectonic
-(after! org
-  ;; Ensure ghostscript and imagemagick are available
-  ;; Add this to your NixOS configuration or home-manager:
-  ;; - ghostscript
-  ;; - imagemagick
-  ;; - dvipng (for alternative preview method)
+;; (after! org
+;;   ;; Ensure ghostscript and imagemagick are available
+;;   ;; Add this to your NixOS configuration or home-manager:
+;;   ;; - ghostscript
+;;   ;; - imagemagick
+;;   ;; - dvipng (for alternative preview method)
 
-  ;; Method 2: Configure Tectonic for org-preview (if you prefer Tectonic)
-  ;; Only use this if you specifically need Tectonic for previews
-  (add-to-list 'org-preview-latex-process-alist
-               '(tectonic
-                 :programs ("tectonic" "convert")
-                 :description "pdf > png (via Tectonic)"
-                 :message "You need: tectonic and imagemagick (with ghostscript in PATH)"
-                 :image-input-type "pdf"
-                 :image-output-type "png"
-                 :image-size-adjust (1.0 . 1.0)
-                 ;; Use absolute path for tectonic output
-                 :latex-compiler
-                 ("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
-                 ;; ImageMagick convert with explicit density
-                 :image-converter
-                 ("magick -density %D -trim -antialias %f -quality 100 %O")))
+;;   ;; Method 2: Configure Tectonic for org-preview (if you prefer Tectonic)
+;;   ;; Only use this if you specifically need Tectonic for previews
+;;   (add-to-list 'org-preview-latex-process-alist
+;;                '(tectonic
+;;                  :programs ("tectonic" "convert")
+;;                  :description "pdf > png (via Tectonic)"
+;;                  :message "You need: tectonic and imagemagick (with ghostscript in PATH)"
+;;                  :image-input-type "pdf"
+;;                  :image-output-type "png"
+;;                  :image-size-adjust (1.0 . 1.0)
+;;                  ;; Use absolute path for tectonic output
+;;                  :latex-compiler
+;;                  ("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
+;;                  ;; ImageMagick convert with explicit density
+;;                  :image-converter
+;;                  ("magick -density %D -trim -antialias %f -quality 100 %O")))
 
-  ;; If you want to use Tectonic for preview, uncomment this:
-   (setq org-preview-latex-default-process 'tectonic)
+;;   ;; If you want to use Tectonic for preview, uncomment this:
+;;    (setq org-preview-latex-default-process 'tectonic)
 
-  ;; Increase preview scale for better readability
-  (setq org-format-latex-options
-        (plist-put org-format-latex-options :scale 1.5))
+;;   ;; Increase preview scale for better readability
+;;   (setq org-format-latex-options
+;;         (plist-put org-format-latex-options :scale 1.5))
 
-  ;; Ensure proper LaTeX header for preview fragments
-  (setq org-format-latex-header
-        "\\documentclass{article}
-\\usepackage[usenames]{color}
-\\usepackage{amsmath}
-\\usepackage{physics}
-\\usepackage{siunitx}
-\\usepackage{amssymb}
-\\usepackage[mathscr]{euscript}
-\\pagestyle{empty}
-[DEFAULT-PACKAGES]
-[PACKAGES]
-\\begin{document}"))
+;;   ;; Ensure proper LaTeX header for preview fragments
+;;   (setq org-format-latex-header
+;;         "\\documentclass{article}
+;; \\usepackage[usenames]{color}
+;; \\usepackage{amsmath}
+;; \\usepackage{physics}
+;; \\usepackage{siunitx}
+;; \\usepackage{amssymb}
+;; \\usepackage[mathscr]{euscript}
+;; \\pagestyle{empty}
+;; [DEFAULT-PACKAGES]
+;; [PACKAGES]
+;; \\begin{document}"))
 #+end_src
 
 ** Custom Yasnippet Templates
