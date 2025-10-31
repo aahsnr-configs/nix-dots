@@ -13,7 +13,6 @@
 (package! org-roam-ui)
 (package! org-super-agenda)
 (package! consult-org-roam)
-(package! org-fragtog)
 
 ;;; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ;;; Citations & LaTeX

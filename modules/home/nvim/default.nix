@@ -22,9 +22,14 @@
         preventJunkFiles = true;
         clipboard = {
           providers = {
-            wl-copy.enable = true; # For Wayland
+            wl-copy = {
+              enable = true;
+              providers = pkgs.wl-clipboard;
+            };
           };
         };
+
+        notes.todo-comments.enable = true;
 
         # Enable treesitter for better syntax highlighting
         treesitter = {
@@ -76,16 +81,22 @@
 
             lsp = {
               enable = true;
-              server = "nil"; # or "nil" for nil LSP
+              server = "nil";
+              package = pkgs.nil;
             };
 
             treesitter = {
               enable = true;
             };
 
+            extraDiagnostics = {
+              enable = true;
+            };
+
             format = {
               enable = true;
-              type = "alejandra"; # Nix formatter
+              type = "alejandra";
+              package = pkgs.alejandra;
             };
           };
 
@@ -117,8 +128,9 @@
           # Markdown support
           markdown = {
             enable = true;
-
-            treesitter = {
+            lsp.enable = true;
+            treesitter.enable = true;
+            extensions.render-markdown-nvim = {
               enable = true;
             };
           };
@@ -514,6 +526,7 @@
           tabstop = 2;
           shiftwidth = 2;
           expandtab = true;
+          clipboard = "unnamedplus";
 
           mouse = "a";
           # UI settings

@@ -361,8 +361,6 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 (use-package! org-super-agenda
   :after org-agenda
   :hook (org-agenda-mode-hook . org-super-agenda-mode))
-
-(add-hook! 'org-mode-hook #'org-fragtog-mode)
 #+end_src
 
 ** Org Modern
@@ -649,147 +647,14 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 (after! ox-latex
   ;; Use Tectonic for Org LaTeX exports
   (setq org-latex-compiler "tectonic")
-  (setq org-latex-pdf-process '("tectonic -X compile %f"))
+  (setq org-latex-pdf-process '("tectonic -X compile %f")))
 
-  ;; NOTE: The biblio module automatically synchronizes org-cite-global-bibliography
-  ;; with citar-bibliography, and configures org-cite processors to use citar.
-  ;; No manual configuration needed for org-cite integration.
-
-  ;; Custom LaTeX classes for Org export
-  (add-to-list 'org-latex-classes
-               '("article"
-                 "\\documentclass[11pt,a4paper]{article}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
-               t)
-
-  (add-to-list 'org-latex-classes
-               '("beamer"
-                 "\\documentclass{beamer}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}"))
-               t))
-
-
-;;; Removed fontspec
-(after! org
-  ;; Clean up default packages list - remove fontspec/inputenc/fontenc
-  ;; These will cause issues even with Tectonic if not handled properly
-  (setq org-latex-default-packages-alist
-        '(("" "graphicx" t)
-          ("" "longtable" nil)
-          ("" "wrapfig" nil)
-          ("" "rotating" nil)
-          ("normalem" "ulem" t)
-          ("" "amsmath" t)
-          ("" "amssymb" t)
-          ("" "capt-of" nil)
-          ("" "hyperref" nil)))
-
-  ;; Add Tectonic to preview process list with corrected configuration
-  (add-to-list 'org-preview-latex-process-alist
-               '(tectonic
-                 :programs ("tectonic" "convert")
-                 :description "pdf > png (via Tectonic)"
-                 :message "You need: tectonic and imagemagick"
-                 :image-input-type "pdf"
-                 :image-output-type "png"
-                 :image-size-adjust (1.0 . 1.0)
-                 ;; Compile with Tectonic - use %O for output directory
-                 :latex-compiler
-                 ("tectonic -X compile -f plain --outdir %o %f")
-                 ;; Convert PDF to PNG - the PDF will be in %o with same basename as %f
-                 :image-converter
-                 ("convert -density %D -trim -antialias %o/%b.pdf -quality 100 %O")))
-
-  ;; Set Tectonic as default
-  (setq org-preview-latex-default-process 'tectonic)
-
-  ;; Increase preview scale
-  (setq org-format-latex-options
-        (plist-put org-format-latex-options :scale 1.5))
-
-  ;; LaTeX header for preview - keep it minimal, no fontspec
-  (setq org-format-latex-header
-        "\\documentclass{article}
-\\usepackage[usenames]{color}
-\\usepackage{amsmath}
-\\usepackage{physics}
-\\usepackage{siunitx}
-\\usepackage{amssymb}
-\\usepackage[mathscr]{euscript}
-\\pagestyle{empty}
-[DEFAULT-PACKAGES]
-[PACKAGES]
-\\begin{document}"))
 ;; (after! org
-;;   ;; Use dvipng for now (simpler, more reliable)
-;;   (setq org-preview-latex-default-process 'dvipng)
 
-;;   ;; Increase preview scale
-;;   (setq org-format-latex-options
-;;         (plist-put org-format-latex-options :scale 1.5))
 
-;;   ;; LaTeX header for preview
-;;   (setq org-format-latex-header
-;;         "\\documentclass{article}
-;; \\usepackage[usenames]{color}
-;; \\usepackage{amsmath}
-;; \\usepackage{physics}
-;; \\usepackage{siunitx}
-;; \\usepackage{amssymb}
-;; \\usepackage[mathscr]{euscript}
-;; \\pagestyle{empty}
-;; [DEFAULT-PACKAGES]
-;; [PACKAGES]
-;; \\begin{document}"))
 
-;; Configure Org preview with Tectonic
-;; (after! org
-;;   ;; Ensure ghostscript and imagemagick are available
-;;   ;; Add this to your NixOS configuration or home-manager:
-;;   ;; - ghostscript
-;;   ;; - imagemagick
-;;   ;; - dvipng (for alternative preview method)
+;;   )
 
-;;   ;; Method 2: Configure Tectonic for org-preview (if you prefer Tectonic)
-;;   ;; Only use this if you specifically need Tectonic for previews
-;;   (add-to-list 'org-preview-latex-process-alist
-;;                '(tectonic
-;;                  :programs ("tectonic" "convert")
-;;                  :description "pdf > png (via Tectonic)"
-;;                  :message "You need: tectonic and imagemagick (with ghostscript in PATH)"
-;;                  :image-input-type "pdf"
-;;                  :image-output-type "png"
-;;                  :image-size-adjust (1.0 . 1.0)
-;;                  ;; Use absolute path for tectonic output
-;;                  :latex-compiler
-;;                  ("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
-;;                  ;; ImageMagick convert with explicit density
-;;                  :image-converter
-;;                  ("magick -density %D -trim -antialias %f -quality 100 %O")))
-
-;;   ;; If you want to use Tectonic for preview, uncomment this:
-;;    (setq org-preview-latex-default-process 'tectonic)
-
-;;   ;; Increase preview scale for better readability
-;;   (setq org-format-latex-options
-;;         (plist-put org-format-latex-options :scale 1.5))
-
-;;   ;; Ensure proper LaTeX header for preview fragments
-;;   (setq org-format-latex-header
-;;         "\\documentclass{article}
-;; \\usepackage[usenames]{color}
-;; \\usepackage{amsmath}
-;; \\usepackage{physics}
-;; \\usepackage{siunitx}
-;; \\usepackage{amssymb}
-;; \\usepackage[mathscr]{euscript}
-;; \\pagestyle{empty}
-;; [DEFAULT-PACKAGES]
-;; [PACKAGES]
-;; \\begin{document}"))
 #+end_src
 
 ** Custom Yasnippet Templates
