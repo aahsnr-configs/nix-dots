@@ -1604,16 +1604,16 @@ This package streamlines adding images and screenshots to Org mode, using the *s
 * LSP Bridge
 #+begin_src emacs-lisp
 (use-package lsp-bridge
+  :ensure t
   :config
   (global-lsp-bridge-mode)
 
-  ;; This provides: basedpyright for completion/navigation + ruff for linting/formatting
+  ;;This provides: basedpyright for completion/navigation + ruff for linting/formatting
   (setq lsp-bridge-python-multi-lsp-server "basedpyright_ruff"
         lsp-bridge-tex-lsp-server "texlab"
         lsp-bridge-nix-lsp-server "nil")
-        ;;lsp-bridge-org-babel-lang-list nil)
 
-  ;; Asynchronous Completion
+  ;;Asynchronous Completion
   (setq acm-enable-doc t
         acm-enable-doc-markdown-render 'async
         acm-enable-icon t
@@ -1625,14 +1625,12 @@ This package streamlines adding images and screenshots to Org mode, using the *s
         lsp-bridge-enable-auto-format-code t
         lsp-bridge-enable-org-babel t)
 
-  ;; Performance optimization
+  ;;Performance optimization
   (setq lsp-bridge-completion-popup-predicates
         '(lsp-bridge-not-match-stop-commands
           lsp-bridge-not-match-hide-characters
           lsp-bridge-not-in-string
           lsp-bridge-not-in-org-table)))
-
-  )
 #+end_src
 
 * Workflow Management
@@ -2306,55 +2304,7 @@ This configures the foundational packages. *AUCTeX* is the primary editing envir
 ;; Provides evil-mode integration for AUCTeX environments.
 (use-package evil-tex
   :ensure t
-  :after (tex evil)
-  :defer t)
-#+end_src
-
-#+RESULTS:
-: Ignoring ’:ensure t’ in ’evil-tex’ config
-
-** LSP, Completion, and Diagnostics
-This section integrates modern tooling for a responsive and intelligent editing experience.
-- *Eglot + Texlab:* Provides Language Server Protocol features.
-- *Completion:* Merges candidates from Eglot (LSP) and AUCTeX for the most comprehensive suggestions.
-- *Flymake + ChkTeX:* Offers on-the-fly syntax and style checking.
-#+begin_src emacs-lisp
-;; Integrate texlab with Eglot for LSP support.
-;; (with-eval-after-load 'eglot
-;;   (add-to-list 'eglot-server-programs
-;;                '((latex-mode tex-mode plain-tex-mode) . ("texlab"))))
-;; 
-;; ;; This function correctly merges AUCTeX's completion functions with the
-;; ;; LSP-provided functions from Eglot. Cape and Corfu will display the merged list.
-;; (defun ar/latex-completion-setup ()
-;;   "Add AUCTeX completion backend to the local completion functions."
-;;   (add-to-list 'completion-at-point-functions #'TeX-completion-at-point-function nil t))
-;; (add-hook 'LaTeX-mode-hook #'ar/latex-completion-setup)
-;; 
-;; ;; Enable the built-in ChkTeX support from AUCTeX for style checking.
-;; ;; This requires the `chktex` command-line tool to be installed.
-;; (add-hook 'LaTeX-mode-hook
-;;           (lambda ()
-;;             (flymake-add-checker 'tex-chktex)))
-#+end_src
-
-** Auto-formatting: Apheleia and latexindent
-This configures *apheleia* to use the *latexindent* tool for formatting, ensuring consistent and clean source code.
-#+begin_src emacs-lisp
-(with-eval-after-load 'apheleia
-  ;; For standalone .tex files
-  (setf (alist-get 'LaTeX-mode apheleia-mode-alist)
-        '(latexindent))
-
-  (setf (alist-get 'latexindent apheleia-formatters)
-        '("latexindent" "-g" "/dev/null"))
-
-  ;; For Org mode LaTeX source blocks
-  (add-to-list 'apheleia-formatters
-               '(latex . ("latexindent" "-g" "/dev/null")))
-
-  ;; Enable in LaTeX buffers
-  (add-hook 'LaTeX-mode-hook #'apheleia-mode))
+  :after (tex evil))
 #+end_src
 
 ** Citation Ecosystem: Citar and Zotero

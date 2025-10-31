@@ -7,7 +7,7 @@
 
   programs.doom-emacs = {
     enable = true;
-    emacs = pkgs.emacs-pgtk;
+    emacs = pkgs.emacs-unstable-pgtk;
     extraPackages = epkgs: [
       epkgs.treesit-grammars.with-all-grammars
       pkgs.emacs.pkgs.lsp-bridge

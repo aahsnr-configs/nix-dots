@@ -45,10 +45,11 @@
     ./bat
     ./brave
     ./btop
-    ./caelestia
+    #./caelestia
     ./catppuccin
     ./cliphist
     ./dev
+    ./dms
     ./doom
     #./emacs
     ./eza
@@ -59,7 +60,7 @@
     ./gammastep
     ./git
     ./hyprland
-    ./hyprpaper
+    #./hyprpaper
     ./imv
     ./keyring
     ./kitty

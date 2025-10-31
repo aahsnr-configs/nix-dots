@@ -12,6 +12,7 @@
     luarocks
     statix
     marksman
+    pandoc
   ];
 
   programs.direnv = {

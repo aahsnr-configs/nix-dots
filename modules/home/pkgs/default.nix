@@ -15,8 +15,10 @@
     nix-prefetch-git
     nix-prefetch-github
     zotero
-    inputs.quickshell.packages.${pkgs.system}.default
-    inputs.hyprsunset.packages.${pkgs.system}.hyprsunset
+    adw-gtk3
+    hyprshot
+    #inputs.quickshell.packages.${pkgs.system}.default
+    #inputs.hyprsunset.packages.${pkgs.system}.hyprsunset
     inputs.hyprpolkitagent.packages.${pkgs.system}.hyprpolkitagent
     # inputs.caelestia-cli.packages.${system}.default
     upscayl
@@ -31,5 +33,6 @@
     onlyoffice-desktopeditors
     todoist-electron
     firefox
+    papirus-icon-theme
   ];
 }

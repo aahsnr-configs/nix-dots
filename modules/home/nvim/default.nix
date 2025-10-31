@@ -11,8 +11,9 @@
     settings = {
       vim = {
         # Basic vim options
-        viAlias = false;
+        viAlias = true;
         vimAlias = true;
+        syntaxHighlighting = true;
 
         # Enable line numbers
         lineNumberMode = "relNumber";
@@ -191,6 +192,26 @@
           lualine = {
             enable = true;
             theme = "auto";
+            # activeSection = {
+            #   a = ["mode"];
+            #   b = ["filename" "location" "progress"];
+            #   c = ["diagnostics"];
+            #   x = ["lsp_progress" "filetype" "encoding" "fileformat" "branch"];
+            #   y = ["diff"];
+            # };
+            icons.enable = true;
+            # componentSeparator.left = "";
+            # componentSeparator.right = "";
+            # sectionSeparator.left = "";
+            # sectionSeparator.right = "";
+            # sections = {
+            #   lualine_a = ["mode"];
+            #   lualine_b = ["filename" "location" "progress"];
+            #   lualine_c = ["diagnostics"];
+            #   lualine_x = ["lsp_progress" "filetype" "encoding" "fileformat" "branch"];
+            #   lualine_y = ["diff"];
+            #   lualine_z = [];
+            # };
           };
         };
 
@@ -497,10 +518,10 @@
           mouse = "a";
           # UI settings
           number = true;
-          relativenumber = true;
+          relativenumber = false;
           signcolumn = "yes";
           cursorline = true;
-          wrap = false;
+          wrap = true;
 
           # Undo settings
           undofile = true;

@@ -1,7 +1,15 @@
 #+TITLE: My Doom Emacs Config
 #+AUTHOR: Ahsanur Rahman
 
-* Catppuccin Theme
+* Personal Information
+#+begin_src emacs-lisp
+;; User Information
+(setq user-full-name "Ahsanur Rahman"
+      user-mail-address "ahsanur041@proton.me")
+#+end_src
+
+* UI and Theming
+** Catppuccin Theme
 #+begin_src emacs-lisp
 (use-package! catppuccin-theme
   :config
@@ -33,12 +41,135 @@
     '(minibuffer-prompt :foreground "#89dceb" :weight bold)))
 #+end_src
 
-* Code Formatting
+** Doom Modeline
+#+begin_src emacs-lisp
+(after! doom-modeline
+  (setq doom-modeline-height 28
+        doom-modeline-bar-width 3))
+#+end_src
+
+** Line Numbers
+#+begin_src emacs-lisp
+;; Enable absolute line numbers globally by default.
+(setq display-line-numbers-type t)
+
+;; Disable line numbers in modes where they aren't useful.
+(add-hook! '(org-mode-hook
+             dired-mode-hook
+             magit-status-mode-hook
+             eshell-mode-hook
+             vterm-mode-hook
+             help-mode-hook
+             doom-dashboard-mode-hook)
+           #'(lambda () (display-line-numbers-mode -1)))
+#+end_src
+
+** Fonts
+#+begin_src emacs-lisp
+(setq doom-font (font-spec :family "JetBrains Mono" :size 14.0 :weight 'medium)
+      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 14.0)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 25))
+#+end_src
+
+** Rainbow Delimiters
+#+begin_src emacs-lisp
+(use-package! rainbow-delimiters
+  :hook ((prog-mode . rainbow-delimiters-mode)
+         (org-src-mode . rainbow-delimiters-mode)
+         (treesit-auto-mode-hook . rainbow-delimiters-mode))
+
+  ;; Catppuccin Mocha palette - these are already defined by the theme
+  ;; but we customize for optimal nesting visibility
+  :custom-face
+  (rainbow-delimiters-depth-1-face ((t (:foreground "#f38ba8"))))  ; Red
+  (rainbow-delimiters-depth-2-face ((t (:foreground "#fab387"))))  ; Peach
+  (rainbow-delimiters-depth-3-face ((t (:foreground "#f9e2af"))))  ; Yellow
+  (rainbow-delimiters-depth-4-face ((t (:foreground "#a6e3a1"))))  ; Green
+  (rainbow-delimiters-depth-5-face ((t (:foreground "#74c7ec"))))  ; Sapphire
+  (rainbow-delimiters-depth-6-face ((t (:foreground "#b4befe"))))  ; Lavender
+  (rainbow-delimiters-depth-7-face ((t (:foreground "#cba6f7"))))  ; Mauve
+  (rainbow-delimiters-unmatched-face ((t (:foreground "#f38ba8" :weight bold)))))
+#+end_src
+
+** Which-key
+#+begin_src emacs-lisp
+(setq which-key-idle-delay 0.3
+      which-key-allow-imprecise-window-fit nil)
+#+end_src
+
+* Development Tools
+** LSP Bridge
+#+begin_src emacs-lisp
+(use-package! lsp-bridge
+  :config
+  (global-lsp-bridge-mode)
+
+  ;; This provides: basedpyright for completion/navigation + ruff for linting/formatting
+  (setq lsp-bridge-python-multi-lsp-server "basedpyright_ruff"
+        lsp-bridge-tex-lsp-server "texlab"
+        lsp-bridge-nix-lsp-server "nil"
+        lsp-bridge-org-babel-lang-list nil)
+
+  ;; Asynchronous Completion
+  (setq acm-enable-doc t
+        ;; acm-enable-jupyter t
+        acm-enable-doc-markdown-render 'async
+        acm-enable-icon t
+        acm-candidate-match-function 'orderless-literal
+        acm-backend-search-file-words-enable-fuzzy-match t)
+
+  (setq lsp-bridge-enable-inlay-hint t
+        lsp-bridge-enable-hover-diagnostic t
+        lsp-bridge-enable-auto-format-code t
+        lsp-bridge-enable-org-babel t))
+#+end_src
+
+** Code Formatting
 *Disable for now*
 #+begin_src emacs-lisp
 ;; (after! apheleia
 ;;   (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff))
 ;;   (setf (alist-get 'python-ts-mode apheleia-mode-alist) '(ruff)))
+#+end_src
+
+** Flymake
+#+begin_src emacs-lisp
+(after! flymake
+  (setq flymake-no-changes-timeout 0.3
+        flymake-start-on-save-buffer t))
+#+end_src
+
+** Jupyter
+#+begin_src emacs-lisp
+(setq org-babel-default-header-args:jupyter-python '((:async . "yes")
+                                                     (:session . "py")
+                                                     (:kernel . "python3")))
+
+(setq ob-async-no-async-languages-alist '("jupyter-python"))
+#+end_src
+
+** Projectile
+#+begin_src emacs-lisp
+(after! projectile
+  (setq projectile-project-search-path '("~/projects/" "~/org/")))
+#+end_src
+
+** Version Control
+#+begin_src emacs-lisp
+(after! magit
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+(use-package! magit-todos
+  :after magit
+  :config (magit-todos-mode 1))
+
+(setq forge-owned-accounts '(("aahsnr")))
+#+end_src
+
+** Vertico
+#+begin_src emacs-lisp
+(after! vertico
+  (setq vertico-count 10))
 #+end_src
 
 * Dired
@@ -56,7 +187,7 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
                                 ("mp4" . "mpv"))))
 #+end_src
 
-* Default Settings
+* Sensible Defaults
 #+begin_src emacs-lisp
 (after! evil
   (setq evil-want-fine-undo t
@@ -103,35 +234,6 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 #+end_src
 
-* Doom Modeline
-#+begin_src emacs-lisp
-(after! doom-modeline
-  (setq doom-modeline-height 28
-        doom-modeline-bar-width 3))
-#+end_src
-
-* Flymake
-#+begin_src emacs-lisp
-(after! flymake
-  (setq flymake-no-changes-timeout 0.3
-        flymake-start-on-save-buffer t))
-#+end_src
-
-* Fonts
-#+begin_src emacs-lisp
-(setq doom-font (font-spec :family "JetBrains Mono" :size 14.0 :weight 'medium)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 14.0)
-      doom-big-font (font-spec :family "JetBrains Mono" :size 25))
-#+end_src
-
-* Jupyter
-#+begin_src emacs-lisp
-(setq org-babel-default-header-args:jupyter-python '((:async . "yes")
-                                                     (:session . "py")
-                                                     (:kernel . "python3")))
-
-(setq ob-async-no-async-languages-alist '("jupyter-python"))
-#+end_src
 * Keybindings
 #+begin_src emacs-lisp
 (map! :leader
@@ -213,49 +315,8 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
        :desc "Debug REPL"          "R" #'dape-repl))
 #+end_src
 
-* Line Numbers
-#+begin_src emacs-lisp
-;; Enable absolute line numbers globally by default.
-(setq display-line-numbers-type t)
-
-;; Disable line numbers in modes where they aren't useful.
-(add-hook! '(org-mode-hook
-             dired-mode-hook
-             magit-status-mode-hook
-             eshell-mode-hook
-             vterm-mode-hook
-             help-mode-hook
-             doom-dashboard-mode-hook)
-           #'(lambda () (display-line-numbers-mode -1)))
-#+end_src
-
-* LSP Bridge
-#+begin_src emacs-lisp
-(use-package! lsp-bridge
-  :config
-  (global-lsp-bridge-mode)
-
-  ;; This provides: basedpyright for completion/navigation + ruff for linting/formatting
-  (setq lsp-bridge-python-multi-lsp-server "basedpyright_ruff"
-        lsp-bridge-tex-lsp-server "texlab"
-        lsp-bridge-nix-lsp-server "nil")
-        ;;lsp-bridge-org-babel-lang-list nil)
-
-  ;; Asynchronous Completion
-  (setq acm-enable-doc t
-        ;; acm-enable-jupyter t
-        acm-enable-doc-markdown-render 'async
-        acm-enable-icon t
-        acm-candidate-match-function 'orderless-literal
-        acm-backend-search-file-words-enable-fuzzy-match t)
-
-  (setq lsp-bridge-enable-inlay-hint t
-        lsp-bridge-enable-hover-diagnostic t
-        lsp-bridge-enable-auto-format-code t
-        lsp-bridge-enable-org-babel t))
-#+end_src
-
-* Org Mode
+* Org
+** Org Mode
 
 #+begin_src emacs-lisp
 (defvar my/org-directory "~/org/" "The root directory for Org files.")
@@ -305,30 +366,30 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 (add-hook! 'org-mode-hook #'org-fragtog-mode)
 #+end_src
 
-* Org Modern
+** Org Modern
 #+begin_src emacs-lisp
-;; (after! org-modern
-;;   (setq
-;;    ;; Override Doom's dynamic star visibility with a consistent character.
-;;    org-modern-hide-stars "· "
-;;    ;; Customize the appearance of headline stars/bullets.
-;;    org-modern-star '("◉" "○" "◈" "◇" "◆" "▷")
-;;    ;; Customize list item bullets.
-;;    org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))
-;;    ;; Adjust table line appearance.
-;;    org-modern-table-vertical 1
-;;    org-modern-table-horizontal 0.1
-;;    ;; Customize the block name delimiters.
-;;    org-modern-block-name '(("src" "»" "«")
-;;                            ("example" "»" "«")
-;;                            ("quote" "❝" "❞"))
-;;    ;; Define custom checkbox characters.
-;;    org-modern-checkbox '((todo . "☐") (done . "☑") (cancel . "☒") (priority . "⚑") (on . "◉") (off . "○"))
-;;    ;; Override Doom's derived tag faces with a specific style for Catppuccin.
-;;    org-modern-tag-faces `((:foreground ,(face-attribute 'default :foreground) :weight bold :box (:line-width (1 . -1) :color "#45475a")))))
+(after! org-modern
+  (setq
+   ;; Override Doom's dynamic star visibility with a consistent character.
+   org-modern-hide-stars "· "
+   ;; Customize the appearance of headline stars/bullets.
+   org-modern-star '("◉" "○" "◈" "◇" "◆" "▷")
+   ;; Customize list item bullets.
+   org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))
+   ;; Adjust table line appearance.
+   org-modern-table-vertical 1
+   org-modern-table-horizontal 0.1
+   ;; Customize the block name delimiters.
+   org-modern-block-name '(("src" "»" "«")
+                           ("example" "»" "«")
+                           ("quote" "❝" "❞"))
+   ;; Define custom checkbox characters.
+   org-modern-checkbox '((todo . "☐") (done . "☑") (cancel . "☒") (priority . "⚑") (on . "◉") (off . "○"))
+   ;; Override Doom's derived tag faces with a specific style for Catppuccin.
+   org-modern-tag-faces `((:foreground ,(face-attribute 'default :foreground) :weight bold :box (:line-width (1 . -1) :color "#45475a")))))
 #+end_src
 
-* Org Roam
+** Org Roam
 *org-roam* is a powerful note-taking tool for building a personal knowledge graph, inspired by the Zettelkasten method. We also enable *org-roam-ui* for a visual graph interface.
 #+begin_src emacs-lisp
 (after! org-roam
@@ -347,65 +408,411 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
   :init (consult-org-roam-mode 1))
 #+end_src
 
+* LaTeX
+** Tectonic Engine Configuration
+#+begin_src emacs-lisp
+(after! tex
+  ;; Set Tectonic as the default engine
+  (setq TeX-engine 'tectonic)
+
+  ;; Register Tectonic as a TeX engine
+  (add-to-list 'TeX-engine-alist
+               '(tectonic
+                 "Tectonic"
+                 "tectonic -X compile -f plain %T"
+                 "tectonic -X watch"
+                 nil))
+
+  ;; Simplify LaTeX command style for Tectonic compatibility
+  (setq LaTeX-command-style '(("" "%(latex)")))
+
+  ;; Disable TeX distribution check (Tectonic is self-contained)
+  (setq TeX-check-TeX nil)
+
+  ;; Update command list for Tectonic
+  (setq TeX-command-list
+        (append
+         '(("Tectonic" "tectonic -X compile %s" TeX-run-command nil
+            (latex-mode) :help "Compile with Tectonic")
+           ("Tectonic Watch" "tectonic -X watch %s" TeX-run-command nil
+            (latex-mode) :help "Continuously compile with Tectonic"))))
+
+  ;; Handle Tectonic project output directories (using Projectile)
+  (add-hook 'after-change-major-mode-hook
+            (lambda ()
+              (when (and (fboundp 'projectile-project-root)
+                         (projectile-project-p))
+                (let ((proot (projectile-project-root)))
+                  (when (file-exists-p (expand-file-name "Tectonic.toml" proot))
+                    (setq-local TeX-output-dir
+                                (expand-file-name "build/index" proot))))))))
+#+end_src
+
+** NixOS Specific Environment Fix
+#+begin_src emacs-lisp
+(after! org
+  ;; Make sure Emacs inherits the shell PATH on NixOS
+  ;; This ensures tectonic, convert, gs, and dvipng are found
+  (when (memq system-type '(gnu gnu/linux gnu/kfreebsd))
+    ;; Add common NixOS binary paths
+    (dolist (path '("/run/current-system/sw/bin"
+                    "~/.nix-profile/bin"))
+      (when (file-directory-p path)
+        (add-to-list 'exec-path (expand-file-name path))
+        (setenv "PATH" (concat (expand-file-name path) ":" (getenv "PATH")))))))
+#+end_src
+
+** Citation Management
+#+begin_src emacs-lisp
+(after! citar
+  ;; *** IMPORTANT: Update these paths to your actual locations ***
+  ;; These should be set BEFORE this configuration loads, ideally in your
+  ;; main config.el after (use-package! citar)
+  (setq! citar-bibliography '("~/path/to/references.bib"))
+  (setq! citar-library-paths '("~/Zotero/storage"))
+  (setq! citar-notes-paths '("~/org-roam/"))
+
+  ;; NOTE: The biblio module automatically sets org-cite-global-bibliography
+  ;; to match citar-bibliography, so we don't need to set it manually
+
+  ;; Use nerd-icons for visual indicators (Doom uses nerd-icons by default)
+  (setq citar-symbols
+        `((file ,(nerd-icons-mdicon "nf-md-file_document") . " ")
+          (note ,(nerd-icons-mdicon "nf-md-note_text") . " ")
+          (link ,(nerd-icons-mdicon "nf-md-link") . " ")))
+
+  ;; Enhanced indicator configuration for better visual feedback
+  (setq citar-indicator-files-icons
+        (citar-indicator-create
+         :symbol (nerd-icons-faicon "nf-fa-file_pdf_o"
+                                    :face 'nerd-icons-red)
+         :function #'citar-has-files
+         :padding "  "
+         :tag "has:files"))
+
+  (setq citar-indicator-notes-icons
+        (citar-indicator-create
+         :symbol (nerd-icons-mdicon "nf-md-note_text"
+                                    :face 'nerd-icons-blue)
+         :function #'citar-has-notes
+         :padding "  "
+         :tag "has:notes"))
+
+  (setq citar-indicator-links-icons
+        (citar-indicator-create
+         :symbol (nerd-icons-mdicon "nf-md-link"
+                                    :face 'nerd-icons-orange)
+         :function #'citar-has-links
+         :padding "  "
+         :tag "has:links"))
+
+  ;; Register indicators
+  (setq citar-indicators
+        (list citar-indicator-files-icons
+              citar-indicator-notes-icons
+              citar-indicator-links-icons)))
+
+;; RefTeX configuration - handle non-citation references only
+;; Let Citar manage bibliographies
+(after! reftex
+  (setq reftex-default-bibliography '()))
+#+end_src
+
+** Fast Math Input with LAAS
+#+begin_src emacs-lisp
+(use-package laas
+  :hook (LaTeX-mode . laas-mode)
+  :config ; do whatever here
+  (aas-set-snippets 'laas-mode
+                    ;; set condition!
+                    :cond #'texmathp ; expand only while in math
+                    "supp" "\\supp"
+                    "On" "O(n)"
+                    "O1" "O(1)"
+                    "Olog" "O(\\log n)"
+                    "Olon" "O(n \\log n)"
+                    ;; bind to functions!
+                    "Sum" (lambda () (interactive)
+                            (yas-expand-snippet "\\sum_{$1}^{$2} $0"))
+                    "Span" (lambda () (interactive)
+                             (yas-expand-snippet "\\Span($1)$0"))
+                    ;; add accent snippets
+                    :cond #'laas-object-on-left-condition
+                    "qq" (lambda () (interactive) (laas-wrap-previous-object "sqrt"))))
+#+end_src
+
+** Enhanced Prettify Symbols
+#+begin_src emacs-lisp
+(after! tex
+  (setq +latex-prettify-symbols-alist
+        '(;; Greek letters
+          ("\\alpha" . "Î±")
+          ("\\beta" . "Î²")
+          ("\\gamma" . "Î³")
+          ("\\delta" . "Î´")
+          ("\\epsilon" . "Îµ")
+          ("\\varepsilon" . "Îµ")
+          ("\\zeta" . "Î¶")
+          ("\\eta" . "Î·")
+          ("\\theta" . "Î¸")
+          ("\\iota" . "Î¹")
+          ("\\kappa" . "Îº")
+          ("\\lambda" . "Î»")
+          ("\\mu" . "Î¼")
+          ("\\nu" . "Î½")
+          ("\\xi" . "Î¾")
+          ("\\pi" . "Ï€")
+          ("\\rho" . "Ï")
+          ("\\sigma" . "Ïƒ")
+          ("\\tau" . "Ï„")
+          ("\\upsilon" . "Ï…")
+          ("\\phi" . "Ï†")
+          ("\\varphi" . "Ï†")
+          ("\\chi" . "Ï‡")
+          ("\\psi" . "Ïˆ")
+          ("\\omega" . "Ï‰")
+
+          ;; Uppercase Greek
+          ("\\Gamma" . "Î“")
+          ("\\Delta" . "Î”")
+          ("\\Theta" . "Î˜")
+          ("\\Lambda" . "Î›")
+          ("\\Xi" . "Îž")
+          ("\\Pi" . "Î ")
+          ("\\Sigma" . "Î£")
+          ("\\Upsilon" . "Î¥")
+          ("\\Phi" . "Î¦")
+          ("\\Psi" . "Î¨")
+          ("\\Omega" . "Î©")
+
+          ;; Math operators
+          ("\\sum" . "âˆ‘")
+          ("\\prod" . "âˆ")
+          ("\\int" . "âˆ«")
+          ("\\iint" . "âˆ¬")
+          ("\\iiint" . "âˆ­")
+          ("\\oint" . "âˆ®")
+          ("\\partial" . "âˆ‚")
+          ("\\nabla" . "âˆ‡")
+          ("\\infty" . "âˆž")
+
+          ;; Relations
+          ("\\in" . "âˆˆ")
+          ("\\notin" . "âˆ‰")
+          ("\\subset" . "âŠ‚")
+          ("\\supset" . "âŠƒ")
+          ("\\subseteq" . "âŠ†")
+          ("\\supseteq" . "âŠ‡")
+          ("\\cap" . "âˆ©")
+          ("\\cup" . "âˆª")
+          ("\\emptyset" . "âˆ…")
+
+          ;; Arrows
+          ("\\rightarrow" . "â†’")
+          ("\\Rightarrow" . "â‡’")
+          ("\\leftarrow" . "â†")
+          ("\\Leftarrow" . "â‡")
+          ("\\leftrightarrow" . "â†”")
+          ("\\Leftrightarrow" . "â‡”")
+          ("\\mapsto" . "â†¦")
+
+          ;; Comparison
+          ("\\leq" . "â‰¤")
+          ("\\geq" . "â‰¥")
+          ("\\neq" . "â‰ ")
+          ("\\approx" . "â‰ˆ")
+          ("\\equiv" . "â‰¡")
+          ("\\sim" . "âˆ¼")
+          ("\\simeq" . "â‰ƒ")
+
+          ;; Logic
+          ("\\forall" . "âˆ€")
+          ("\\exists" . "âˆƒ")
+          ("\\nexists" . "âˆ„")
+          ("\\neg" . "Â¬")
+          ("\\land" . "âˆ§")
+          ("\\lor" . "âˆ¨")
+
+          ;; Misc
+          ("\\times" . "Ã—")
+          ("\\div" . "Ã·")
+          ("\\cdot" . "Â·")
+          ("\\circ" . "âˆ˜")
+          ("\\pm" . "Â±")
+          ("\\mp" . "âˆ“")
+          ("\\sqrt" . "âˆš")
+          ("\\ell" . "â„“")
+          ("\\hbar" . "â„"))))
+#+end_src
+
+** Org Mode Integration
+#+begin_src emacs-lisp
+(after! ox-latex
+  ;; Use Tectonic for Org LaTeX exports
+  (setq org-latex-compiler "tectonic")
+  (setq org-latex-pdf-process '("tectonic -X compile %f"))
+
+  ;; NOTE: The biblio module automatically synchronizes org-cite-global-bibliography
+  ;; with citar-bibliography, and configures org-cite processors to use citar.
+  ;; No manual configuration needed for org-cite integration.
+
+  ;; Custom LaTeX classes for Org export
+  (add-to-list 'org-latex-classes
+               '("article"
+                 "\\documentclass[11pt,a4paper]{article}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+               t)
+
+  (add-to-list 'org-latex-classes
+               '("beamer"
+                 "\\documentclass{beamer}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}"))
+               t))
+
+
+;; (after! org
+;;   ;; Use dvipng for now (simpler, more reliable)
+;;   (setq org-preview-latex-default-process 'dvipng)
+
+;;   ;; Increase preview scale
+;;   (setq org-format-latex-options
+;;         (plist-put org-format-latex-options :scale 1.5))
+
+;;   ;; LaTeX header for preview
+;;   (setq org-format-latex-header
+;;         "\\documentclass{article}
+;; \\usepackage[usenames]{color}
+;; \\usepackage{amsmath}
+;; \\usepackage{physics}
+;; \\usepackage{siunitx}
+;; \\usepackage{amssymb}
+;; \\usepackage[mathscr]{euscript}
+;; \\pagestyle{empty}
+;; [DEFAULT-PACKAGES]
+;; [PACKAGES]
+;; \\begin{document}"))
+
+;; Configure Org preview with Tectonic
+(after! org
+  ;; Ensure ghostscript and imagemagick are available
+  ;; Add this to your NixOS configuration or home-manager:
+  ;; - ghostscript
+  ;; - imagemagick
+  ;; - dvipng (for alternative preview method)
+
+  ;; Method 2: Configure Tectonic for org-preview (if you prefer Tectonic)
+  ;; Only use this if you specifically need Tectonic for previews
+  (add-to-list 'org-preview-latex-process-alist
+               '(tectonic
+                 :programs ("tectonic" "convert")
+                 :description "pdf > png (via Tectonic)"
+                 :message "You need: tectonic and imagemagick (with ghostscript in PATH)"
+                 :image-input-type "pdf"
+                 :image-output-type "png"
+                 :image-size-adjust (1.0 . 1.0)
+                 ;; Use absolute path for tectonic output
+                 :latex-compiler
+                 ("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
+                 ;; ImageMagick convert with explicit density
+                 :image-converter
+                 ("magick -density %D -trim -antialias %f -quality 100 %O")))
+
+  ;; If you want to use Tectonic for preview, uncomment this:
+   (setq org-preview-latex-default-process 'tectonic)
+
+  ;; Increase preview scale for better readability
+  (setq org-format-latex-options
+        (plist-put org-format-latex-options :scale 1.5))
+
+  ;; Ensure proper LaTeX header for preview fragments
+  (setq org-format-latex-header
+        "\\documentclass{article}
+\\usepackage[usenames]{color}
+\\usepackage{amsmath}
+\\usepackage{physics}
+\\usepackage{siunitx}
+\\usepackage{amssymb}
+\\usepackage[mathscr]{euscript}
+\\pagestyle{empty}
+[DEFAULT-PACKAGES]
+[PACKAGES]
+\\begin{document}"))
+#+end_src
+
+** Custom Yasnippet Templates
+#+begin_src emacs-lisp
+(after! yasnippet
+  ;; Scientific writing snippets for LaTeX
+  (yas-define-snippets 'latex-mode
+                       '(;; Environments
+                         ("beg" "\\begin{${1:env}}\n  $0\n\\end{$1}" "begin-end")
+
+                         ("eq" "\\begin{equation}\n  ${1:equation}\n  \\label{eq:${2:label}}\n\\end{equation}\n$0"
+                          "equation with label")
+
+                         ("ali" "\\begin{align}\n  ${1:a} &= ${2:b} \\\\\\\\\n  ${3:c} &= ${4:d}\n  \\label{eq:${5:label}}\n\\end{align}\n$0"
+                          "align with label")
+
+                         ("fig" "\\begin{figure}[htbp]\n  \\centering\n  \\includegraphics[width=${1:0.8}\\textwidth]{${2:path}}\n  \\caption{${3:caption}}\n  \\label{fig:${4:label}}\n\\end{figure}\n$0"
+                          "figure")
+
+                         ("tab" "\\begin{table}[htbp]\n  \\centering\n  \\caption{${1:caption}}\n  \\label{tab:${2:label}}\n  \\begin{tabular}{${3:lll}}\n    \\toprule\n    ${4:header} \\\\\\\\\n    \\midrule\n    ${5:data} \\\\\\\\\n    \\bottomrule\n  \\end{tabular}\n\\end{table}\n$0"
+                          "table with booktabs")
+
+                         ;; Math shortcuts
+                         ("frac" "\\frac{${1:num}}{${2:denom}}$0" "fraction")
+                         ("sum" "\\sum_{${1:i=1}}^{${2:n}} ${3:x_i}$0" "summation")
+                         ("int" "\\int_{${1:a}}^{${2:b}} ${3:f(x)} \\, dx$0" "integral")
+                         ("lim" "\\lim_{${1:x \\to \\infty}} ${2:f(x)}$0" "limit")
+
+                         ;; Physics/calculus
+                         ("pd" "\\frac{\\partial ${1:f}}{\\partial ${2:x}}$0" "partial derivative")
+                         ("dd" "\\frac{d ${1:f}}{d ${2:x}}$0" "derivative")
+                         ("vv" "\\vec{${1:v}}$0" "vector")
+                         ("grad" "\\nabla ${1:f}$0" "gradient")
+                         ("div" "\\nabla \\cdot ${1:F}$0" "divergence")
+                         ("curl" "\\nabla \\times ${1:F}$0" "curl")
+
+                         ;; Citations and references
+                         ("cite" "\\cite{${1:key}}$0" "citation")
+                         ("ref" "\\ref{${1:label}}$0" "reference")
+                         ("eqref" "\\eqref{${1:eq:label}}$0" "equation reference")
+                         ("autoref" "\\autoref{${1:label}}$0" "auto reference"))))
+
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp
+(map! :after tex
+      :map LaTeX-mode-map
+      :localleader
+      ;; Extend build commands with Tectonic-specific options
+      (:prefix ("b" . "build")
+       :desc "Compile with Tectonic" "t" (cmd! (TeX-command "Tectonic" 'TeX-master-file))
+       :desc "Watch mode (Tectonic)" "w" (cmd! (TeX-command "Tectonic Watch" 'TeX-master-file)))
+
+      ;; Citation management
+      (:prefix ("c" . "citations")
+       :desc "Insert citation" "i" #'citar-insert-citation
+       :desc "Open citation" "o" #'citar-open
+       :desc "Open library file" "f" #'citar-open-library-file
+       :desc "Open notes" "n" #'citar-open-notes)
+
+      ;; LSP features (via lsp-bridge)
+      (:prefix ("l" . "lsp")
+       :desc "Find definition" "d" #'lsp-bridge-find-def
+       :desc "Find references" "r" #'lsp-bridge-find-references
+       :desc "Show documentation" "h" #'lsp-bridge-show-documentation
+       :desc "Rename" "R" #'lsp-bridge-rename
+       :desc "Code action" "a" #'lsp-bridge-code-action
+       :desc "Diagnostic list" "x" #'lsp-bridge-diagnostic-list))
+#+end_src
+
 * PDF Tools
 #+begin_src emacs-lisp
 (setq-default pdf-view-display-size 'fit-page)
 (add-hook! 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode)
-#+end_src
-
-* Personal Information
-#+begin_src emacs-lisp
-;; User Information
-(setq user-full-name "Ahsanur Rahman"
-      user-mail-address "ahsanur041@proton.me")
-#+end_src
-
-* Projectile
-#+begin_src emacs-lisp
-(after! projectile
-  (setq projectile-project-search-path '("~/projects/" "~/org/")))
-#+end_src
-
-* Rainbow Delimiters
-#+begin_src emacs-lisp
-;; (use-package! rainbow-delimiters
-;;   :hook ((prog-mode . rainbow-delimiters-mode)
-;;          (org-src-mode . rainbow-delimiters-mode)
-;;          (treesit-auto-mode-hook . rainbow-delimiters-mode))
-
-;;   ;; Catppuccin Mocha palette - these are already defined by the theme
-;;   ;; but we customize for optimal nesting visibility
-;;   :custom-face
-;;   (rainbow-delimiters-depth-1-face ((t (:foreground "#f38ba8"))))  ; Red
-;;   (rainbow-delimiters-depth-2-face ((t (:foreground "#fab387"))))  ; Peach
-;;   (rainbow-delimiters-depth-3-face ((t (:foreground "#f9e2af"))))  ; Yellow
-;;   (rainbow-delimiters-depth-4-face ((t (:foreground "#a6e3a1"))))  ; Green
-;;   (rainbow-delimiters-depth-5-face ((t (:foreground "#74c7ec"))))  ; Sapphire
-;;   (rainbow-delimiters-depth-6-face ((t (:foreground "#b4befe"))))  ; Lavender
-;;   (rainbow-delimiters-depth-7-face ((t (:foreground "#cba6f7"))))  ; Mauve
-;;   (rainbow-delimiters-unmatched-face ((t (:foreground "#f38ba8" :weight bold)))))
-#+end_src
-
-* Version Control
-#+begin_src emacs-lisp
-(after! magit
-  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-
-(use-package! magit-todos
-  :after magit
-  :config (magit-todos-mode 1))
-
-(setq forge-owned-accounts '(("aahsnr")))
-#+end_src
-
-* Vertico
-#+begin_src emacs-lisp
-(after! vertico
-  (setq vertico-count 10))
-#+end_src
-
-* Which-key
-#+begin_src emacs-lisp
-(setq which-key-idle-delay 0.3
-      which-key-allow-imprecise-window-fit nil)
 #+end_src

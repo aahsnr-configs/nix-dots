@@ -1,7 +1,5 @@
 # ~/nix-dots/modules/home/fish/default.nix
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # Install all required packages and shell plugins
   home.packages = with pkgs; [
     fishPlugins.autopair
@@ -12,7 +10,6 @@
     enable = true;
     shellAliases = {
       # General
-      vi = "nvim";
       gg = "lazygit";
       cat = "bat --paging=never";
       grep = "rg";

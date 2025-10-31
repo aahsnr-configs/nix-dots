@@ -1,51 +1,7 @@
-{ ... }:
-{
+{...}: {
   wayland.windowManager.hyprland.extraConfig = ''
-    exec = hyprctl dispatch submap global
-    submap = global
-
-    #--- Shell keybinds ---
-    # Launcher
-    bind = Super, D, global, caelestia:launcher
-    bindin = Super, catchall, global, caelestia:launcherInterrupt
-    bindin = Super, mouse:272, global, caelestia:launcherInterrupt
-    bindin = Super, mouse:273, global, caelestia:launcherInterrupt
-    bindin = Super, mouse:274, global, caelestia:launcherInterrupt
-    bindin = Super, mouse:275, global, caelestia:launcherInterrupt
-    bindin = Super, mouse:276, global, caelestia:launcherInterrupt
-    bindin = Super, mouse:277, global, caelestia:launcherInterrupt
-    bindin = Super, mouse_up, global, caelestia:launcherInterrupt
-    bindin = Super, mouse_down, global, caelestia:launcherInterrupt
-
-    ## Misc
-    bind = Super,X, global, caelestia:session
-    bind = Super, K, global, caelestia:showall
-    bindl = Ctrl+Alt, C, global, caelestia:clearNotifs
-
-    ## Anyrun
-    bind = Super+Shift, D, exec, pkill anyrun || anyrun
-  
-    ## Restore lock
-    bindl = Super+Alt, L, exec, caelestia shell -d
-    bindl = Super+Alt, L, global, caelestia:lock
-
-    ## Brightness
-    bindl = , XF86MonBrightnessUp, global, caelestia:brightnessUp
-    bindl = , XF86MonBrightnessDown, global, caelestia:brightnessDown
-
-    ## Media
-    bindl = , XF86AudioPlay, global, caelestia:mediaToggle
-    bindl = , XF86AudioPause, global, caelestia:mediaToggle
-    bindl = , XF86AudioNext, global, caelestia:mediaNext
-    bindl = , XF86AudioPrev, global, caelestia:mediaPrev
-    bindl = , XF86AudioStop, global, caelestia:mediaStop
-
-    ## Kill/restart
-    bindr = Ctrl+Super+Shift, R, exec, qs -c caelestia kill
-    bindr = Ctrl+Super+Alt, R, exec, qs -c caelestia kill; caelestia shell -d
-
     #--- Workspace Focus ---
-    ## Go to workspace no. 
+    ## Go to workspace no.
     bind = Super, 1, exec, wsaction workspace 1
     bind = Super, 2, exec, wsaction workspace 2
     bind = Super, 3, exec, wsaction workspace 3
@@ -57,7 +13,7 @@
     bind = Super, 9, exec, wsaction workspace 9
     bind = Super, 0, exec, wsaction workspace 10
 
-    ## Go to workspace group no. 
+    ## Go to workspace group no.
     bind = Ctrl+Super, 1, exec, wsaction -g workspace 1
     bind = Ctrl+Super, 2, exec, wsaction -g workspace 2
     bind = Ctrl+Super, 3, exec, wsaction -g workspace 3
@@ -69,6 +25,7 @@
     bind = Ctrl+Super, 9, exec, wsaction -g workspace 9
     bind = Ctrl+Super, 0, exec, wsaction -g workspace 10
 
+
     ## Go to workspace -1/+1
     binde = Ctrl+Alt, right, workspace, +1
     binde = Ctrl+Alt, left, workspace, -1
@@ -77,6 +34,8 @@
     bind = Ctrl+Super, mouse_down, workspace, -10
     bind = Ctrl+Super, mouse_up, workspace, +10
 
+    ## Screenshot
+    bind = Super+Shift, S, exec, hyprshot -m region
 
     #--- Workspace Window Movement ---
     ## Move window to workspace no.
@@ -148,19 +107,12 @@
     binde = Super+Alt, right, moveactive, 10 0
     binde = Super+Alt, up, moveactive, 0 -10
     binde = Super+Alt, down, moveactive, 0 10
-      
+
     ## Switch between windows
     ## General Actions
     bind = Super, Q, killactive,
     bind = Super, F, fullscreen, 0
     bind = Super, Space, togglefloating,
-
-    ## Special Workspaces Toggles
-    bind = Super, S, exec, caelestia toggle specialws
-    bind = Ctrl+Shift, Escape, exec, caelestia toggle sysmon
-    bind = Super, M, exec, caelestia toggle music
-    bind = Super, C, exec, caelestia toggle communication
-    bind = Super, R, exec, caelestia toggle todo
 
     #--- Apps ---
     ## Terminal
@@ -172,25 +124,40 @@
     bind = Super+Shift, G, exec, pypr toggle tuigit
 
     ## GUI Apps
-    bind = Super, E, exec, emacsclient -c -a 'emacs' 
-    bind = Super, B, exec, zen            
-    bind = Super, Z, exec, zotero         
-    bind = Super, T, exec, thunar         
+    bind = Super, E, exec, emacsclient -c -a 'emacs'
+    bind = Super, B, exec, zen
+    bind = Super, Z, exec, zotero
+    bind = Super, T, exec, thunar
 
 
     #--- Utilities ---
-    bindl = , Print, exec, caelestia screenshot
-    bind = Super+Shift, S, global, caelestia:screenshotFreeze  # Capture region (freeze)
-    bind = Super+Alt, R, exec, caelestia record -s
-    bind = Ctrl+Alt, R, exec, caelestia record
-    bind = Super+Shift+Alt, R, exec, caelestia record -r
-    bind = Super+Shift, C, exec, hyprpicker -a
+    # bindl = , Print, exec, caelestia screenshot
+    # bind = Super+Shift, S, global, caelestia:screenshotFreeze  # Capture region (freeze)
+    # bind = Super+Alt, R, exec, caelestia record -s
+    # bind = Ctrl+Alt, R, exec, caelestia record
+    # bind = Super+Shift+Alt, R, exec, caelestia record -r
+    # bind = Super+Shift, C, exec, hyprpicker -a
+
+    # Application and system controls
+    bind = SUPER, D, exec, dms ipc call spotlight toggle
+    bind = SUPER, V, exec, dms ipc call clipboard toggle
+    bind = SUPER, M, exec, dms ipc call processlist toggle
+    bind = SUPER, N, exec, dms ipc call notifications toggle
+    bind = SUPER, P, exec, dms ipc call notepad toggle
+    bind = SUPERALT, L, exec, dms ipc call lock lock
+    bind = SUPER, X, exec, dms ipc call powermenu toggle
+    bind = SUPER, Y, exec, dms ipc call dankdash wallpaper
+    bind = SUPER, C, exec, dms ipc call control-center toggle
+    bind = SUPER, TAB, exec, dms ipc call hypr toggleOverview
 
     #--- Volume Control ---:
 
-    bindl = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-    bindle=, XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+
-    bindle=, XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+    bindl = , XF86AudioRaiseVolume, exec, dms ipc call audio increment 3
+    bindl = , XF86AudioLowerVolume, exec, dms ipc call audio decrement 3
+    bindl = , XF86AudioMute, exec, dms ipc call audio mute
+    bindl = , XF86AudioMicMute, exec, dms ipc call audio micmute
+
+    bind = SUPERSHIFT, N, exec, dms ipc call night toggle
 
     # Plugins
     bind = Super, period, layoutmsg, move +col
@@ -201,15 +168,10 @@
     bind = Super+Shift, comma, layoutmsg, swapcol l
     bind = Super+Ctrl+Shift, period, layoutmsg, movewindowto r
     bind = Super+Ctrl+Shift, comma, layoutmsg, movewindowto l
-    bind = Super, g, hyprexpo:expo, toggle
+    #bind = Super, g, hyprexpo:expo, toggle
 
     #--- Sleep --
     bind = Super+Shift, L, exec, systemctl suspend-then-hibernate
-
-    # Clipboard and emoji picker
-    bind = Super, V, exec, pkill fuzzel || caelestia clipboard
-    bind = Super+Alt, V, exec, pkill fuzzel || caelestia clipboard -d
-    # bind = Super, Period, exec, pkill fuzzel || caelestia emoji -p
-    bindl = Ctrl+Shift+Alt, V, exec, sleep 0.5s && ydotool type -d 1 "$(cliphist list | head -1 | cliphist decode)"  # Alternate paste
+    bind = Super+Shift, R, exec, killall dms && dms run
   '';
 }

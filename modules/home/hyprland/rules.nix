@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   wayland.windowManager.hyprland.settings = {
     # Start pyprland daemon
     layerrule = [
@@ -14,6 +13,20 @@
       "blur, launcher"
       "ignorealpha 0.57, caelestia-drawers"
       "noanim, caelestia-(border-exclusion|area-picker)"
+
+      "ignorealpha 0, quickshell"
+
+      "ignorealpha 0, quickshell:bar"
+      "blur, quickshell:bar"
+      "blurpopups, quickshell:bar"
+
+      "ignorealpha 0, quickshell:dock"
+      "blur, quickshell:dock"
+      "blurpopups, quickshell:dock"
+
+      "ignorealpha 0, quickshell:popout"
+      "blur, quickshell:popout"
+      "blurpopups, quickshell:popout"
     ];
 
     windowrule = [
@@ -112,7 +125,6 @@
       "float,title:^(File Operation Progress)"
       "float,title:^(Open File)$"
 
-
       # Idle Inhibit Rules
       "idleinhibit focus, class:^(brave)$, title:^(.*YouTube.*)$"
       "idleinhibit focus, class:^(mpv)$"
@@ -143,7 +155,7 @@
       "opacity 0.80 0.80,class:^(footclient)$"
       "opacity 0.80 0.80,class:^(foot)$"
       "opacity 0.80 0.80,class:^(kitty)$"
-      "opacity 0.80 0.80,class:^(kitty-float)$"      
+      "opacity 0.80 0.80,class:^(kitty-float)$"
       "opacity 0.90 0.90,class:^(Thunar)$"
       "opacity 0.90 0.90,class:^(thunar)$" # Added for scratchpad
       #"opacity 0.90 0.90,class:^(emacs)$"

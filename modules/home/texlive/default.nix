@@ -14,6 +14,8 @@
       ulem
       hyperref
       capt-of
+      physics
+      siunitx
       ;
   };
 in {
@@ -22,5 +24,7 @@ in {
     tex
     tectonic
     texlab
+    ghostscript
+    imagemagick
   ];
 }
