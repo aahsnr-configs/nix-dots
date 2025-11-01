@@ -27,6 +27,8 @@
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+
     devshell.url = "github:numtide/devshell";
 
     dgop = {
@@ -62,88 +64,88 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hy3 = {
-      url = "github:aahsnr-configs/hy3";
-      inputs.hyprland.follows = "hyprland";
-    };
+    # hy3 = {
+    #   url = "github:aahsnr-configs/hy3";
+    #   inputs.hyprland.follows = "hyprland";
+    # };
+    #
+    # hypridle = {
+    #   url = "github:hyprwm/hypridle";
+    #   inputs = {
+    #     hyprlang.follows = "hyprland/hyprlang";
+    #     hyprutils.follows = "hyprland/hyprutils";
+    #     nixpkgs.follows = "hyprland/nixpkgs";
+    #     systems.follows = "hyprland/systems";
+    #   };
+    # };
 
-    hypridle = {
-      url = "github:hyprwm/hypridle";
-      inputs = {
-        hyprlang.follows = "hyprland/hyprlang";
-        hyprutils.follows = "hyprland/hyprutils";
-        nixpkgs.follows = "hyprland/nixpkgs";
-        systems.follows = "hyprland/systems";
-      };
-    };
+    # hyprkool = {
+    #   url = "github:thrombe/hyprkool";
+    #   inputs.hyprland.follows = "hyprland";
+    # };
 
-    hyprkool = {
-      url = "github:thrombe/hyprkool";
-      inputs.hyprland.follows = "hyprland";
-    };
+    # hyprland = {
+    #   url = "git+https://github.com/hyprwm/Hyprland";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+    #
+    # hyprland-contrib = {
+    #   url = "github:hyprwm/contrib";
+    #   inputs.nixpkgs.follows = "hyprland/nixpkgs";
+    # };
+    #
+    # hyprland-plugins = {
+    #   url = "github:hyprwm/hyprland-plugins";
+    #   inputs.hyprland.follows = "hyprland";
+    # };
+    #
+    # hyprland-protocols = {
+    #   url = "github:hyprwm/hyprland-protocols";
+    #   inputs = {
+    #     nixpkgs.follows = "nixpkgs";
+    #     systems.follows = "systems";
+    #   };
+    # };
+    #
+    # hyprlock = {
+    #   url = "github:hyprwm/hyprlock";
+    #   inputs = {
+    #     hyprlang.follows = "hyprland/hyprlang";
+    #     hyprutils.follows = "hyprland/hyprutils";
+    #     nixpkgs.follows = "hyprland/nixpkgs";
+    #     systems.follows = "hyprland/systems";
+    #   };
+    # };
+    #
+    # hyprpaper = {
+    #   url = "github:hyprwm/hyprpaper";
+    #   inputs = {
+    #     hyprlang.follows = "hyprland/hyprlang";
+    #     hyprutils.follows = "hyprland/hyprutils";
+    #     nixpkgs.follows = "hyprland/nixpkgs";
+    #     systems.follows = "hyprland/systems";
+    #   };
+    # };
 
-    hyprland = {
-      url = "git+https://github.com/hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # hyprpicker = {
+    #   url = "github:hyprwm/hyprpicker";
+    #   inputs.nixpkgs.follows = "hyprland/nixpkgs";
+    # };
+    #
+    # hyprpolkitagent = {
+    #   url = "github:hyprwm/hyprpolkitagent";
+    #   inputs.nixpkgs.follows = "hyprland/nixpkgs";
+    # };
+    #
+    # Hyprspace = {
+    #   url = "github:aahsnr-configs/Hyprspace";
+    #   inputs.hyprland.follows = "hyprland";
+    # };
 
-    hyprland-contrib = {
-      url = "github:hyprwm/contrib";
-      inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    };
-
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
-
-    hyprland-protocols = {
-      url = "github:hyprwm/hyprland-protocols";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems";
-      };
-    };
-
-    hyprlock = {
-      url = "github:hyprwm/hyprlock";
-      inputs = {
-        hyprlang.follows = "hyprland/hyprlang";
-        hyprutils.follows = "hyprland/hyprutils";
-        nixpkgs.follows = "hyprland/nixpkgs";
-        systems.follows = "hyprland/systems";
-      };
-    };
-
-    hyprpaper = {
-      url = "github:hyprwm/hyprpaper";
-      inputs = {
-        hyprlang.follows = "hyprland/hyprlang";
-        hyprutils.follows = "hyprland/hyprutils";
-        nixpkgs.follows = "hyprland/nixpkgs";
-        systems.follows = "hyprland/systems";
-      };
-    };
-
-    hyprpicker = {
-      url = "github:hyprwm/hyprpicker";
-      inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    };
-
-    hyprpolkitagent = {
-      url = "github:hyprwm/hyprpolkitagent";
-      inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    };
-
-    Hyprspace = {
-      url = "github:aahsnr-configs/Hyprspace";
-      inputs.hyprland.follows = "hyprland";
-    };
-
-    hyprsunset = {
-      url = "github:hyprwm/hyprsunset";
-      inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    };
+    # hyprsunset = {
+    #   url = "github:hyprwm/hyprsunset";
+    #   inputs.nixpkgs.follows = "hyprland/nixpkgs";
+    # };
 
     nix-doom-emacs-unstraightened = {
       url = "github:marienz/nix-doom-emacs-unstraightened";
@@ -195,10 +197,10 @@
 
     systems.url = "github:nix-systems/default-linux";
 
-    xdg-portal-hyprland = {
-      url = "github:hyprwm/xdg-desktop-portal-hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # xdg-portal-hyprland = {
+    #   url = "github:hyprwm/xdg-desktop-portal-hyprland";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     yazi = {
       url = "github:sxyazi/yazi";
@@ -222,6 +224,7 @@
     anyrun,
     chaotic,
     nvf,
+    determinate,
     ...
   } @ inputs: let
     system = "x86_64-linux";

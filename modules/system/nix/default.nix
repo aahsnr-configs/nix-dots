@@ -44,7 +44,8 @@
       allowed-users = ["@wheel"];
       trusted-users = ["@wheel"];
       sandbox = true;
-      max-jobs = 2;
+      lazy-trees = true;
+      max-jobs = "auto";
       cores = 8;
       keep-going = true;
       # Increase download buffer size
@@ -109,12 +110,12 @@
     # };
   };
 
-  # documentation = {
-  #   enable = true;
-  #   doc.enable = true;
-  #   man.enable = false;
-  #   dev.enable = true;
-  # };
+  documentation = {
+    enable = true;
+    doc.enable = true;
+    man.enable = false;
+    dev.enable = true;
+  };
 
   system = {
     autoUpgrade.enable = true;

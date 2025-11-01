@@ -151,13 +151,13 @@
       "opacity 0.90 0.80,class:^(discord)$"
       "opacity 0.90 0.80,class:^(qt5ct)$"
       "opacity 0.90 0.90,class:^(explorer)$"
-      "opacity 0.80 0.80,class:^(foot-float)$"
-      "opacity 0.80 0.80,class:^(footclient)$"
-      "opacity 0.80 0.80,class:^(foot)$"
+      "opacity 1.00 1.00,class:^(foot-float)$"
+      "opacity 1.00 1.00,class:^(footclient)$"
+      "opacity 1.00 1.00,class:^(foot)$"
       "opacity 0.80 0.80,class:^(kitty)$"
       "opacity 0.80 0.80,class:^(kitty-float)$"
-      "opacity 0.90 0.90,class:^(Thunar)$"
-      "opacity 0.90 0.90,class:^(thunar)$" # Added for scratchpad
+      "opacity 1.00 1.00,class:^(Thunar)$"
+      "opacity 1.00 1.00,class:^(thunar)$" # Added for scratchpad
       #"opacity 0.90 0.90,class:^(emacs)$"
       "opacity 0.95 0.95,class:^(Code)$"
 

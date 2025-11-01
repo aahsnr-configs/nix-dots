@@ -4,14 +4,17 @@
   catppuccin,
   chaotic,
   nixos-hardware,
+  determinate,
   ...
-}: let
+}:
+let
   inputs = self.inputs;
   system = ../modules/system;
   laptop = nixos-hardware.nixosModules.asus-zephyrus-ga401;
   chaotic_nix = chaotic.homeManagerModules.default;
   hmModule = inputs.home-manager.nixosModules.home-manager;
   caTppuccin = catppuccin.nixosModules.catppuccin;
+  deterMinate = determinate.nixosModules.default;
 
   home-manager = {
     useUserPackages = true;
@@ -20,6 +23,7 @@
       inherit inputs;
       inherit self;
       inherit chaotic_nix;
+      inherit deterMinate;
     };
     users.ahsan = {
       imports = [
@@ -28,35 +32,37 @@
       ];
     };
   };
-in {
+in
+{
   #workstation
   workstation = nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     modules = [
-      {networking.hostName = "workstation";}
+      { networking.hostName = "workstation"; }
       ./workstation/hardware-configuration.nix
       system
       hmModule
       caTppuccin
       chaotic_nix
-      {inherit home-manager;}
+      { inherit home-manager; }
     ];
-    specialArgs = {inherit inputs;};
+    specialArgs = { inherit inputs; };
   };
 
   #zephyrus
   zephyrus = nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     modules = [
-      {networking.hostName = "zephyrus";}
+      { networking.hostName = "zephyrus"; }
       ./zephyrus/hardware-configuration.nix
       system
       hmModule
       caTppuccin
       laptop
       chaotic_nix
-      {inherit home-manager;}
+      deterMinate
+      { inherit home-manager; }
     ];
-    specialArgs = {inherit inputs;};
+    specialArgs = { inherit inputs; };
   };
 }

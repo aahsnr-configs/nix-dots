@@ -6,6 +6,7 @@
   # imports = [
   #   inputs.caelestia-shell.homeManagerModules.default
   # ];
+  #
   home.packages = with pkgs; [
     bitwarden-desktop
     fastfetch
@@ -17,10 +18,11 @@
     zotero
     adw-gtk3
     hyprshot
-    #inputs.quickshell.packages.${pkgs.system}.default
+    inputs.quickshell.packages.${pkgs.system}.default
     #inputs.hyprsunset.packages.${pkgs.system}.hyprsunset
-    inputs.hyprpolkitagent.packages.${pkgs.system}.hyprpolkitagent
-    # inputs.caelestia-cli.packages.${system}.default
+    #inputs.hyprpolkitagent.packages.${pkgs.system}.hyprpolkitagent
+    hyprpolkitagent
+    #inputs.caelestia-cli.packages.${pkgs.system}.default
     upscayl
     qt6Packages.qt6ct
     chafa

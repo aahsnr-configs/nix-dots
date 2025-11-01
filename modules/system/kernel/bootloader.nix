@@ -8,10 +8,9 @@
       luks.devices."luks-c931ab4a-8d18-4092-ae17-4cc82a7f9d14".device = "/dev/disk/by-uuid/c931ab4a-8d18-4092-ae17-4cc82a7f9d14";
     };
 
-    kernelPackages = pkgs.linuxPackages_xanmod_latest;
+    kernelPackages = pkgs.linuxPackages_zen;
 
     kernelParams = [
-      "quiet"
       "splash"
       "loglevel=3"
       "nowatchdog"

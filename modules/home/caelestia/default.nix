@@ -2,9 +2,7 @@
   pkgs,
   inputs,
   ...
-}:
-
-{
+}: {
   # Import the caelestia-shell home manager module
   imports = [
     inputs.caelestia-shell.homeManagerModules.default
@@ -14,9 +12,9 @@
     enable = true;
 
     systemd = {
-      enable = false;
+      enable = true;
       target = "graphical-session.target";
-      environment = [ ];
+      environment = [];
     };
 
     cli = {
@@ -62,10 +60,10 @@
 
       general = {
         apps = {
-          terminal = [ "foot" ];
-          audio = [ "pavucontrol" ];
-          playback = [ "mpv" ];
-          explorer = [ "thunar" ];
+          terminal = ["foot"];
+          audio = ["pavucontrol"];
+          playback = ["mpv"];
+          explorer = ["thunar"];
         };
         battery = {
           warnLevels = [
@@ -190,7 +188,7 @@
         tray = {
           background = true;
           compact = true;
-          iconSubs = [ ];
+          iconSubs = [];
           recolour = true;
         };
         workspaces = {
@@ -381,7 +379,7 @@
           wallpapers = false;
         };
         showOnHover = false;
-        hiddenApps = [ ];
+        hiddenApps = [];
       };
 
       lock = {
@@ -472,8 +470,6 @@
       };
     };
   };
-
-
 
   home.packages = with pkgs; [
     aubio

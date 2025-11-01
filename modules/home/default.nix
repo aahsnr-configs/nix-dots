@@ -45,11 +45,11 @@
     ./bat
     ./brave
     ./btop
-    #./caelestia
+    ./caelestia
     ./catppuccin
     ./cliphist
     ./dev
-    ./dms
+    #./dms
     ./doom
     #./emacs
     ./eza
@@ -74,7 +74,6 @@
     ./starship
     ./scripts
     ./swappy
-    ./texlive
     ./theming
     ./tldr
     ./tmux

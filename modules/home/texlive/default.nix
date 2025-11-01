@@ -1,12 +1,10 @@
-{
-  config,
-  pkgs,
-  ...
-}: let
+{pkgs, ...}: let
   tex = pkgs.texlive.combine {
     inherit
       (pkgs.texlive)
-      scheme-medium
+      scheme-minimal
+      metapost
+      xetex
       dvisvgm
       dvipng
       wrapfig
@@ -16,14 +14,14 @@
       capt-of
       physics
       siunitx
+      booktabs
       ;
   };
 in {
-  # home-manager
   home.packages = with pkgs; [
     tex
-    tectonic
     texlab
+    tectonic
     ghostscript
     imagemagick
   ];

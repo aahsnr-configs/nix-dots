@@ -3,7 +3,7 @@
     (pkgs.emacsWithPackagesFromUsePackage {
       config = ./config.org;
       defaultInitFile = true;
-      package = pkgs.emacs-pgtk;
+      package = pkgs.emacs-unstable-pgtk;
       alwaysEnsure = false;
       alwaysTangle = true;
       extraEmacsPackages = epkgs:
@@ -19,12 +19,6 @@
         org = null;
       };
     })
-    pkgs.texlab
-    pkgs.texpresso
-    pkgs.gnuplot
-    pkgs.hunspell
-    pkgs.hunspellDicts.en_US
-    pkgs.gnuplot
   ];
 
   # services.emacs = {

@@ -13,6 +13,10 @@
     statix
     marksman
     pandoc
+    gnuplot
+    hunspell
+    hunspellDicts.en_US
+    gnuplot
   ];
 
   programs.direnv = {

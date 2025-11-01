@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   wayland.windowManager.hyprland.settings = {
     general = {
       layout = "scrolling";
@@ -21,7 +20,7 @@
     decoration = {
       rounding = 10;
       blur = {
-        enabled = true;
+        enabled = false;
         xray = false;
         special = false;
         ignore_opacity = true;
@@ -34,7 +33,7 @@
       };
       # disable if costing perf
       shadow = {
-        enabled = true;
+        enabled = false;
         range = 10;
         render_power = 2;
         color = "rgba(1a1b26d4)"; # Tokyo Night Background
@@ -155,7 +154,5 @@
     cursor = {
       hotspot_padding = 1;
     };
-
-
   };
 }
