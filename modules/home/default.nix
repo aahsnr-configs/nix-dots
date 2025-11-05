@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home = {
     username = "ahsan";
     homeDirectory = "/home/ahsan";
@@ -13,7 +14,7 @@
     sessionVariables = {
       BROWSER = "zen";
       TERMINAL = "footclient";
-      # EDITOR = "emacsclient -t -a 'emacs'";
+      EDITOR = "emacsclient -t -a 'emacs'";
       VISUAL = "emacsclient -c -a 'emacs'";
     };
 
@@ -45,8 +46,9 @@
     ./bat
     ./brave
     ./btop
-    ./caelestia
-    ./catppuccin
+    #./caelestia
+    # -- managed by dms --
+    #./catppuccin
     ./cliphist
     ./dev
     #./dms
@@ -57,9 +59,9 @@
     ./fish
     ./foot
     ./fzf
-    ./gammastep
+    #./gammastep
     ./git
-    ./hyprland
+    #./hyprland
     #./hyprpaper
     ./imv
     ./keyring
@@ -69,11 +71,12 @@
     ./nvim
     ./pay-respects
     ./pkgs
+    ./polkit
     ./ripgrep
     ./schizofox
     ./starship
     ./scripts
-    ./swappy
+    #./swappy
     ./theming
     ./tldr
     ./tmux

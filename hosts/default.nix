@@ -4,7 +4,6 @@
   catppuccin,
   chaotic,
   nixos-hardware,
-  determinate,
   ...
 }:
 let
@@ -14,7 +13,6 @@ let
   chaotic_nix = chaotic.homeManagerModules.default;
   hmModule = inputs.home-manager.nixosModules.home-manager;
   caTppuccin = catppuccin.nixosModules.catppuccin;
-  deterMinate = determinate.nixosModules.default;
 
   home-manager = {
     useUserPackages = true;
@@ -23,7 +21,6 @@ let
       inherit inputs;
       inherit self;
       inherit chaotic_nix;
-      inherit deterMinate;
     };
     users.ahsan = {
       imports = [
@@ -60,7 +57,6 @@ in
       caTppuccin
       laptop
       chaotic_nix
-      deterMinate
       { inherit home-manager; }
     ];
     specialArgs = { inherit inputs; };

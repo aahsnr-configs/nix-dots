@@ -1,12 +1,8 @@
 {
   pkgs,
-  inputs,
   ...
-}: {
-  # imports = [
-  #   inputs.caelestia-shell.homeManagerModules.default
-  # ];
-  #
+}:
+{
   home.packages = with pkgs; [
     bitwarden-desktop
     fastfetch
@@ -17,13 +13,6 @@
     nix-prefetch-github
     zotero
     adw-gtk3
-    hyprshot
-    inputs.quickshell.packages.${pkgs.system}.default
-    #inputs.hyprsunset.packages.${pkgs.system}.hyprsunset
-    #inputs.hyprpolkitagent.packages.${pkgs.system}.hyprpolkitagent
-    hyprpolkitagent
-    #inputs.caelestia-cli.packages.${pkgs.system}.default
-    upscayl
     qt6Packages.qt6ct
     chafa
     trash-cli
@@ -33,7 +22,6 @@
     protonvpn-gui
     ticktick
     onlyoffice-desktopeditors
-    todoist-electron
     firefox
     papirus-icon-theme
   ];

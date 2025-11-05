@@ -65,11 +65,11 @@
       flavor = "mocha";
     };
 
-    # mpv = {
-    #   enable = true;
-    #   accent = "flamingo";
-    #   flavor = "mocha";
-    # };
+    mpv = {
+      enable = true;
+      accent = "flamingo";
+      flavor = "mocha";
+    };
 
     tmux = {
       enable = true;

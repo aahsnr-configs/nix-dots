@@ -12,22 +12,9 @@
       flake = false;
     };
 
-    caelestia-cli = {
-      url = "github:caelestia-dots/cli";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.caelestia-shell.follows = "";
-    };
-
-    caelestia-shell = {
-      url = "github:caelestia-dots/shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     catppuccin.url = "github:catppuccin/nix";
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
 
     devshell.url = "github:numtide/devshell";
 
@@ -35,21 +22,17 @@
       url = "github:AvengeMedia/dgop";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     dms-cli = {
       url = "github:AvengeMedia/danklinux";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     dankMaterialShell = {
       url = "github:AvengeMedia/DankMaterialShell";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.dgop.follows = "dgop";
       inputs.dms-cli.follows = "dms-cli";
-    };
-
-    # Required, nvf works best and only directly supports flakes
-    nvf = {
-      url = "github:NotAShelf/nvf";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     emacs-overlay = {
@@ -63,89 +46,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # hy3 = {
-    #   url = "github:aahsnr-configs/hy3";
-    #   inputs.hyprland.follows = "hyprland";
-    # };
-    #
-    # hypridle = {
-    #   url = "github:hyprwm/hypridle";
-    #   inputs = {
-    #     hyprlang.follows = "hyprland/hyprlang";
-    #     hyprutils.follows = "hyprland/hyprutils";
-    #     nixpkgs.follows = "hyprland/nixpkgs";
-    #     systems.follows = "hyprland/systems";
-    #   };
-    # };
-
-    # hyprkool = {
-    #   url = "github:thrombe/hyprkool";
-    #   inputs.hyprland.follows = "hyprland";
-    # };
-
-    # hyprland = {
-    #   url = "git+https://github.com/hyprwm/Hyprland";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    #
-    # hyprland-contrib = {
-    #   url = "github:hyprwm/contrib";
-    #   inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    # };
-    #
-    # hyprland-plugins = {
-    #   url = "github:hyprwm/hyprland-plugins";
-    #   inputs.hyprland.follows = "hyprland";
-    # };
-    #
-    # hyprland-protocols = {
-    #   url = "github:hyprwm/hyprland-protocols";
-    #   inputs = {
-    #     nixpkgs.follows = "nixpkgs";
-    #     systems.follows = "systems";
-    #   };
-    # };
-    #
-    # hyprlock = {
-    #   url = "github:hyprwm/hyprlock";
-    #   inputs = {
-    #     hyprlang.follows = "hyprland/hyprlang";
-    #     hyprutils.follows = "hyprland/hyprutils";
-    #     nixpkgs.follows = "hyprland/nixpkgs";
-    #     systems.follows = "hyprland/systems";
-    #   };
-    # };
-    #
-    # hyprpaper = {
-    #   url = "github:hyprwm/hyprpaper";
-    #   inputs = {
-    #     hyprlang.follows = "hyprland/hyprlang";
-    #     hyprutils.follows = "hyprland/hyprutils";
-    #     nixpkgs.follows = "hyprland/nixpkgs";
-    #     systems.follows = "hyprland/systems";
-    #   };
-    # };
-
-    # hyprpicker = {
-    #   url = "github:hyprwm/hyprpicker";
-    #   inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    # };
-    #
-    # hyprpolkitagent = {
-    #   url = "github:hyprwm/hyprpolkitagent";
-    #   inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    # };
-    #
-    # Hyprspace = {
-    #   url = "github:aahsnr-configs/Hyprspace";
-    #   inputs.hyprland.follows = "hyprland";
-    # };
-
-    # hyprsunset = {
-    #   url = "github:hyprwm/hyprsunset";
-    #   inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    # };
 
     nix-doom-emacs-unstraightened = {
       url = "github:marienz/nix-doom-emacs-unstraightened";
@@ -163,11 +63,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -175,6 +70,11 @@
 
     nur = {
       url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nvf = {
+      url = "github:NotAShelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -197,11 +97,6 @@
 
     systems.url = "github:nix-systems/default-linux";
 
-    # xdg-portal-hyprland = {
-    #   url = "github:hyprwm/xdg-desktop-portal-hyprland";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
     yazi = {
       url = "github:sxyazi/yazi";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -213,30 +108,32 @@
     };
   };
 
-  outputs = {
-    self,
-    home-manager,
-    emacs-overlay,
-    nixpkgs,
-    yazi,
-    nix-doom-emacs-unstraightened,
-    pyprland,
-    anyrun,
-    chaotic,
-    nvf,
-    determinate,
-    ...
-  } @ inputs: let
-    system = "x86_64-linux";
-  in {
-    nixosConfigurations = import ./hosts inputs;
+  outputs =
+    {
+      self,
+      home-manager,
+      emacs-overlay,
+      nixpkgs,
+      yazi,
+      nix-doom-emacs-unstraightened,
+      pyprland,
+      anyrun,
+      chaotic,
+      nvf,
+      ...
+    }@inputs:
+    let
+      system = "x86_64-linux";
+    in
+    {
+      nixosConfigurations = import ./hosts inputs;
 
-    packages.${system} = {
-      #catppuccin-folders = pkgs.callPackage ./pkgs/catppuccin-folders.nix {};
-      #catppuccin-gtk = pkgs.callPackage ./pkgs/catppuccin-gtk.nix {};
-      #catppuccin-cursors = pkgs.callPackage ./pkgs/catppuccin-cursors.nix {};
-      #onlyoffice-deb = pkgs.callPackage ./pkgs/onlyoffice-bin.nix {};
-      #insync-deb = pkgs.callPackage ./pkgs/insync-deb.nix {};
+      packages.${system} = {
+        #catppuccin-folders = pkgs.callPackage ./pkgs/catppuccin-folders.nix {};
+        #catppuccin-gtk = pkgs.callPackage ./pkgs/catppuccin-gtk.nix {};
+        #catppuccin-cursors = pkgs.callPackage ./pkgs/catppuccin-cursors.nix {};
+        #onlyoffice-deb = pkgs.callPackage ./pkgs/onlyoffice-bin.nix {};
+        #insync-deb = pkgs.callPackage ./pkgs/insync-deb.nix {};
+      };
     };
-  };
 }

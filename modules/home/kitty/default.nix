@@ -1,11 +1,12 @@
-{ ... }: {
+{ ... }:
+{
   programs.kitty = {
     enable = true;
 
     # Font Configuration
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 14;
+      size = 12;
     };
 
     # Shell Integration
@@ -39,20 +40,21 @@
       confirm_os_window_close = 0;
 
       # Tab Bar Configuration
-      tab_bar_edge = "bottom";
-      tab_bar_margin_width = 0.0;
-      tab_bar_margin_height = "0.0 0.0";
-      tab_bar_style = "powerline";
-      tab_bar_align = "left";
-      tab_bar_min_tabs = 2;
-      tab_switch_strategy = "previous";
-      tab_fade = "0.25 0.5 0.75 1";
-      tab_separator = " ┇";
-      tab_powerline_style = "slanted";
-      tab_activity_symbol = "none";
-      tab_title_template =
-        "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title}";
-      active_tab_title_template = "none";
+      # -- managed by dms --
+      # tab_bar_edge = "bottom";
+      # tab_bar_margin_width = 0.0;
+      # tab_bar_margin_height = "0.0 0.0";
+      # tab_bar_style = "powerline";
+      # tab_bar_align = "left";
+      # tab_bar_min_tabs = 2;
+      # tab_switch_strategy = "previous";
+      # tab_fade = "0.25 0.5 0.75 1";
+      # tab_separator = " ┇";
+      # tab_powerline_style = "slanted";
+      # tab_activity_symbol = "none";
+      # tab_title_template =
+      #   "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title}";
+      # active_tab_title_template = "none";
 
       # Background/Opacity
       background_opacity = "0.98";
@@ -131,14 +133,6 @@
       click_interval = -1.0;
 
       # OS Specific
-      macos_option_as_alt = false;
-      macos_hide_from_tasks = false;
-      macos_quit_when_last_window_closed = false;
-      macos_window_resizable = true;
-      macos_thicken_font = 0;
-      macos_traditional_fullscreen = false;
-      macos_show_window_title_in = "all";
-      macos_custom_beam_cursor = false;
       linux_display_server = "auto";
     };
 

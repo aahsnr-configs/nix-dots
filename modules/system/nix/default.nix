@@ -4,10 +4,11 @@
   lib,
   inputs,
   ...
-}: {
+}:
+{
   environment = {
-    systemPackages = [pkgs.git];
-    defaultPackages = [];
+    systemPackages = [ pkgs.git ];
+    defaultPackages = [ ];
   };
 
   nix = {
@@ -22,7 +23,7 @@
     daemonIOSchedClass = "idle";
 
     # pin the registry to avoid downloading and evaling a new nixpkgs version every time
-    registry = lib.mapAttrs (_: v: {flake = v;}) inputs;
+    registry = lib.mapAttrs (_: v: { flake = v; }) inputs;
 
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
@@ -41,14 +42,12 @@
       flake-registry = "/etc/nix/registry.json";
       auto-optimise-store = true;
       builders-use-substitutes = true;
-      allowed-users = ["@wheel"];
-      trusted-users = ["@wheel"];
+      allowed-users = [ "@wheel" ];
+      trusted-users = [ "@wheel" ];
       sandbox = true;
-      lazy-trees = true;
       max-jobs = "auto";
       cores = 8;
       keep-going = true;
-      # Increase download buffer size
       download-buffer-size = 524288000;
       log-lines = 50;
       system-features = [
@@ -62,11 +61,11 @@
         "https://cache.nixos.org"
         "https://nix-community.cachix.org"
         "https://nixpkgs-unfree.cachix.org"
-        "https://install.determinate.systems"
         "https://hyprland.cachix.org"
         "https://cuda-maintainers.cachix.org"
         "https://anyrun.cachix.org"
         "https://yazi.cachix.org"
+        "https://niri.cachix.org"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -77,6 +76,7 @@
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
         "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
         "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
+        "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
       ];
       extra-experimental-features = [
         "flakes"
@@ -101,6 +101,7 @@
       emacs-overlay.overlay
       nixpkgs-wayland.overlay
       rust-overlay.overlays.default
+      niri.overlays.niri
     ];
 
     # hostPlatform = {
