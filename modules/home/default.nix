@@ -68,6 +68,7 @@
     ./kitty
     ./lazygit
     ./mpv
+    ./niri
     ./nvim
     ./pay-respects
     ./pkgs
