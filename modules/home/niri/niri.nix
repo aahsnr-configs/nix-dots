@@ -406,7 +406,8 @@ in {
 
         # System Application Launchers
         "Mod+Return".action = spawn "kitty";
-        "Mod+E".action = spawn "nautilus";
+        "Mod+E".action = spawn "emacsclient" "-c" "-a" "'emacs'";
+        "Mod+Shift+E".action = spawn "nautilus";
 
         # Window Management
         "Mod+Q".action = close-window;
