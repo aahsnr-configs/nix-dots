@@ -15,11 +15,12 @@
       physics
       siunitx
       booktabs
+      latex
       ;
   };
 in {
   home.packages = with pkgs; [
-    tex
+    texliveFull
     texlab
     tectonic
     ghostscript

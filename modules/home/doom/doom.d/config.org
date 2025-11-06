@@ -66,9 +66,9 @@
 
 ** Fonts
 #+begin_src emacs-lisp
-(setq doom-font (font-spec :family "JetBrains Mono" :size 14.0 :weight 'medium)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 14.0)
-      doom-big-font (font-spec :family "JetBrains Mono" :size 25))
+(setq doom-font (font-spec :family "JetBrains Mono" :size 13.0 :weight 'medium)
+      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 13.0)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 24))
 #+end_src
 
 ** Rainbow Delimiters
@@ -650,25 +650,24 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 
 ** Org Mode Integration
 #+begin_src emacs-lisp
-;; (after! org
-;;  ;; Use Tectonic for Org LaTeX exports
-;;  (setq org-latex-compiler "tectonic")
-;;  (setq org-latex-pdf-process '("tectonic -X compile %f")))
-;;
-;;(after! org
-;;  (add-to-list 'org-preview-latex-process-alist
-;;               '(tectonic :programs ("tectonic" "magick")
-;;        	 :description "pdf > png"
-;;        	 :message "you need install the programs: tectonic and imagemagick."
-;;        	 :image-input-type "pdf"
-;;        	 :image-output-type "png"
-;;        	 :image-size-adjust (1.0 . 1.0)
-;;        	 :latex-compiler
-;;        	 ("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
-;;        	 :image-converter
-;;        	 ("magick -density %D -trim -antialias %f -quality 300 %O")))
-;;  (setq org-preview-latex-default-process 'tectonic))
+(after! org
+  ;; Use Tectonic for Org LaTeX exports
+  (setq org-latex-compiler "tectonic")
+  (setq org-latex-pdf-process '("tectonic -X compile %f")))
 
+(after! org
+  (add-to-list 'org-preview-latex-process-alist
+               '(tectonic :programs ("tectonic" "magick")
+        	 :description "pdf > png"
+        	 :message "you need install the programs: tectonic and imagemagick."
+        	 :image-input-type "pdf"
+        	 :image-output-type "png"
+        	 :image-size-adjust (1.0 . 1.0)
+        	 :latex-compiler
+        	 ("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
+        	 :image-converter
+        	 ("magick -density %D -trim -antialias %f -quality 300 %O")))
+  (setq org-preview-latex-default-process 'tectonic))
 #+end_src
 
 ** Custom Yasnippet Templates

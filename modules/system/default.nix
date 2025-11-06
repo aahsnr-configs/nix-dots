@@ -1,9 +1,9 @@
 {...}: {
   imports = [
-    ./asus
+    #./asus
     ./bluetooth
     ./catppuccin
-    ./graphics
+    ./hardware
     #./hyprland
     ./kernel
     ./logind

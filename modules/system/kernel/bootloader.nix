@@ -14,6 +14,7 @@
       "splash"
       "loglevel=3"
       "nowatchdog"
+      "amd_pstate=active"
     ];
 
     loader = {

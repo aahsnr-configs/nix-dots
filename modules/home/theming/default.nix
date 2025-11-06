@@ -4,54 +4,54 @@
   ...
 }: {
   # gtk = {
-    # enable = true;
-    #
-    # # cursorTheme = {
-    # #   name = "Bibata-Modern-Ice";
-    # #   size = 24;
-    # #   package = pkgs.bibata-cursors;
-    # # };
-    #
-    # # theme = {
-    # #   package = pkgs.adw-gtk3;
-    # #   name = "adw-gtk3";
-    # # };
-    # #
-    # iconTheme = {
-    #   package = pkgs.papirus-icon-theme;
-    #   name = "Papirus-Dark";
-    # };
-    #
-    # font = {
-    #   name = "JetBrains Mono";
-    #   size = 13;
-    # };
+  # enable = true;
+  #
+  # # cursorTheme = {
+  # #   name = "Bibata-Modern-Ice";
+  # #   size = 24;
+  # #   package = pkgs.bibata-cursors;
+  # # };
+  #
+  # # theme = {
+  # #   package = pkgs.adw-gtk3;
+  # #   name = "adw-gtk3";
+  # # };
+  # #
+  # iconTheme = {
+  #   package = pkgs.papirus-icon-theme;
+  #   name = "Papirus-Dark";
+  # };
+  #
+  # font = {
+  #   name = "JetBrains Mono";
+  #   size = 13;
+  # };
 
-    # gtk2.extraConfig = ''
-    #   gtk-xft-antialias=1
-    #   gtk-xft-hinting=1
-    #   gtk-xft-hintstyle="hintslight"
-    #   gtk-xft-rgba="rgb"
-    # '';
-    #
-    # gtk3.bookmarks = [
-    #   "file://${config.home.homeDirectory}/Dev"
-    #   "file://${config.home.homeDirectory}/Documents"
-    #   "file://${config.home.homeDirectory}/Downloads"
-    #   "file://${config.home.homeDirectory}/Music"
-    #   "file://${config.home.homeDirectory}/Pictures"
-    #   "file://${config.home.homeDirectory}/Videos"
-    # ];
-    #
-    # gtk3.extraConfig = {
-    #   gtk-xft-antialias = 1;
-    #   gtk-xft-hinting = 1;
-    #   gtk-xft-hintstyle = "hintsfull";
-    #   gtk-xft-rgba = "rgb";
-    #   gtk-application-prefer-dark-theme = 1;
-    # };
-    #
-    # gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
+  # gtk2.extraConfig = ''
+  #   gtk-xft-antialias=1
+  #   gtk-xft-hinting=1
+  #   gtk-xft-hintstyle="hintslight"
+  #   gtk-xft-rgba="rgb"
+  # '';
+  #
+  # gtk3.bookmarks = [
+  #   "file://${config.home.homeDirectory}/Dev"
+  #   "file://${config.home.homeDirectory}/Documents"
+  #   "file://${config.home.homeDirectory}/Downloads"
+  #   "file://${config.home.homeDirectory}/Music"
+  #   "file://${config.home.homeDirectory}/Pictures"
+  #   "file://${config.home.homeDirectory}/Videos"
+  # ];
+  #
+  # gtk3.extraConfig = {
+  #   gtk-xft-antialias = 1;
+  #   gtk-xft-hinting = 1;
+  #   gtk-xft-hintstyle = "hintsfull";
+  #   gtk-xft-rgba = "rgb";
+  #   gtk-application-prefer-dark-theme = 1;
+  # };
+  #
+  # gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
   # };
 
   fonts.fontconfig = {
@@ -59,13 +59,13 @@
     defaultFonts = {
       emoji = ["Noto color emoji"];
       monospace = ["JetBrains Mono"];
-      sansSerif = ["Rubik Medium"];
+      sansSerif = ["Rubik Regular"];
       serif = [
         "Noto Serif"
         "Noto Color Emoji"
       ];
     };
-    hinting = "slight";
+    hinting = "full";
     subpixelRendering = "rgb";
     antialiasing = true;
   };
