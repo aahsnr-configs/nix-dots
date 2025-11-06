@@ -4,11 +4,10 @@
   lib,
   inputs,
   ...
-}:
-{
+}: {
   environment = {
-    systemPackages = [ pkgs.git ];
-    defaultPackages = [ ];
+    systemPackages = [pkgs.git];
+    defaultPackages = [];
   };
 
   nix = {
@@ -23,7 +22,7 @@
     daemonIOSchedClass = "idle";
 
     # pin the registry to avoid downloading and evaling a new nixpkgs version every time
-    registry = lib.mapAttrs (_: v: { flake = v; }) inputs;
+    registry = lib.mapAttrs (_: v: {flake = v;}) inputs;
 
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
@@ -42,8 +41,8 @@
       flake-registry = "/etc/nix/registry.json";
       auto-optimise-store = true;
       builders-use-substitutes = true;
-      allowed-users = [ "@wheel" ];
-      trusted-users = [ "@wheel" ];
+      allowed-users = ["@wheel"];
+      trusted-users = ["@wheel"];
       sandbox = true;
       max-jobs = "auto";
       cores = 8;
@@ -97,10 +96,9 @@
     };
 
     overlays = with inputs; [
-      yazi.overlays.default
+      #yazi.overlays.default
       emacs-overlay.overlay
       nixpkgs-wayland.overlay
-      rust-overlay.overlays.default
       niri.overlays.niri
     ];
 

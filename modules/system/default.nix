@@ -1,14 +1,13 @@
-{ ... }:
-{
+{...}: {
   imports = [
     ./asus
     ./bluetooth
     ./catppuccin
     ./graphics
-    ./hyprland
+    #./hyprland
     ./kernel
     ./logind
-    ./ly
+    #./ly
     ./misc
     ./network
     ./nix
@@ -20,7 +19,7 @@
     ./security
     ./sound
     ./systemd
-    ./thunar
+    #./thunar
     ./users
     ./zram
   ];

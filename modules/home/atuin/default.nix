@@ -1,13 +1,22 @@
 # ~/nix-dots/modules/home/atuin/default.nix
-{ ... }:
 {
+  pkgs,
+  inputs,
+  ...
+}: {
   programs.atuin = {
     enable = true;
+    package = pkgs.atuin;
     enableFishIntegration = true;
-    # flags = [ "--disable-up-arrow" ]; # For zsh-vi-mode compatibility
+    daemon = {
+      enable = true;
+      logLevel = "warn";
+    };
     settings = {
-      log = "warn";
-      sync_frequency = "10m";
+      auto_sync = true;
+      sync_frequency = "5m";
+      sync_address = "https://api.atuin.sh";
+      search_mode = "prefix";
     };
   };
 }

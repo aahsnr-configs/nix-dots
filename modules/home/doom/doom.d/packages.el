@@ -40,3 +40,4 @@
 ;;; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 (package! helm-bibtex :ignore t)
 (package! hydra :ignore t)
+(package! org :built-in 'prefer)

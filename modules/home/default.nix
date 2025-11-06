@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home = {
     username = "ahsan";
     homeDirectory = "/home/ahsan";
@@ -57,7 +56,7 @@
     ./eza
     ./fd-find
     ./fish
-    ./foot
+    #./foot
     ./fzf
     #./gammastep
     ./git
@@ -77,13 +76,14 @@
     ./schizofox
     ./starship
     ./scripts
-    #./swappy
+    ./swappy
+    ./texlive
     ./theming
     ./tldr
     ./tmux
     ./udiskie
     ./xdg
-    #./yazi
+    ./yazi
     ./zathura
     ./zen-browser
     ./zoxide

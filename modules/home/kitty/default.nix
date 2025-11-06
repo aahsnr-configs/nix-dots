@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   programs.kitty = {
     enable = true;
 
@@ -234,5 +233,10 @@
       "kitty_mod+delete" = "clear_terminal reset active";
       "opt+cmd+r" = "clear_terminal reset active";
     };
+    extraConfig = ''
+      # Dank color generation
+      include dank-tabs.conf
+      include dank-theme.conf
+    '';
   };
 }

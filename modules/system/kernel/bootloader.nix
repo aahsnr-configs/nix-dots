@@ -5,10 +5,10 @@
     initrd = {
       verbose = false;
       systemd.enable = true;
-      luks.devices."luks-c931ab4a-8d18-4092-ae17-4cc82a7f9d14".device = "/dev/disk/by-uuid/c931ab4a-8d18-4092-ae17-4cc82a7f9d14";
+      luks.devices."luks-f3d8460b-b00c-4eba-ac46-e1b8478a46c8".device = "/dev/disk/by-uuid/f3d8460b-b00c-4eba-ac46-e1b8478a46c8";
     };
 
-    kernelPackages = pkgs.linuxPackages_zen;
+    kernelPackages = pkgs.linuxPackages_cachyos;
 
     kernelParams = [
       "splash"
@@ -25,7 +25,7 @@
       systemd-boot = {
         enable = true;
         editor = false;
-        configurationLimit = 0;
+        configurationLimit = 50;
       };
 
       timeout = 5;

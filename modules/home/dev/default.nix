@@ -16,7 +16,7 @@
     gnuplot
     hunspell
     hunspellDicts.en_US
-    gnuplot
+    cachix
   ];
 
   programs.direnv = {

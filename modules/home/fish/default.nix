@@ -29,19 +29,23 @@
     };
 
     functions = {
-      "pac-clean" = "command sudo pacman -Qdtq | command sudo pacman -Rns -";
       "tldr-fzf" = "tldr --list | fzf --preview 'tldr {1}' --preview-window right:70%";
       yy = ''
         set tmp (mktemp -t "yazi-cwd.XXXXXX")
         yazi $argv --cwd-file="$tmp"
-        if set cwd (cat -- "$tmp"); and test -n "$cwd"; and test "$cwd" != "$PWD"
+
+        # Use `tail -n 1` to robustly get the last line from the file,
+        # ignoring any extra verbose output Yazi might have added.
+        if set cwd (tail -n 1 -- "$tmp"); and test -n "$cwd"; and test "$cwd" != "$PWD"
           cd -- "$cwd"
         end
+
         rm -f -- "$tmp"
       '';
       rgfzf = ''
-        rg --color=always --line-number $argv | fzf --ansi \
-            --preview 'bat --style=numbers --color=always --line-range :500 {1}' \
+        rg --color=always --line-number --no-heading $argv | fzf --ansi \
+            --delimiter ':' \
+            --preview 'bat --style=numbers --color=always --highlight-line {2} {1}' \
             --preview-window 'right:60%:wrap'
       '';
 

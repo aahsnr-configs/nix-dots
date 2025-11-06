@@ -7,11 +7,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    app2unit = {
-      url = "github:Vladimir-csp/app2unit";
-      flake = false;
-    };
-
     catppuccin.url = "github:catppuccin/nix";
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
@@ -52,6 +47,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-doom-emacs-unstraightened = {
       url = "github:marienz/nix-doom-emacs-unstraightened";
       inputs.nixpkgs.follows = "";
@@ -83,18 +83,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    pyprland = {
-      url = "github:hyprland-community/pyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -102,43 +92,40 @@
 
     systems.url = "github:nix-systems/default-linux";
 
-    yazi = {
-      url = "github:sxyazi/yazi";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
+    # yazi = {
+    #   url = "github:sxyazi/yazi";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+    #
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs =
-    {
-      self,
-      home-manager,
-      emacs-overlay,
-      nixpkgs,
-      yazi,
-      nix-doom-emacs-unstraightened,
-      pyprland,
-      anyrun,
-      chaotic,
-      nvf,
-      ...
-    }@inputs:
-    let
-      system = "x86_64-linux";
-    in
-    {
-      nixosConfigurations = import ./hosts inputs;
+  outputs = {
+    self,
+    home-manager,
+    emacs-overlay,
+    nixpkgs,
+    nix-doom-emacs-unstraightened,
+    pyprland,
+    anyrun,
+    chaotic,
+    nvf,
+    niri,
+    ...
+  } @ inputs: let
+    system = "x86_64-linux";
+  in {
+    nixosConfigurations = import ./hosts inputs;
 
-      packages.${system} = {
-        #catppuccin-folders = pkgs.callPackage ./pkgs/catppuccin-folders.nix {};
-        #catppuccin-gtk = pkgs.callPackage ./pkgs/catppuccin-gtk.nix {};
-        #catppuccin-cursors = pkgs.callPackage ./pkgs/catppuccin-cursors.nix {};
-        #onlyoffice-deb = pkgs.callPackage ./pkgs/onlyoffice-bin.nix {};
-        #insync-deb = pkgs.callPackage ./pkgs/insync-deb.nix {};
-      };
+    packages.${system} = {
+      #catppuccin-folders = pkgs.callPackage ./pkgs/catppuccin-folders.nix {};
+      #catppuccin-gtk = pkgs.callPackage ./pkgs/catppuccin-gtk.nix {};
+      #catppuccin-cursors = pkgs.callPackage ./pkgs/catppuccin-cursors.nix {};
+      #onlyoffice-deb = pkgs.callPackage ./pkgs/onlyoffice-bin.nix {};
+      #insync-deb = pkgs.callPackage ./pkgs/insync-deb.nix {};
     };
+  };
 }

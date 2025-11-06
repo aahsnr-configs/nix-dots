@@ -1,12 +1,41 @@
 {
   config,
   pkgs,
+  inputs,
+  lib,
   ...
-}:
-
-let
+}: let
   # Path to DMS colors file
   dmsColorsPath = "${config.home.homeDirectory}/.config/DankMaterialShell/dms-colors.json";
+
+  # Define the DMS package for easier reference
+  dms-pkg = inputs.dankMaterialShell.packages.${pkgs.system}.default;
+
+  # A script to handle screenshots with grim, slurp, and swappy
+  screenshotScript = pkgs.writeShellScriptBin "niri-screenshot" ''
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    # Swappy's config will handle the save directory, but we ensure it exists.
+    mkdir -p "''${HOME}/Pictures/Screenshots"
+
+    MODE=$1
+
+    case "$MODE" in
+      full)
+        # Capture the entire focused output and pipe to swappy
+        ${pkgs.grim}/bin/grim - | ${pkgs.swappy}/bin/swappy -f -
+        ;;
+      select)
+        # Select a region or window with slurp, capture it with grim, and pipe to swappy
+        ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.swappy}/bin/swappy -f -
+        ;;
+      *)
+        echo "Usage: $0 {full|select}" >&2
+        exit 1
+        ;;
+    esac
+  '';
 
   # Default colors (used if DMS colors file doesn't exist yet)
   defaultColors = {
@@ -18,10 +47,9 @@ let
 
   # Read colors from DMS file, fallback to defaults if not found
   dmsColors =
-    if builtins.pathExists dmsColorsPath then
-      builtins.fromJSON (builtins.readFile dmsColorsPath)
-    else
-      defaultColors;
+    if builtins.pathExists dmsColorsPath
+    then builtins.fromJSON (builtins.readFile dmsColorsPath)
+    else defaultColors;
 
   # Extract colors with fallback to defaults
   colorConfig = {
@@ -33,9 +61,12 @@ let
     primaryAlpha = "${dmsColors.primary or defaultColors.primary}80";
     shadowAlpha = "${dmsColors.shadow or defaultColors.shadow}70";
   };
+in {
+  # Import the niri-flake home-manager module for settings support
+  imports = [
+    inputs.niri.homeModules.niri
+  ];
 
-in
-{
   programs.niri = {
     enable = true;
     package = pkgs.niri-unstable;
@@ -80,9 +111,6 @@ in
         "eDP-1".enable = false;
       };
 
-      # Screenshot path
-      screenshot-path = "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png";
-
       # Hotkey overlay
       hotkey-overlay.skip-at-startup = true;
 
@@ -92,10 +120,10 @@ in
         center-focused-column = "never";
 
         preset-column-widths = [
-          { proportion = 0.33333; }
-          { proportion = 0.5; }
-          { proportion = 0.66667; }
-          { proportion = 1.0; }
+          {proportion = 0.33333;}
+          {proportion = 0.5;}
+          {proportion = 0.66667;}
+          {proportion = 1.0;}
         ];
 
         default-column-width = {
@@ -150,7 +178,7 @@ in
         # Background color (transparent as per colors.kdl)
         background-color = null;
 
-        struts = { };
+        struts = {};
       };
 
       # Overview settings with shadow colors (DYNAMIC)
@@ -165,25 +193,35 @@ in
       # Window rules - applying to all windows by default
       window-rules = [
         {
-          geometry-corner-radius = 7.0;
+          geometry-corner-radius = {
+            top-left = 7.0;
+            top-right = 7.0;
+            bottom-left = 7.0;
+            bottom-right = 7.0;
+          };
           clip-to-geometry = true;
           draw-border-with-background = false;
         }
         {
-          matches = [ { app-id = "^org\\.wezfurlong\\.wezterm$"; } ];
-          default-column-width = { };
+          matches = [{app-id = "^org\\.wezfurlong\\.wezterm$";}];
+          default-column-width = {};
         }
         {
-          matches = [ { app-id = "^org\\.gnome\\."; } ];
+          matches = [{app-id = "^org\\.gnome\\.";}];
           draw-border-with-background = false;
-          geometry-corner-radius = 12.0;
+          geometry-corner-radius = {
+            top-left = 12.0;
+            top-right = 12.0;
+            bottom-left = 12.0;
+            bottom-right = 12.0;
+          };
           clip-to-geometry = true;
         }
         {
           matches = [
-            { app-id = "^gnome-control-center$"; }
-            { app-id = "^pavucontrol$"; }
-            { app-id = "^nm-connection-editor$"; }
+            {app-id = "^gnome-control-center$";}
+            {app-id = "^pavucontrol$";}
+            {app-id = "^nm-connection-editor$";}
           ];
           default-column-width = {
             proportion = 0.5;
@@ -192,27 +230,27 @@ in
         }
         {
           matches = [
-            { app-id = "^gnome-calculator$"; }
-            { app-id = "^galculator$"; }
-            { app-id = "^blueman-manager$"; }
-            { app-id = "^org\\.gnome\\.Nautilus$"; }
-            { app-id = "^steam$"; }
-            { app-id = "^xdg-desktop-portal$"; }
+            {app-id = "^gnome-calculator$";}
+            {app-id = "^galculator$";}
+            {app-id = "^blueman-manager$";}
+            {app-id = "^org\\.gnome\\.Nautilus$";}
+            {app-id = "^steam$";}
+            {app-id = "^xdg-desktop-portal$";}
           ];
           open-floating = true;
         }
         {
           matches = [
-            { app-id = "^org\\.wezfurlong\\.wezterm$"; }
-            { app-id = "Alacritty"; }
-            { app-id = "zen"; }
-            { app-id = "com.mitchellh.ghostty"; }
-            { app-id = "kitty"; }
+            {app-id = "^org\\.wezfurlong\\.wezterm$";}
+            {app-id = "Alacritty";}
+            {app-id = "zen";}
+            {app-id = "com.mitchellh.ghostty";}
+            {app-id = "kitty";}
           ];
           draw-border-with-background = false;
         }
         {
-          matches = [ { is-active = false; } ];
+          matches = [{is-active = false;}];
           opacity = 1.0;
         }
         {
@@ -221,7 +259,7 @@ in
               app-id = "zen$";
               title = "^Picture-in-Picture$";
             }
-            { app-id = "zoom"; }
+            {app-id = "zoom";}
           ];
           open-floating = true;
         }
@@ -230,11 +268,11 @@ in
       # Layer rules for DMS quickshell and wallpaper blur
       layer-rules = [
         {
-          matches = [ { namespace = "^quickshell$"; } ];
+          matches = [{namespace = "^quickshell$";}];
           place-within-backdrop = true;
         }
         {
-          matches = [ { namespace = "dms:blurwallpaper"; } ];
+          matches = [{namespace = "dms:blurwallpaper";}];
           place-within-backdrop = true;
         }
       ];
@@ -468,15 +506,15 @@ in
         "Mod+9".action = focus-workspace 9;
 
         # Move to Numbered Workspaces
-        "Mod+Shift+1".action = move-column-to-workspace 1;
-        "Mod+Shift+2".action = move-column-to-workspace 2;
-        "Mod+Shift+3".action = move-column-to-workspace 3;
-        "Mod+Shift+4".action = move-column-to-workspace 4;
-        "Mod+Shift+5".action = move-column-to-workspace 5;
-        "Mod+Shift+6".action = move-column-to-workspace 6;
-        "Mod+Shift+7".action = move-column-to-workspace 7;
-        "Mod+Shift+8".action = move-column-to-workspace 8;
-        "Mod+Shift+9".action = move-column-to-workspace 9;
+        "Mod+Shift+1".action = {"move-column-to-workspace" = 1;};
+        "Mod+Shift+2".action = {"move-column-to-workspace" = 2;};
+        "Mod+Shift+3".action = {"move-column-to-workspace" = 3;};
+        "Mod+Shift+4".action = {"move-column-to-workspace" = 4;};
+        "Mod+Shift+5".action = {"move-column-to-workspace" = 5;};
+        "Mod+Shift+6".action = {"move-column-to-workspace" = 6;};
+        "Mod+Shift+7".action = {"move-column-to-workspace" = 7;};
+        "Mod+Shift+8".action = {"move-column-to-workspace" = 8;};
+        "Mod+Shift+9".action = {"move-column-to-workspace" = 9;};
 
         # Column Management
         "Mod+BracketLeft".action = consume-or-expel-window-left;
@@ -497,13 +535,10 @@ in
         "Mod+Shift+Minus".action = set-window-height "-10%";
         "Mod+Shift+Equal".action = set-window-height "+10%";
 
-        # Screenshots
-        "XF86Launch1".action = screenshot;
-        "Ctrl+XF86Launch1".action = screenshot-screen;
-        "Alt+XF86Launch1".action = screenshot-window;
-        "Print".action = screenshot;
-        "Ctrl+Print".action = screenshot-screen;
-        "Alt+Print".action = screenshot-window;
+        # Screenshots (using grim, slurp, and swappy)
+        "Ctrl+Print".action = spawn "${screenshotScript}/bin/niri-screenshot" "full";
+        "Mod+Shift+S".action = spawn "${screenshotScript}/bin/niri-screenshot" "select";
+        "Alt+Print".action = spawn "${screenshotScript}/bin/niri-screenshot" "select";
 
         # Audio Controls
         "XF86AudioRaiseVolume" = {
@@ -540,36 +575,20 @@ in
         };
         "Mod+Shift+P".action = power-off-monitors;
       };
-
-      # Debug options
-      debug.honor-xdg-activation-with-invalid-serial = true;
     };
   };
 
-  # Create backup directory for config files
-  home.file.".config/niri/backups/.keep".text = "";
-
-  # Helper script to view current colors
+  # Add packages required by niri and its ecosystem
   home.packages = with pkgs; [
     wayland-utils
     cage
     xwayland-satellite-unstable
-    (writeShellScriptBin "niri-show-colors" ''
-      #!/usr/bin/env bash
-      echo "Current Niri Colors (from DMS):"
-      echo "================================"
-      echo "Primary (active):    ${colorConfig.primary}"
-      echo "Inactive:            ${colorConfig.inactive}"
-      echo "Urgent:              ${colorConfig.urgent}"
-      echo "Shadow:              ${colorConfig.shadowAlpha}"
-      echo "Insert Hint:         ${colorConfig.primaryAlpha}"
-      echo ""
-      echo "Source: ${dmsColorsPath}"
-      if [ -f "${dmsColorsPath}" ]; then
-        echo "Status: ✓ Colors loaded from DMS"
-      else
-        echo "Status: ⚠️ Using default colors (DMS not initialized)"
-      fi
-    '')
+    # Explicitly list packages for keybindings and screenshot script
+    nautilus
+    file-roller
+    grim
+    slurp
+    swappy
+    screenshotScript
   ];
 }

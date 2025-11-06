@@ -4,9 +4,7 @@
   config,
   lib,
   ...
-}:
-
-let
+}: let
   # Path to home-manager flake configuration
   flakeDir = "${config.home.homeDirectory}/.config/home-manager";
 
@@ -73,12 +71,12 @@ let
       if home-manager switch --flake "$FLAKE_DIR"; then
         log "✓ Home-manager rebuild successful"
         log "✓ Niri will automatically reload with new colors"
-        
+
         # Extract and log the new colors
         PRIMARY=$(${pkgs.jq}/bin/jq -r '.primary // "#b1c5ff"' "$DMS_COLORS")
         INACTIVE=$(${pkgs.jq}/bin/jq -r '.surfaceVariantText // "#8f9099"' "$DMS_COLORS")
         URGENT=$(${pkgs.jq}/bin/jq -r '.error // "#ffb4ab"' "$DMS_COLORS")
-        
+
         log "New colors applied:"
         log "  Primary: $PRIMARY"
         log "  Inactive: $INACTIVE"
@@ -90,16 +88,15 @@ let
       error "home-manager command not found in PATH"
     fi
   '';
-
-in
-{
+in {
   imports = [
     inputs.dankMaterialShell.homeModules.dankMaterialShell.default
+    inputs.dankMaterialShell.homeModules.dankMaterialShell.niri
   ];
 
   programs.dankMaterialShell = {
     enable = true;
-    enableSystemd = true;
+    niri.enableSpawn = true;
     quickshell.package = inputs.quickshell.packages.${pkgs.system}.default;
     default.settings = {
       theme = "dark";
@@ -188,8 +185,7 @@ in
       Environment = [
         "PATH=${
           lib.makeBinPath (
-            with pkgs;
-            [
+            with pkgs; [
               nix
               git
               jq
@@ -217,7 +213,7 @@ in
   systemd.user.paths.watch-dms-colors = {
     Unit = {
       Description = "Watch for DMS color changes";
-      After = [ "graphical-session.target" ];
+      After = ["graphical-session.target"];
     };
 
     Path = {
@@ -232,7 +228,7 @@ in
     };
 
     Install = {
-      WantedBy = [ "default.target" ];
+      WantedBy = ["default.target"];
     };
   };
 
@@ -305,7 +301,7 @@ in
   '';
 
   # Ensure DMS config directory exists
-  home.activation.setupDmsDirectories = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  home.activation.setupDmsDirectories = lib.hm.dag.entryAfter ["writeBoundary"] ''
     $DRY_RUN_CMD mkdir -p ${config.home.homeDirectory}/.config/DankMaterialShell
     $DRY_RUN_CMD mkdir -p ${config.home.homeDirectory}/.config/niri/backups
   '';
