@@ -122,7 +122,7 @@ in {
 
       # Layout configuration
       layout = {
-        gaps = 7;
+        gaps = 10;
         center-focused-column = "never";
 
         preset-column-widths = [
@@ -200,10 +200,10 @@ in {
       window-rules = [
         {
           geometry-corner-radius = {
-            top-left = 7.0;
-            top-right = 7.0;
-            bottom-left = 7.0;
-            bottom-right = 7.0;
+            top-left = 10.0;
+            top-right = 10.0;
+            bottom-left = 10.0;
+            bottom-right = 10.0;
           };
           clip-to-geometry = true;
           draw-border-with-background = false;

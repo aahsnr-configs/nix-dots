@@ -2886,7 +2886,6 @@ This provides a full-featured environment for creating and executing Gnuplot scr
   (gnuplot-default-term 'pdfcairo))
 #+end_src
 
-
 * Enhanced Window, Buffer & General Keybindings
 This section adds Spacemacs-like keybindings for efficient window, buffer,
 and general workflow management. The bindings are organized under logical and
