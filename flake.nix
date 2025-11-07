@@ -52,6 +52,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    niri-switch.url = "github:Kiki-Bouba-Team/niri-switch";
+
     nix-doom-emacs-unstraightened = {
       url = "github:marienz/nix-doom-emacs-unstraightened";
       inputs.nixpkgs.follows = "";

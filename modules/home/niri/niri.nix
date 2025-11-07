@@ -72,6 +72,12 @@ in {
     package = pkgs.niri-unstable;
 
     settings = {
+      spawn-at-startup = [
+        {argv = ["niri-switch-daemon"];}
+        # {argv = ["swaybg" "--image" "/path/to/wallpaper.jpg"];}
+        # {argv = ["~/.config/niri/scripts/startup.sh"];}
+      ];
+
       # Prefer no client-side decorations
       prefer-no-csd = true;
 
@@ -568,6 +574,8 @@ in {
           allow-inhibiting = false;
         };
         "Mod+Shift+P".action = power-off-monitors;
+
+        "Alt+Tab".action = spawn "niri-switch";
       };
     };
   };
@@ -583,5 +591,6 @@ in {
     slurp
     swappy
     screenshotScript
+    inputs.niri-switch.packages.${system}.default
   ];
 }

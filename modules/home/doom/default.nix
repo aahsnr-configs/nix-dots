@@ -16,6 +16,5 @@
     tangleArgs = "--all config.org";
     experimentalFetchTree = true;
   };
-
-  services.emacs.enable = true;
+  # services.emacs.enable = true;
 }

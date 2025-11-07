@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-{
-
+{pkgs, ...}: {
   hardware.ledger.enable = true;
 
   systemd.coredump.enable = false;
@@ -10,7 +8,7 @@
     haveged.enable = true;
     sysstat.enable = true;
     networkd-dispatcher.enable = true;
-    #dbus.apparmor = "enabled";
+    dbus.apparmor = "enabled";
   };
 
   programs.atop.atopacctService.enable = true;
@@ -41,7 +39,7 @@
     rtkit.enable = true;
     virtualisation.flushL1DataCache = "always";
     forcePageTableIsolation = true;
-    sudo.package = pkgs.sudo.override { withInsults = true; };
+    sudo.package = pkgs.sudo.override {withInsults = true;};
     apparmor = {
       enable = true;
       enableCache = true;
@@ -59,12 +57,13 @@
     };
     audit = {
       enable = true;
-      rules = [ "-a exit,always -F arch=b64 -S execve" ];
+      rules = ["-a exit,always -F arch=b64 -S execve"];
       backlogLimit = 32;
       failureMode = "printk";
     };
     auditd.enable = true;
     pam = {
+      services.ahsan.enableGnomeKeyring = true;
       loginLimits = [
         {
           domain = "*";
@@ -73,10 +72,6 @@
           value = "0";
         }
       ];
-      # services = {
-      #   # hyprlock = { };
-      #   greetd.enableGnomeKeyring = true;
-      # };
     };
   };
 }

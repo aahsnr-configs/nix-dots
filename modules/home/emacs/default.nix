@@ -3,7 +3,7 @@
     (pkgs.emacsWithPackagesFromUsePackage {
       config = ./config.org;
       defaultInitFile = true;
-      package = pkgs.emacs-unstable-pgtk;
+      package = pkgs.emacs-pgtk;
       alwaysEnsure = false;
       alwaysTangle = true;
       extraEmacsPackages = epkgs:

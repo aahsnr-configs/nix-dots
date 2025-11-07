@@ -47,8 +47,8 @@
     ./btop
     ./cliphist
     ./dev
-    ./doom
-    #./emacs
+    #./doom
+    ./emacs
     ./eza
     ./fd-find
     ./fish
@@ -68,7 +68,7 @@
     ./pay-respects
     ./pkgs
     ./polkit
-    #./python
+    ./python
     ./ripgrep
     ./schizofox
     ./starship

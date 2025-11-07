@@ -140,11 +140,12 @@
 
 ** Jupyter
 #+begin_src emacs-lisp
-(setq org-babel-default-header-args:jupyter-python '((:async . "yes")
-                                                     (:session . "py")
-                                                     (:kernel . "python3")))
+(after! ob-jupyter
+  (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
+                                                       (:session . "py")
+                                                       (:kernel . "python3")))
 
-(setq ob-async-no-async-languages-alist '("jupyter-python"))
+  (setq ob-async-no-async-languages-alist '("jupyter-python")))
 #+end_src
 
 ** Projectile
@@ -359,7 +360,7 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 
   (require 'org-tempo)
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("py" . "src jupyter-python"))
   (add-to-list 'org-structure-template-alist '("sq" . "src sql")))
 
 

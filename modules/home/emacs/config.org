@@ -13,7 +13,7 @@ This section incorporates the sensible defaults and settings from the minimal-em
 ** Startup Performance
 #+begin_src emacs-lisp
 ;; --- Defer Garbage Collection ---
-(setq gc-cons-threshold 200000000)
+(setq gc-cons-threshold 100000000)
 
 (setq read-process-output-max (* 3 1024 1024)) ;; 3mb
 ;; --- Defer UI Elements ---
@@ -337,9 +337,9 @@ This setup defines a robust function to find and set the best available font fro
 #+begin_src emacs-lisp
 (defun ar/set-fonts ()
   "Set the default, fixed-pitch, and variable-pitch fonts for the current frame."
-  (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 140 :weight 'medium)
-  (set-face-attribute 'fixed-pitch nil :font "JetBrainsMono Nerd Font" :height 140 :weight 'medium)
-  (set-face-attribute 'variable-pitch nil :font "JetBrainsMono Nerd Font" :height 140 :weight 'medium)
+  (set-face-attribute 'default nil :font "JetBrains Mono" :height 120 :weight 'medium)
+  (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 120 :weight 'medium)
+  (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height 120 :weight 'medium)
   ;; Apply italic slant to comments and keywords for visual distinction
   (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
   (set-face-attribute 'font-lock-keyword-face nil :slant 'italic))
@@ -1608,29 +1608,23 @@ This package streamlines adding images and screenshots to Org mode, using the *s
   :config
   (global-lsp-bridge-mode)
 
-  ;;This provides: basedpyright for completion/navigation + ruff for linting/formatting
+  ;; This provides: basedpyright for completion/navigation + ruff for linting/formatting
   (setq lsp-bridge-python-multi-lsp-server "basedpyright_ruff"
         lsp-bridge-tex-lsp-server "texlab"
-        lsp-bridge-nix-lsp-server "nil")
+        lsp-bridge-nix-lsp-server "nil"
+        lsp-bridge-org-babel-lang-list nil)
 
-  ;;Asynchronous Completion
-  (setq acm-enable-doc t
+  ;; Asynchronous Completion
+  (setq acm-enable-doc nil
+        acm-enable-jupyter t
         acm-enable-doc-markdown-render 'async
         acm-enable-icon t
         acm-candidate-match-function 'orderless-literal
         acm-backend-search-file-words-enable-fuzzy-match t)
 
-  (setq lsp-bridge-enable-inlay-hint t
-        lsp-bridge-enable-hover-diagnostic t
+  (setq lsp-bridge-enable-hover-diagnostic t
         lsp-bridge-enable-auto-format-code t
-        lsp-bridge-enable-org-babel t)
-
-  ;;Performance optimization
-  (setq lsp-bridge-completion-popup-predicates
-        '(lsp-bridge-not-match-stop-commands
-          lsp-bridge-not-match-hide-characters
-          lsp-bridge-not-in-string
-          lsp-bridge-not-in-org-table)))
+        lsp-bridge-enable-org-babel t))
 #+end_src
 
 * Workflow Management

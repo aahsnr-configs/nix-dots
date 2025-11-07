@@ -2,6 +2,7 @@
   home.packages = with pkgs; [
     basedpyright
     ruff
+    mutmut
     (python313.withPackages (python-pkgs:
       with python-pkgs; [
         pandas
@@ -22,7 +23,6 @@
         coverage
         pytest-cov
         pytest-benchmark
-        mutmut
         pytest-xdist
       ]))
   ];
