@@ -111,15 +111,14 @@
         lsp-bridge-org-babel-lang-list nil)
 
   ;; Asynchronous Completion
-  (setq acm-enable-doc t
-        ;; acm-enable-jupyter t
+  (setq acm-enable-doc nil
+        acm-enable-jupyter t
         acm-enable-doc-markdown-render 'async
         acm-enable-icon t
         acm-candidate-match-function 'orderless-literal
         acm-backend-search-file-words-enable-fuzzy-match t)
 
-  (setq lsp-bridge-enable-inlay-hint t
-        lsp-bridge-enable-hover-diagnostic t
+  (setq lsp-bridge-enable-hover-diagnostic t
         lsp-bridge-enable-auto-format-code t
         lsp-bridge-enable-org-babel t))
 #+end_src
@@ -189,7 +188,7 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 
 * Sensible Defaults
 #+begin_src emacs-lisp
-(global-so-long-mode 1)
+;; (global-so-long-mode 1)
 
 (after! evil
   (setq evil-want-fine-undo t
@@ -233,7 +232,7 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
 (setq split-width-threshold 170
       split-height-threshold nil)
 
-(setq gc-cons-threshold (* 100 1024 1024))
+;; (setq gc-cons-threshold (* 100 1024 1024))
 
 
 (setq-default bidi-inhibit-bpa t) ;; Emacs 27+ recommended
@@ -348,15 +347,15 @@ Configuration for Emacs's built-in file manager, `dired`. We set custom listing 
           (sequence "PLAN(P)" "ACTIVE(A)" "PAUSED(x)" "|" "ACHIEVED(a)" "DROPPED(D)")))
 
   ;; Set custom faces for scaled org headers to improve visual hierarchy.
-  (custom-set-faces!
-    '(org-level-1 :inherit 'variable-pitch :weight bold :height 1.2)
-    '(org-level-2 :inherit 'variable-pitch :weight bold :height 1.13)
-    '(org-level-3 :inherit 'variable-pitch :weight bold :height 1.10)
-    '(org-level-4 :inherit 'variable-pitch :weight bold :height 1.07)
-    '(org-level-5 :inherit 'variable-pitch :weight bold :height 1.05)
-    '(org-level-6 :inherit 'variable-pitch :weight bold :height 1.03)
-    '(org-level-7 :inherit 'variable-pitch :weight bold :height 1.02)
-    '(org-level-8 :inherit 'variable-pitch :weight bold :height 1.0))
+  ;; (custom-set-faces!
+  ;;   '(org-level-1 :inherit 'variable-pitch :weight bold :height 1.2)
+  ;;   '(org-level-2 :inherit 'variable-pitch :weight bold :height 1.13)
+  ;;   '(org-level-3 :inherit 'variable-pitch :weight bold :height 1.10)
+  ;;   '(org-level-4 :inherit 'variable-pitch :weight bold :height 1.07)
+  ;;   '(org-level-5 :inherit 'variable-pitch :weight bold :height 1.05)
+  ;;   '(org-level-6 :inherit 'variable-pitch :weight bold :height 1.03)
+  ;;   '(org-level-7 :inherit 'variable-pitch :weight bold :height 1.02)
+  ;;   '(org-level-8 :inherit 'variable-pitch :weight bold :height 1.0))
 
   (require 'org-tempo)
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))

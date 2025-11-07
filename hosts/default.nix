@@ -8,7 +8,7 @@
 }: let
   inputs = self.inputs;
   system = ../modules/system;
-  #laptop = nixos-hardware.nixosModules.asus-zephyrus-ga401;
+  laptop = nixos-hardware.nixosModules.asus-zephyrus-ga401;
   chaotic_nix = chaotic.homeManagerModules.default;
   hmModule = inputs.home-manager.nixosModules.home-manager;
   caTppuccin = catppuccin.nixosModules.catppuccin;
@@ -54,6 +54,7 @@ in {
       hmModule
       caTppuccin
       chaotic_nix
+      laptop
       {inherit home-manager;}
     ];
     specialArgs = {inherit inputs;};

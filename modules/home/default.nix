@@ -45,12 +45,8 @@
     ./bat
     ./brave
     ./btop
-    #./caelestia
-    # -- managed by dms --
-    #./catppuccin
     ./cliphist
     ./dev
-    #./dms
     ./doom
     #./emacs
     ./eza
@@ -72,6 +68,7 @@
     ./pay-respects
     ./pkgs
     ./polkit
+    #./python
     ./ripgrep
     ./schizofox
     ./starship

@@ -49,6 +49,7 @@
       brokerPackage = pkgs.dbus-broker;
       dbusPackage = pkgs.dbus;
     };
+    power-profiles-daemon.enable = true;
     flatpak.enable = true;
     sysprof.enable = true;
     udisks2.enable = true;

@@ -7,7 +7,7 @@
     #./hyprland
     ./kernel
     ./logind
-    #./ly
+    ./ly
     ./misc
     ./network
     ./nix

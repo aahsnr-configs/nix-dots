@@ -127,7 +127,7 @@ in {
         ];
 
         default-column-width = {
-          proportion = 0.4;
+          #proportion = 0.4;
         };
 
         # Border configuration (disabled, using focus-ring instead)
@@ -340,13 +340,6 @@ in {
             damping-ratio = 0.65;
             stiffness = 923;
             epsilon = 0.001;
-          };
-        };
-
-        screenshot-ui-open.kind = {
-          easing = {
-            duration-ms = 200;
-            curve = "ease-out-quad";
           };
         };
 
@@ -584,7 +577,6 @@ in {
     wayland-utils
     cage
     xwayland-satellite-unstable
-    # Explicitly list packages for keybindings and screenshot script
     nautilus
     file-roller
     grim

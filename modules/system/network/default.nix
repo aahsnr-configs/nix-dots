@@ -2,7 +2,7 @@
   networking = {
     networkmanager = {
       enable = true;
-      wifi.powersave = false;
+      #wifi.powersave = false;
     };
     firewall = {
       enable = true;
