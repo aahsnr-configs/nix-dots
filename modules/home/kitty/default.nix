@@ -5,7 +5,7 @@
     # Font Configuration
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 13;
+      size = 12.5;
     };
 
     # Shell Integration
@@ -20,12 +20,12 @@
 
       # Window Settings
       remember_window_size = "yes";
-      initial_window_width = 640;
-      initial_window_height = 400;
-      window_padding_width = 4;
+      initial_window_width = 500;
+      initial_window_height = 300;
+      window_padding_width = 3;
       window_margin_width = 0;
       single_window_margin_width = -1;
-      window_border_width = "0.5pt";
+      window_border_width = "1.0pt";
       draw_minimal_borders = true;
       placement_strategy = "center";
       hide_window_decorations = "no";

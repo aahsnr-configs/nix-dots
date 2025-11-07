@@ -194,11 +194,6 @@ This section incorporates the sensible defaults and settings from the minimal-em
       user-mail-address "ahsanur041@proton.me")
 #+end_src
 
-** Custom Functions
-*** Jupyter Helper Function
-#+begin_src emacs-lisp
-#+end_src
-
 ** Frame Title Formatting
 #+begin_src emacs-lisp
 (setq-default
@@ -724,27 +719,27 @@ A small internal border is added around the frame to create visual breathing roo
 This provides a declarative way to control where and how special-purpose buffers
 appear, ensuring a consistent and predictable windowing layout.
 #+begin_src emacs-lisp
-(use-package shackle
-  :ensure t
-  :hook (after-init . shackle-mode)
-  :config
-  (setq shackle-rules
-   '(;; FIX: Add this rule at the beginning to prevent Shackle from managing Treemacs.
-     ;; This allows Treemacs to use its own logic for side-window placement.
-     ;;("^\\*treemacs.*\\*$" :side left :size 35)
-     ;; Rule for Help buffers
-     ("\\`\\*Help" :align bottom :size 0.3)
-     ;; Rule for compilation/grep/etc.
-     ("^\\*.*compilation.*\\*$" :align bottom :size 0.3)
-     ("^\\*grep.*\\*$" :align bottom :size 0.3)
-     ;; Rule for Embark
-     ("\\`\\*Embark Collect" :align bottom :size 0.25)
-     ;; Rules for the debugger (dape)
-     ("\\`\\*dap-repl" :align right :size 0.4)
-     ("\\`\\*dap-locals" :align right :size 0.4)
-     ("\\`\\*dap-breakpoints" :align right :size 0.4)
-     ("\\`\\*dap-sessions" :align right :size 0.4))
-   shackle-inhibit-window-quit-on-same-buffer t))
+;; (use-package shackle
+;;   :ensure t
+;;   :hook (after-init . shackle-mode)
+;;   :config
+;;   (setq shackle-rules
+;;    '(;; FIX: Add this rule at the beginning to prevent Shackle from managing Treemacs.
+;;      ;; This allows Treemacs to use its own logic for side-window placement.
+;;      ;;("^\\*treemacs.*\\*$" :side left :size 35)
+;;      ;; Rule for Help buffers
+;;      ("\\`\\*Help" :align bottom :size 0.3)
+;;      ;; Rule for compilation/grep/etc.
+;;      ("^\\*.*compilation.*\\*$" :align bottom :size 0.3)
+;;      ("^\\*grep.*\\*$" :align bottom :size 0.3)
+;;      ;; Rule for Embark
+;;      ("\\`\\*Embark Collect" :align bottom :size 0.25)
+;;      ;; Rules for the debugger (dape)
+;;      ("\\`\\*dap-repl" :align right :size 0.4)
+;;      ("\\`\\*dap-locals" :align right :size 0.4)
+;;      ("\\`\\*dap-breakpoints" :align right :size 0.4)
+;;      ("\\`\\*dap-sessions" :align right :size 0.4))
+;;    shackle-inhibit-window-quit-on-same-buffer t))
 #+end_src
 
 ** TODO Combobulate
@@ -851,40 +846,56 @@ appear, ensuring a consistent and predictable windowing layout.
 * Completion Framework
 ** Orderless for Advanced Filtering
 #+begin_src emacs-lisp
-  (use-package orderless
-    :ensure t
-    :config
-    ;; Configuration to be evaluated before the package is loaded.
-    ;; Define a special, more restrictive completion style for Corfu.
-    ;; This style only matches characters literally and in order, which prevents
-    ;; the auto-completion popup from feeling chaotic.
-    (orderless-define-completion-style orderless-literal-only
-      (orderless-style-dispatchers nil)
-      (orderless-matching-styles '(orderless-literal)))
+(use-package orderless
+  :ensure t
+  :demand t
+  :config
 
-    ;; Use a hook to apply our special style only when Corfu is active.
-    ;; This is the key to having powerful filtering for commands (like M-x)
-    ;; but simple, predictable filtering for auto-completion.
-    (add-hook 'corfu-mode-hook
-              (lambda ()
-                (setq-local completion-styles '(orderless-literal-only basic)
-                            completion-category-overrides nil
-                            completion-category-defaults nil)))
+  (defun +orderless--consult-suffix ()
+    "Regexp which matches the end of string with Consult tofu support."
+    (if (boundp 'consult--tofu-regexp)
+        (concat consult--tofu-regexp "*\\'")
+      "\\'"))
 
-    ;; Global settings managed by use-package.
-    :custom
-    ;; Use orderless as the primary completion style globally.
-    (completion-styles '(orderless basic))
-    (completion-category-defaults nil)
+  ;; Recognizes the following patterns:
+  ;; * .ext (file extension)
+  ;; * regexp$ (regexp matching at end)
+  (defun +orderless-consult-dispatch (word _index _total)
+    (cond
+     ;; Ensure that $ works with Consult commands, which add disambiguation suffixes
+     ((string-suffix-p "$" word)
+      `(orderless-regexp . ,(concat (substring word 0 -1) (+orderless--consult-suffix))))
+     ;; File extensions
+     ((and (or minibuffer-completing-file-name
+               (derived-mode-p 'eshell-mode))
+           (string-match-p "\\`\\.." word))
+      `(orderless-regexp . ,(concat "\\." (substring word 1) (+orderless--consult-suffix))))))
 
-    ;; Use standard completion for file paths for a more predictable experience.
-    (orderless-component-separator #'orderless-escapable-split-on-space)
-    (completion-category-overrides '((file (styles basic partial-completion))))
+  ;; Define orderless style with initialism by default
+  (orderless-define-completion-style +orderless-with-initialism
+    (orderless-matching-styles '(orderless-initialism orderless-literal orderless-regexp)))
 
-    ;; Add dispatchers for more precise filtering (e.g., =literal, %regexp)
-    ;; This enables advanced features for Consult/Vertico.
-    (orderless-dispatchers
-     '(orderless-consult-dispatch orderless-affix-dispatch)))
+  ;; Certain dynamic completion tables (completion-table-dynamic) do not work
+  ;; properly with orderless. One can add basic as a fallback.  Basic will only
+  ;; be used when orderless fails, which happens only for these special
+  ;; tables. Also note that you may want to configure special styles for special
+  ;; completion categories, e.g., partial-completion for files.
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        ;;; Enable partial-completion for files.
+        ;;; Either give orderless precedence or partial-completion.
+        ;;; Note that completion-category-overrides is not really an override,
+        ;;; but rather prepended to the default completion-styles.
+        ;; completion-category-overrides '((file (styles orderless partial-completion))) ;; orderless is tried first
+        completion-category-overrides '((file (styles partial-completion)) ;; partial-completion is tried first
+                                        ;; enable initialism by default for symbols
+                                        (command (styles +orderless-with-initialism))
+                                        (variable (styles +orderless-with-initialism))
+                                        (symbol (styles +orderless-with-initialism)))
+        orderless-component-separator #'orderless-escapable-split-on-space ;; allow escaping space with backslash!
+        orderless-style-dispatchers (list #'+orderless-consult-dispatch
+                                          #'orderless-kwd-dispatch
+                                          #'orderless-affix-dispatch)))
 #+end_src
 
 ** Vertico: The Vertical Completion UI
@@ -962,18 +973,35 @@ appear, ensuring a consistent and predictable windowing layout.
   (setq consult-preview-key 'any)
 
   :config
-    (setq consult-buffer-sources
-        '(consult--source-recent-file
-          consult--source-bookmark))
-    ;; Configure preview keys for various commands.
-  ;; A delayed preview is used to avoid performance issues.
+  ;; Define a custom buffer source that only shows file-visiting buffers
+  ;; This mimics Doom Emacs behavior where only "real" file buffers are shown
+  (defvar consult--source-file-visiting-buffer
+    `(:name "Main"
+      :narrow ?f
+      :category buffer
+      :face consult-buffer
+      :history buffer-name-history
+      :state ,#'consult--buffer-state
+      :default t
+      :items ,(lambda ()
+                (consult--buffer-query
+                 :sort 'visibility
+                 :predicate (lambda (buf)
+                              ;; Only show buffers that are visiting files
+                              (buffer-file-name buf))
+                 :as #'buffer-name)))
+    "Buffer source for file-visiting buffers only.")
+
+  ;; Configure consult-buffer to show file-visiting buffers, recent files, and bookmarks
+  ;; File-visiting buffers appear under "Files" headline
+  ;; Recent files and bookmarks provide additional navigation options
+  (setq consult-buffer-sources
+        '(consult--source-file-visiting-buffer))
+  
   (consult-customize
-   consult-ripgrep consult-git-grep consult-grep consult-man
-   consult-bookmark consult-recent-file consult-xref
-   consult--source-recent-file consult--source-project-recent-file
-   consult--source-bookmark consult--source-file-register
-   
-    consult--source-project-recent-file
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file
+   consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
    :preview-key "C-SPC"))
 #+end_src
 
@@ -1299,7 +1327,7 @@ Configure code block execution and create handy shortcuts for inserting common s
   (require 'org-tempo)
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-  (add-to-list 'org-structure-template-alist '("py" . "src python")))
+  (add-to-list 'org-structure-template-alist '("py" . "src jupyter-python")))
 #+end_src
 
 ** Visual Enhancements
@@ -2856,4 +2884,54 @@ This provides a full-featured environment for creating and executing Gnuplot scr
   ;; interactive default. Other options include 'wxt', 'x11', or file-based
   ;; terminals like 'pngcairo' or 'svg'.
   (gnuplot-default-term 'pdfcairo))
+#+end_src
+
+
+* Enhanced Window, Buffer & General Keybindings
+This section adds Spacemacs-like keybindings for efficient window, buffer,
+and general workflow management. The bindings are organized under logical and
+non-conflicting prefixes.
+#+begin_src emacs-lisp
+(ar/global-leader
+  ;; --- Window Management ---
+  "w" '(:ignore t :wk "windows")
+  "w /" '(evil-window-vsplit :wk "Split Vertically")
+  "w -" '(evil-window-split :wk "Split Horizontally")
+  "w d" '(delete-window :wk "Delete Window")
+  "w c" '(delete-other-windows :wk "Delete Other Windows")
+  "w w" '(other-window :wk "Other Window")
+  "w h" '(windmove-left :wk "Window Left")
+  "w j" '(windmove-down :wk "Window Down")
+  "w k" '(windmove-up :wk "Window Up")
+  "w l" '(windmove-right :wk "Window Right")
+  "w s" '(evil-window-swap :wk "Swap Windows")
+  "w n" '(next-buffer :wk "Next Buffer")
+  "w p" '(previous-buffer :wk "Previous Buffer")
+
+  ;; --- Buffer Management ---
+  "b" '(:ignore t :wk "buffers")
+  "b b" '(consult-buffer :wk "Switch Buffer")
+  "b i" '(ibuffer :wk "List Buffers (Ibuffer)")
+  "b k" '(kill-current-buffer :wk "Kill Current Buffer")
+  "b K" '(kill-other-buffers :wk "Kill Other Buffers")
+  "b s" '(save-buffer :wk "Save Buffer")
+  "b m" '(bookmark-set :wk "Bookmark Current Buffer")
+  "b B" '(consult-bookmark :wk "Bookmarks")
+  "b r" '(rename-buffer :wk "Rename Buffer")
+  "b R" '(revert-buffer :wk "Revert Buffer")
+
+  ;; --- Quality-of-Life & Navigation ---
+  "/" '(:ignore t :wk "search")
+  "/ /" '(consult-line :wk "Search Line in Buffer")
+  "/ p" '(consult-ripgrep :wk "Search Project (Ripgrep)")
+
+  "." '(:ignore t :wk "jump")
+  ". l" '(consult-goto-line :wk "Jump to Line")
+  ". m" '(consult-mark :wk "Jump to Mark")
+  ". j" '(consult-jump-list :wk "Jump List (Evil)")
+
+  "t" '(:ignore t :wk "toggle")
+  "t n" '(display-line-numbers-mode :wk "Toggle Line Numbers")
+  "t t" '(toggle-truncate-lines :wk "Toggle Truncate Lines")
+  "t f" '(display-fill-column-indicator-mode :wk "Toggle Fill Column Indicator"))
 #+end_src
