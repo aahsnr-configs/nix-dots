@@ -3,11 +3,11 @@
     #./asus
     ./bluetooth
     ./catppuccin
+    ./greeter
     ./hardware
     #./hyprland
     ./kernel
     ./logind
-    ./ly
     ./misc
     ./network
     ./nix
@@ -19,7 +19,6 @@
     ./security
     ./sound
     ./systemd
-    #./thunar
     ./users
     ./zram
   ];
