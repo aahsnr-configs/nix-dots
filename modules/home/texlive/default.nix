@@ -2,7 +2,7 @@
   tex = pkgs.texlive.combine {
     inherit
       (pkgs.texlive)
-      scheme-minimal
+      scheme-medium
       metapost
       xetex
       dvisvgm
@@ -20,11 +20,10 @@
   };
 in {
   home.packages = with pkgs; [
-    texliveFull
+    tex
     texlab
     tectonic
     ghostscript
     imagemagick
-    texlivePackages.cascadia-code
   ];
 }

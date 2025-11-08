@@ -46,5 +46,6 @@
     cmake
     ninja
     pkg-config
+    tuigreet
   ];
 }

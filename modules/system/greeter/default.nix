@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   services.greetd = {
     enable = true;
     settings = {
@@ -7,7 +7,7 @@
       };
       default_session = {
         user = "greeter";
-        command = "dms-greeter --command niri";
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --command niri";
       };
     };
   };

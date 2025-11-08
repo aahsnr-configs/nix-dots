@@ -107,51 +107,51 @@ This section incorporates the sensible defaults and settings from the minimal-em
 ** General Behaviour
 #+begin_src emacs-lisp
 ;; Allow for shorter "y" or "n" responses.
-  (defalias 'yes-or-no-p 'y-or-n-p)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
-  ;; Allow nested minibuffers.
-  (setq enable-recursive-minibuffers t)
+;; Allow nested minibuffers.
+(setq enable-recursive-minibuffers t)
 
-  ;; Keep the cursor out of the read-only portions of the minibuffer.
-  (setq minibuffer-prompt-properties
-        '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+;; Keep the cursor out of the read-only portions of the minibuffer.
+(setq minibuffer-prompt-properties
+      '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-  ;; No beeping or blinking on errors.
-  (setq ring-bell-function 'ignore)
-  (setq visible-bell nil)
+;; No beeping or blinking on errors.
+(setq ring-bell-function 'ignore)
+(setq visible-bell nil)
 
-  ;; Disable the obsolete practice of end-of-line spacing from the typewriter era.
-  (setq sentence-end-double-space nil)
+;; Disable the obsolete practice of end-of-line spacing from the typewriter era.
+(setq sentence-end-double-space nil)
 
-  ;; According to POSIX, a line should end with a newline.
-  (setq require-final-newline t)
+;; According to POSIX, a line should end with a newline.
+(setq require-final-newline t)
 
-  ;; Move point to top/bottom of buffer before signaling a scrolling error.
-  (setq scroll-error-top-bottom t)
+;; Move point to top/bottom of buffer before signaling a scrolling error.
+(setq scroll-error-top-bottom t)
 
-  ;; If `scroll-conservatively' is set above 100, the window is never automatically recentered.
-  (setq scroll-conservatively 101)
+;; If `scroll-conservatively' is set above 100, the window is never automatically recentered.
+(setq scroll-conservatively 101)
 
   ;; Number of lines of margin at the top and bottom of a window.
-  (setq scroll-margin 0)
+(setq scroll-margin 0)
 
-  ;; Prefer vertical splits over horizontal ones.
-  (setq split-width-threshold 170
-        split-height-threshold nil)
+;; Prefer vertical splits over horizontal ones.
+(setq split-width-threshold 170
+      split-height-threshold nil)
 
-  ;; Uniquify buffer names by adding a directory prefix.
-  (setq uniquify-buffer-name-style 'forward)
+;; Uniquify buffer names by adding a directory prefix.
+(setq uniquify-buffer-name-style 'forward)
 
-  ;; Delete files by moving them to the system trash.
-  (setq delete-by-moving-to-trash t)
-  
-  ;; Disable automatic backups and lockfiles.
-  (setq make-backup-files nil
-        create-lockfiles nil)
+;; Delete files by moving them to the system trash.
+(setq delete-by-moving-to-trash t)
 
-  ;; Skip confirmation prompts when creating a new file or buffer
-  (setq confirm-nonexistent-file-or-buffer nil)
+;; Disable automatic backups and lockfiles.
+(setq make-backup-files nil
+      create-lockfiles nil)
+
+;; Skip confirmation prompts when creating a new file or buffer
+(setq confirm-nonexistent-file-or-buffer nil)
 
 ;; Disable cursor blink for a more responsive feel and fewer redraws.
 (blink-cursor-mode -1)
@@ -207,9 +207,6 @@ This section incorporates the sensible defaults and settings from the minimal-em
 
 ** Session Management
 #+begin_src emacs-lisp
-;; Auto-revert in Emacs is a feature that automatically updates the
-;; contents of a buffer to reflect changes made to the underlying file
-;; on disk.
 (use-package autorevert
   :ensure nil
   :commands (auto-revert-mode global-auto-revert-mode)
@@ -221,9 +218,6 @@ This section incorporates the sensible defaults and settings from the minimal-em
   (auto-revert-avoid-polling nil)
   (auto-revert-verbose t))
 
-;; Recentf is an Emacs package that maintains a list of recently
-;; accessed files, making it easier to reopen files you have worked on
-;; recently.
 (use-package recentf
   :ensure nil
   :commands (recentf-mode recentf-cleanup)
@@ -238,10 +232,6 @@ This section incorporates the sensible defaults and settings from the minimal-em
           "^/tmp/" "^/var/folders/.+$" "^/ssh:" "/persp-confs/"))
 
   :config
-  ;; A cleanup depth of -90 ensures that `recentf-cleanup' runs before
-  ;; `recentf-save-list', allowing stale entries to be removed before the list
-  ;; is saved by `recentf-save-list', which is automatically added to
-  ;; `kill-emacs-hook' by `recentf-mode'.
   (add-hook 'kill-emacs-hook #'recentf-cleanup -90))
 
 (use-package savehist
@@ -256,9 +246,6 @@ This section incorporates the sensible defaults and settings from the minimal-em
      mark-ring global-mark-ring       ; marks
      search-ring regexp-search-ring)))
 
-;; save-place-mode enables Emacs to remember the last location within a file
-;; upon reopening. This feature is particularly beneficial for resuming work at
-;; the precise point where you previously left off.
 (use-package saveplace
   :ensure nil
   :commands (save-place-mode save-place-local-mode)
@@ -272,16 +259,6 @@ This section incorporates the sensible defaults and settings from the minimal-em
 
 (setq auto-save-interval 300)
 (setq auto-save-timeout 30)
-
-;; When auto-save-visited-mode is enabled, Emacs will auto-save file-visiting
-;; buffers after a certain amount of idle time if the user forgets to save it
-;; with save-buffer or C-x s for example.
-;;
-;; This is different from auto-save-mode: auto-save-mode periodically saves
-;; all modified buffers, creating backup files, including those not associated
-;; with a file, while auto-save-visited-mode only saves file-visiting buffers
-;; after a period of idle time, directly saving to the file itself without
-;; creating backup files.
 (setq auto-save-visited-interval 5)   ; Save after 5 seconds if inactivity
 (auto-save-visited-mode 1)
 #+end_src
@@ -332,9 +309,9 @@ This setup defines a robust function to find and set the best available font fro
 #+begin_src emacs-lisp
 (defun ar/set-fonts ()
   "Set the default, fixed-pitch, and variable-pitch fonts for the current frame."
-  (set-face-attribute 'default nil :font "Cascadia Code" :height 120 :weight 'medium)
-  (set-face-attribute 'fixed-pitch nil :font "Cascadia Code" :height 120 :weight 'medium)
-  (set-face-attribute 'variable-pitch nil :font "Cascadia Code" :height 120 :weight 'medium)
+  (set-face-attribute 'default nil :font "JetBrains Mono" :height 120 :weight 'medium)
+  (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 120 :weight 'medium)
+  (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height 120 :weight 'medium)
   ;; Apply italic slant to comments and keywords for visual distinction
   (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
   (set-face-attribute 'font-lock-keyword-face nil :slant 'italic))
@@ -424,24 +401,11 @@ and language server information, while reducing unnecessary clutter. *The commen
         doom-modeline-icon t
         doom-modeline-buffer-file-name-style 'auto
         doom-modeline-minor-modes nil
-        ;; doom-modeline-buffer-state-icon t
-        ;; doom-modeline-buffer-modification-icon t
-        ;; doom-modeline-checker-simple-format t
         doom-modeline-lsp-icon t
         doom-modeline-indent-info t
-        doom-modeline-matches t
-        ;; doom-modeline-vcs-max-length 12
-        ;; doom-modeline-position-info t
-        ;; doom-modeline-window-number t
         doom-modeline-percent-position t
         doom-modeline-github-timer nil
         doom-modeline-gnus-timer nil))
-
-  ;;disable for now
-  ;; (custom-set-faces
-  ;;  '(mode-line ((t (:family "JetBrainsMono Nerd Font" :height 1.0))))
-  ;;  '(mode-line-active ((t (:family "JetBrainsMono Nerd Font" :height 1.0))))
-  ;;  '(mode-line-inactive ((t (:family "JetBrainsMono Nerd Font" :height 1.0)))))
 #+end_src
 
 ** Dashboard
@@ -525,8 +489,6 @@ A small internal border is added around the frame to create visual breathing roo
 * Evil
 ** Undo System
 #+begin_src emacs-lisp
-;; The undo-fu package is a lightweight wrapper around Emacs' built-in undo
-;; system, providing more convenient undo/redo functionality.
 (use-package undo-fu
   :ensure t
   :commands (undo-fu-only-undo
@@ -538,8 +500,6 @@ A small internal border is added around the frame to create visual breathing roo
   (global-set-key (kbd "C-z") 'undo-fu-only-undo)
   (global-set-key (kbd "C-S-z") 'undo-fu-only-redo))
 
-;; The undo-fu-session package complements undo-fu by enabling the saving
-;; and restoration of undo history across Emacs sessions, even after restarting.
 (use-package undo-fu-session
   :ensure t
   :commands undo-fu-session-global-mode
@@ -548,10 +508,8 @@ A small internal border is added around the frame to create visual breathing roo
 
 ** Core Evil
 #+begin_src emacs-lisp
-;; Uncomment the following if you are using undo-fu
 (setq evil-undo-system 'undo-fu)
 
-;; Vim emulation
 (use-package evil
   :ensure t
   :init
@@ -583,7 +541,6 @@ A small internal border is added around the frame to create visual breathing roo
   :ensure t
   :after evil
   :init
-  ;; It has to be defined before evil-colllection
   (setq evil-collection-setup-minibuffer t)
   :config
   (evil-collection-init))
@@ -645,10 +602,6 @@ A small internal border is added around the frame to create visual breathing roo
          (markdown-mode . smartparens-mode)
          (org-mode . smartparens-mode))
   :config
-  ;; not recommended for use
-  ;; (smartparens-global-strict-mode 1)
-
-  ;; --- UI and Behavior Customizations ---
   (setq sp-show-pair-delay 0.1
         sp-show-pair-from-inside t))
 #+end_src
@@ -689,71 +642,15 @@ A small internal border is added around the frame to create visual breathing roo
   :ensure t
   :defer t
   :custom
-  ;; Enable/Disable verbose mode to log buffer cleanup events
   (buffer-terminator-verbose nil)
-
-  ;; Set the inactivity timeout (in seconds) after which buffers are considered
-  ;; inactive (default is 30 minutes):
   (buffer-terminator-inactivity-timeout (* 30 60)) ; 30 minutes
 
-  ;; Define how frequently the cleanup process should run (default is every 10
-  ;; minutes):
   (buffer-terminator-interval (* 10 60)) ; 10 minutes
 
   :config
   (buffer-terminator-mode 1))
 #+end_src
 
-** Inhibit Mouse
-*disable for now*
-#+begin_src emacs-lisp
-;; (use-package inhibit-mouse
-;;   :ensure t
-;;   :config
-;;   (if (daemonp)
-;;       (add-hook 'server-after-make-frame-hook #'inhibit-mouse-mode)
-;;     (inhibit-mouse-mode 1)))
-#+end_src
-
-** Shackle for Popup Window Management
-This provides a declarative way to control where and how special-purpose buffers
-appear, ensuring a consistent and predictable windowing layout.
-#+begin_src emacs-lisp
-;; (use-package shackle
-;;   :ensure t
-;;   :hook (after-init . shackle-mode)
-;;   :config
-;;   (setq shackle-rules
-;;    '(;; FIX: Add this rule at the beginning to prevent Shackle from managing Treemacs.
-;;      ;; This allows Treemacs to use its own logic for side-window placement.
-;;      ;;("^\\*treemacs.*\\*$" :side left :size 35)
-;;      ;; Rule for Help buffers
-;;      ("\\`\\*Help" :align bottom :size 0.3)
-;;      ;; Rule for compilation/grep/etc.
-;;      ("^\\*.*compilation.*\\*$" :align bottom :size 0.3)
-;;      ("^\\*grep.*\\*$" :align bottom :size 0.3)
-;;      ;; Rule for Embark
-;;      ("\\`\\*Embark Collect" :align bottom :size 0.25)
-;;      ;; Rules for the debugger (dape)
-;;      ("\\`\\*dap-repl" :align right :size 0.4)
-;;      ("\\`\\*dap-locals" :align right :size 0.4)
-;;      ("\\`\\*dap-breakpoints" :align right :size 0.4)
-;;      ("\\`\\*dap-sessions" :align right :size 0.4))
-;;    shackle-inhibit-window-quit-on-same-buffer t))
-#+end_src
-
-** TODO Combobulate
-#+begin_src emacs-lisp
-;; (use-package combobulate
-;;    :custom
-;;    ;; You can customize Combobulate's key prefix here.
-;;    ;; Note that you may have to restart Emacs for this to take effect!
-;;    (combobulate-key-prefix "C-c o")
-;;    :hook ((prog-mode . combobulate-mode))
-;;    ;; Amend this to the directory where you keep Combobulate's source
-;;    ;; code.
-;;    :load-path ("~/.config/emacs/lisp/combobulate"))
-#+end_src
 ** Helpful
 *helpful* is an alternative to the built-in Emacs help that provides much more contextual information.
 #+begin_src emacs-lisp
@@ -804,8 +701,6 @@ appear, ensuring a consistent and predictable windowing layout.
   :ensure t
   :hook (after-init . jinx-mode)
   :custom
-  ;; Sensibly disable Jinx in modes where spell-checking is not desired.
-  ;; This includes programming modes, UI-centric modes, and special buffers.
   (jinx-disabled-modes
    '(prog-mode           ; All programming modes
      conf-mode           ; All configuration file modes
@@ -857,9 +752,6 @@ appear, ensuring a consistent and predictable windowing layout.
         (concat consult--tofu-regexp "*\\'")
       "\\'"))
 
-  ;; Recognizes the following patterns:
-  ;; * .ext (file extension)
-  ;; * regexp$ (regexp matching at end)
   (defun +orderless-consult-dispatch (word _index _total)
     (cond
      ;; Ensure that $ works with Consult commands, which add disambiguation suffixes
@@ -875,21 +767,10 @@ appear, ensuring a consistent and predictable windowing layout.
   (orderless-define-completion-style +orderless-with-initialism
     (orderless-matching-styles '(orderless-initialism orderless-literal orderless-regexp)))
 
-  ;; Certain dynamic completion tables (completion-table-dynamic) do not work
-  ;; properly with orderless. One can add basic as a fallback.  Basic will only
-  ;; be used when orderless fails, which happens only for these special
-  ;; tables. Also note that you may want to configure special styles for special
-  ;; completion categories, e.g., partial-completion for files.
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        ;;; Enable partial-completion for files.
-        ;;; Either give orderless precedence or partial-completion.
-        ;;; Note that completion-category-overrides is not really an override,
-        ;;; but rather prepended to the default completion-styles.
-        ;; completion-category-overrides '((file (styles orderless partial-completion))) ;; orderless is tried first
         completion-category-overrides '((file (styles partial-completion)) ;; partial-completion is tried first
-                                        ;; enable initialism by default for symbols
-                                        (command (styles +orderless-with-initialism))
+                                         (command (styles +orderless-with-initialism))
                                         (variable (styles +orderless-with-initialism))
                                         (symbol (styles +orderless-with-initialism)))
         orderless-component-separator #'orderless-escapable-split-on-space ;; allow escaping space with backslash!
@@ -945,7 +826,6 @@ appear, ensuring a consistent and predictable windowing layout.
 (use-package consult
   :ensure t
   :bind
-  ;; Remap default commands to their Consult versions for a unified interface.
   ([remap switch-to-buffer] . consult-buffer)
   ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
   ([remap switch-to-buffer-other-frame] . consult-buffer-other-frame)
@@ -960,8 +840,6 @@ appear, ensuring a consistent and predictable windowing layout.
 
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :init
-  ;; Tweak the register preview for `consult-register-load',
-  ;; `consult-register-store' and the built-in commands.  This improves ;; register formatting, adds thin separator lines, register sorting and hides the window mode line.
   (advice-add #'register-preview :override #'consult-register-window)
   (setq register-preview-delay 0.5)
 
@@ -992,9 +870,6 @@ appear, ensuring a consistent and predictable windowing layout.
                  :as #'buffer-name)))
     "Buffer source for file-visiting buffers only.")
 
-  ;; Configure consult-buffer to show file-visiting buffers, recent files, and bookmarks
-  ;; File-visiting buffers appear under "Files" headline
-  ;; Recent files and bookmarks provide additional navigation options
   (setq consult-buffer-sources
         '(consult--source-file-visiting-buffer)) 
   
@@ -1041,9 +916,6 @@ appear, ensuring a consistent and predictable windowing layout.
 #+end_src
 
 ** Wgrep: Writable Grep
-This package allows you to edit the contents of a grep/search results buffer
-and apply those changes directly to the source files. It is a powerful tool for
-project-wide refactoring.
 #+begin_src emacs-lisp
 (use-package wgrep
   :defer t
@@ -1052,119 +924,6 @@ project-wide refactoring.
   (setq wgrep-auto-save-buffer t))
 #+end_src
 
-** Corfu: The Core UI with Smart TAB Navigation
-*disabled in favor of lsp-bridge*
-#+begin_src emacs-lisp
-;; (use-package corfu
-;;   :ensure t
-;;   :hook (after-init . global-corfu-mode)
-;;   :init
-;;   (corfu-history-mode)
-;;   (corfu-popupinfo-mode)
-
-;;   ;; A list of modes where Corfu should be disabled to prevent conflicts.
-;;   (defvar ar/corfu-disabled-modes
-;;     '(erc-mode
-;;       circe-mode
-;;       help-mode
-;;       gud-mode
-;;       vterm-mode
-;;       eshell-mode
-;;       term-mode
-;;       shell-mode
-;;       comint-mode))
-
-;;   :config
-;;   (add-hook 'corfu-mode-hook
-;;             (lambda ()
-;;               (when (memq major-mode ar/corfu-disabled-modes)
-;;                 (corfu-mode -1))))
-
-;;   :custom
-;;   (corfu-cycle t)                       ; Allow cycling from last to first candidate
-;;   (corfu-auto t)                        ; Enable auto-completion
-;;   (corfu-auto-resize nil)               ; Do not resize the popup
-;;   (corfu-auto-delay 0.13)               ; Delay before auto-completion appears
-;;   (corfu-preselect 'prompt)             ; Pre-select the first candidate
-;;   (corfu-quit-at-boundary 'separator)   ; Quit completion when you cross a boundary (e.g., space)
-;;   (corfu-quit-no-match 'separator)      ; Quit if there are no matches
-;;   (corfu-on-exact-match nil)            ; Do not automatically select an exact match
-
-;;   :bind
-;;   (:map corfu-map
-;;         ("TAB" . corfu-next)            ; Use TAB to navigate to next candidate
-;;         ([tab] . corfu-next)            ; Also bind the tab key event
-;;         ("S-TAB" . corfu-previous)      ; Use Shift-TAB to navigate to previous candidate
-;;         ([backtab] . corfu-previous)))  ; Alternative binding for Shift-TAB
-#+end_src
-
-** Smart TAB Configuration
-*Turned off in favor of lsp-bridge*
-#+begin_src emacs-lisp
-;; (use-package emacs
-;;   :ensure nil
-;;   :custom
-;;   ;; TAB cycle if there are only few candidates (3 or less)
-;;   (completion-cycle-threshold 3)
-
-;;   ;; Enable indentation+completion using the TAB key.
-;;   ;; TAB will first try to indent the line. If the line is already indented,
-;;   ;; it will then trigger completion. This is the recommended approach.
-;;   (tab-always-indent 'complete)
-
-;;   ;; Control when TAB completes on first press vs requiring a second press
-;;   ;; nil: always complete immediately (if line is already indented)
-;;   ;; 'eol: only complete if point is at end of line
-;;   ;; 'word: complete unless next char has word syntax
-;;   ;; 'word-or-paren: complete unless next char is word or parenthesis
-;;   (tab-first-completion 'word-or-paren)
-
-;;   ;; Hide commands in M-x which do not work in the current mode.
-;;   ;; Corfu commands are hidden since they are not meant to be used via M-x.
-;;   (read-extended-command-predicate #'command-completion-default-include-p))
-#+end_src
-
-** Nerd Icons for Corfu
-#+begin_src emacs-lisp
-;; (use-package nerd-icons-corfu
-;;   :ensure t
-;;   :after (corfu nerd-icons)
-;;   :config (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
-#+end_src
-
-** Cape: Completion Backends
-*Disable in favor of lsp-bridge*
-#+begin_src emacs-lisp
-;; (use-package cape
-;;   :ensure t
-;;   :init
-;;   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-;;   (add-to-list 'completion-at-point-functions #'cape-file)
-;;   (add-to-list 'completion-at-point-functions #'cape-keyword)
-;;   (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-;;   :config
-;;   (advice-add #'comint-completion-at-point :around #'cape-wrap-nonexclusive)
-;;   (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive)
-;;   (advice-add #'pcomplete-completions-at-point :around #'cape-wrap-nonexclusive))
-#+end_src
-
-** Dabbrev
-*Disabled in favor of lsp-bridge*
-#+begin_src emacs-lisp
-;; (use-package dabbrev
-;;   ;; Swap M-/ and C-M-/
-;;   :bind (("M-/" . dabbrev-completion)
-;;          ("C-M-/" . dabbrev-expand))
-;;   :config
-;;   (setq dabbrev-friend-buffer-function #'+corfu-dabbrev-friend-buffer-p
-;;         dabbrev-ignored-buffer-regexps
-;;         '("\\` "
-;;           "\\(?:\\(?:[EG]?\\|GR\\)TAGS\\|e?tags\\|GPATH\\)\\(<[0-9]+>\\)?")
-;;         dabbrev-upcase-means-case-search t)
-;;   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
-;;   (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
-;;   (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
-#+end_src
 
 * Org Mode
 ** Dynamic Directory Structure
@@ -1238,7 +997,7 @@ project-wide refactoring.
                   (org-level-6 . 1.03)
                   (org-level-7 . 1.02)
                   (org-level-8 . 1)))
-    (set-face-attribute (car face) nil :font "Cascadia Code" :weight 'bold :height (cdr face))))
+    (set-face-attribute (car face) nil :font "JetBrains Mono" :weight 'bold :height (cdr face))))
 #+end_src
 
 ** Core Configuration
@@ -1315,7 +1074,6 @@ project-wide refactoring.
 #+end_src
 
 ** Babel & Structure Templates
-Configure code block execution and create handy shortcuts for inserting common structures.
 #+begin_src emacs-lisp
 (with-eval-after-load 'org
   ;; Load a comprehensive list of languages for Org Babel.
@@ -1338,7 +1096,6 @@ Configure code block execution and create handy shortcuts for inserting common s
 #+end_src
 
 ** Visual Enhancements
-This section makes Org mode beautiful and ergonomic, with modern styling and seamless Vim keybindings. The `org-modern` configuration complements the base `org-todo-keyword-faces` for a rich, thematic look.
 #+begin_src emacs-lisp
 (use-package org-modern
   :ensure t
@@ -1376,7 +1133,6 @@ This section makes Org mode beautiful and ergonomic, with modern styling and sea
 #+end_src
 
 ** Org Roam: The Knowledge Graph
-Org Roam is configured for rapid, Zettelkasten-style note-taking. Templates are minimal and flexible, and the UI is integrated to feel like a natural extension of Emacs.
 #+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
@@ -1444,8 +1200,6 @@ Org Roam is configured for rapid, Zettelkasten-style note-taking. Templates are 
 #+end_src
 
 ** Capture: The Gateway to Org
-Your central inbox for capturing tasks, notes, and ideas, now featuring the
-advanced dynamic project task template.
 *Use dynamic directory*
 #+begin_src emacs-lisp
 (use-package org-capture
@@ -1517,7 +1271,6 @@ advanced dynamic project task template.
 #+end_src
   
 ** Org Download for Images
-This package streamlines adding images and screenshots to Org mode, using the *swappy* annotation tool and Spacemacs-style keybindings.
 #+begin_src emacs-lisp
 (use-package org-download
   :ensure t
@@ -1610,9 +1363,7 @@ This package streamlines adding images and screenshots to Org mode, using the *s
 
 (use-package ob-async
   :ensure t
-  :after org
-  :config
-  (setq ob-async-no-async-languages-alist '("python" "jupyter-python")))
+  :after org)
 #+end_src
 
 ** ANSI Colors
@@ -1642,16 +1393,14 @@ This package streamlines adding images and screenshots to Org mode, using the *s
   :ensure t
   :config
   (global-lsp-bridge-mode)
-
-  ;; This provides: basedpyright for completion/navigation + ruff for linting/formatting
   (setq lsp-bridge-python-multi-lsp-server "basedpyright_ruff"
         lsp-bridge-tex-lsp-server "texlab"
         lsp-bridge-nix-lsp-server "nil"
         lsp-bridge-org-babel-lang-list nil)
 
-  ;; Asynchronous Completion
   (setq acm-enable-doc nil
         acm-enable-jupyter t
+        acm-enable-capf nil
         acm-enable-doc-markdown-render 'async
         acm-enable-icon t
         acm-candidate-match-function 'orderless-literal
@@ -1723,11 +1472,9 @@ This package streamlines adding images and screenshots to Org mode, using the *s
   :after dired
   :custom (dired-x-hands-off-my-keys nil)
   :config
-  ;; Define dired-omit-files to prevent void-variable errors
   (setq dired-omit-files "^\\.[^.]\\|^#\\|^\\.$\\|^\\.\\.$\\|\\.pyc$\\|\\.o$")
   (setq dired-omit-verbose nil))
 
-;; Asynchronously display git status in Dired. Highly performant.
 (use-package dired-git-info
   :ensure t
   :after dired
@@ -1741,7 +1488,6 @@ This package streamlines adding images and screenshots to Org mode, using the *s
   :ensure t
   :hook (dired-mode . nerd-icons-dired-mode))
 
-;; Allows editing directory listings directly (wdired) with ranger-like keys.
 (use-package dired-ranger
   :ensure t
   :after dired
@@ -1789,62 +1535,6 @@ themed with nerd-icons and integrates with evil-mode for vim-like navigation.
   (envrc-global-mode))
 #+end_src
 
-** Eglot
-*Disabled in favor of lsp-bridge*
-#+begin_src emacs-lisp
-;; (use-package eglot
-;;   :ensure t
-;;   :defer t
-;;   :hook (prog-mode . eglot-ensure)
-;;   :custom
-;;   (eglot-autoshutdown nil)
-;;   (eglot-events-buffer-size 0)
-;;   ;;(eglot-extend-to-xref nil)
-;;   (eglot-ignored-server-capabilities
-;;    '(:hoverProvider
-;;      :documentHighlightProvider
-;;      :documentFormattingProvider
-;;      :documentRangeFormattingProvider
-;;      :documentOnTypeFormattingProvider
-;;      :colorProvider
-;;      :foldingRangeProvider))
-;;   (eglot-stay-out-of '(yasnippet)))
-;; 
-;; (use-package eglot-booster
-;;   :ensure t
-;;   :after eglot
-;;   :config
-;;   (eglot-booster-mode))
-#+end_src
-
-** Eldoc Box
-Display eldoc documentation in a popup frame at point.
-#+begin_src emacs-lisp
-;; (use-package eldoc-box
-;;   :ensure t
-;;   :config
-;;   (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
-;;   :custom
-;;   (eldoc-box-show-if-no-doc nil)
-;;   (eldoc-echo-area-display-truncation-p nil)
-;;   :custom-face
-;;   (eldoc-box-border ((t (:foreground "#3b4261"))))
-;;   (eldoc-highlight-symbol-face ((t (:foreground "#7aa2f7" :weight bold)))))
-#+end_src
-
-** Consult Integration
-#+begin_src emacs-lisp
-;; ;; Provides a powerful consult interface for Eglot's LSP features.
-;; (use-package consult-eglot
-;;   :ensure t
-;;   :after (consult eglot))
-;; 
-;; ;; Integrates consult-eglot sources with Embark actions.
-;; (use-package consult-eglot-embark
-;;   :ensure t
-;;   :after (consult-eglot embark))
-#+end_src
-
 ** Robust Debugger UI
 We use *dape* for debugging. The UI for debugger windows is cleanly managed by the enhanced *shackle* configuration in my *Editor Behaviour* section.
 #+begin_src emacs-lisp
@@ -1876,34 +1566,6 @@ We use *dape* for debugging. The UI for debugger windows is cleanly managed by t
  "d B" '(ar/dape-debug-org-src-block :wk "debug org block"))
 #+end_src
 
-** Syntax Checking
-This setup uses the built-in *flymake* for live diagnostics, enhanced by *flymake-collection* for easy linter integration, and *apheleia* for automatic, on-save formatting.
-#+begin_src emacs-lisp
-;; (use-package flymake
-;;   :ensure t
-;;   :hook (prog-mode . flymake-mode)
-;;   :custom
-;;   (flymake-check-syntax-automatically '(save mode-enabled))
-;;   (flymake-idle-change-delay 0.1)
-;;   :custom-face
-;;   (flymake-error   ((t (:underline (:style wave :color "#f7768e") :inherit nil))))  (flymake-warning ((t (:underline (:style wave :color "#e0af68") :inherit nil))))  (flymake-note    ((t (:underline (:style wave :color "#73daca") :inherit nil)))))
-;; 
-;; ;; A much cleaner way to add support for checkers like pylint and flake8.
-;; (use-package flymake-collection
-;;   :ensure t
-;;   :after flymake)
-;;   ;; will use use-package setup
-;;   ;; :config
-;;   ;; (flymake-collection-hook-setup)
-;; 
-;; (use-package sideline-flymake
-;;   :ensure t
-;;   :hook (flymake-mode . sideline-mode)
-;;   :init
-;;   (setq sideline-flymake-display-mode 'point)
-;;   (setq sideline-backends-right '(sideline-flymake)))
-#+end_src
-
 ** Formatting
 #+begin_src emacs-lisp
 (use-package apheleia
@@ -1917,7 +1579,6 @@ This setup uses the built-in *flymake* for live diagnostics, enhanced by *flymak
 #+begin_src emacs-lisp
 (with-eval-after-load 'treesit
   (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(markdown-mode . markdown-ts-mode))
   (add-to-list 'major-mode-remap-alist '(latex-mode . latex-ts-mode)))
 
 (use-package treesit-fold
@@ -1977,68 +1638,8 @@ This setup uses the built-in *flymake* for live diagnostics, enhanced by *flymak
  "l h d" '(eldoc-doc-buffer :wk "show doc in popup"))
 #+end_src
 
-* Python Development
-** LSP: Eglot with Pyright
-#+begin_src emacs-lisp
-;; (with-eval-after-load 'eglot
-;;   ;; Register pyright-langserver for Python modes.
-;;   (add-to-list 'eglot-server-programs
-;;                '((python-ts-mode) . ("basedpyright-langserver" "--stdio"))))
-#+end_src
-
-** Diagnostics: Flymake with Ruff, Mypy, and Bandit
-#+begin_src emacs-lisp
-;; (push
-;;  '(python-ts-mode
-;;    flymake-collection-ruff
-;;    (flymake-collection-mypy)
-;;    (flymake-collection-bandit))
-;;  flymake-collection-config)
-#+end_src
-
-** Formatting: Apheleia with Ruff
-We use *apheleia* to automatically format Python code on save. By using *ruff* as the backend, we ensure that formatting is consistent with our linter rules.
-#+begin_src emacs-lisp
-(with-eval-after-load 'apheleia
-  (setf (alist-get 'python-mode apheleia-formatters)
-        '("ruff" "format" "-")))
-#+end_src
-
-** Debugging: Dape with debugpy
-*No need for a separate dape configuration since dape already provides a an
-optimized config for debugpy*
-#+begin_src emacs-lisp
-;; (with-eval-after-load 'dape
-;;   ;; Register a debug template for Python using debugpy. This defines how
-;;   ;; dape will launch the debugger for Python files.
-;;   (dape-register-debug-template
-;;    "Python (debugpy)"
-;;    (list :type "python"
-;;          :request "launch"
-;;          :name "Dape: Python File"
-;;          :program "${file}"
-;;          :console "internalConsole"))
-;; 
-;;   ;; Interactive function to start a debug session for the current Python buffer.
-;;   (defun ar/dape-debug-python-file ()
-;;     "Start a DAPE debug session for the current Python file."
-;;     (interactive)
-;;     (unless (eq major-mode 'python-ts-mode)
-;;       (error "Not in a Python buffer"))
-;;     (dape-debug-by-template "Python (debugpy)")))
-#+end_src
-
-** Keybindings
-#+begin_src emacs-lisp
-(ar/global-leader
- ;; Add to the existing debug (dape) leader map
- "d" '(:ignore t :wk "debug (dape)")
- "d p" '(ar/dape-debug-python-file :wk "Debug Python File"))
-#+end_src
-
 * Version Control
 ** Magit: The Core Git Client
-*magit* is the central hub for all Git operations. This configuration ensures it works seamlessly with a full-frame UI and other packages.
 #+begin_src emacs-lisp
 (use-package magit
   :ensure t
@@ -2066,7 +1667,6 @@ optimized config for debugpy*
 #+end_src
 
 ** Forge: Git Forge Integration
-*forge* provides integration with online Git forges (e.g., GitHub, GitLab).
 #+begin_src emacs-lisp
 (use-package forge
   :ensure t
@@ -2093,9 +1693,6 @@ optimized config for debugpy*
 #+end_src
 
 ** Git Gutter: Live Diff Highlighting
-git-gutter provides live, inline diff indicators in the fringe, showing
-which lines have been added, modified, or deleted. This is a crucial
-feature for at-a-glance understanding of changes.
 #+begin_src emacs-lisp
 (use-package git-gutter
   :ensure t
@@ -2109,13 +1706,7 @@ feature for at-a-glance understanding of changes.
   ;; Define keybindings for evil-mode for navigating between hunks.
   (with-eval-after-load 'evil
     (define-key evil-normal-state-map (kbd "]g") 'git-gutter:next-hunk)
-    (define-key evil-normal-state-map (kbd "[g") 'git-gutter:previous-hunk))
-
-  ;; Add a keybinding to stage the current hunk directly.
-  ;; need to fix
-  ;; (define-key git-gutter-mode-map (kbd "C-x C-s") 'git-gutter:stage-hunk)
-
-)
+    (define-key evil-normal-state-map (kbd "[g") 'git-gutter:previous-hunk)))
 #+end_src
 
 ** Keybindings
@@ -2142,6 +1733,10 @@ feature for at-a-glance understanding of changes.
 * PDF-Tools
 ** Core
 #+begin_src emacs-lisp
+(use-package org-pdftools
+  :ensure t
+  :hook (org-load . org-pdftools-setup-link))
+
 (use-package pdf-tools
   :ensure t
   :magic ("%PDF" . pdf-view-mode)
@@ -2258,18 +1853,6 @@ Opens the notes in a split window to the right."
   (consult-customize consult-yasnippet :preview-key 'any))
 #+end_src
 
-** Cape Integration
-*Disable in favor of lsp-bridge*
-#+begin_src emacs-lisp
-;; (use-package yasnippet-capf
-;;   :ensure t
-;;   :after cape
-;;   :config
-;;   (add-to-list 'completion-at-point-functions #'yasnippet-capf))
-#+end_src
-
-#+RESULTS:
-
 ** Keybindings
 #+begin_src emacs-lisp
 (ar/global-leader
@@ -2281,7 +1864,6 @@ Opens the notes in a split window to the right."
 
 * LaTeX Writing Environment
 ** Core Backend: AUCTeX and Tectonic
-This configures the foundational packages. *AUCTeX* is the primary editing environment, enhanced with *Tectonic* as the default compiler for its modern, all-in-one approach.
 #+begin_src emacs-lisp
 (use-package tex
   :ensure auctex
@@ -2320,9 +1902,7 @@ This configures the foundational packages. *AUCTeX* is the primary editing envir
                 (when (file-exists-p (expand-file-name "Tectonic.toml" proot))
                   (setq-local TeX-output-dir (expand-file-name "build/index" proot))))))
 
-  
-  ;; Use PDF-Tools as the default viewer and enable source correlation (SyncTeX).
-  (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+   (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
   (setq TeX-source-correlate-mode t)
   (setq TeX-PDF-mode t)
 
@@ -2354,7 +1934,6 @@ This configures the foundational packages. *AUCTeX* is the primary editing envir
 #+end_src
 
 ** Citation Ecosystem: Citar and Zotero
-This section configures a streamlined citation workflow centered around **Citar** and Zotero. It removes redundant packages for a simpler, more powerful setup.
 #+begin_src emacs-lisp
 (use-package citar
   :ensure t
@@ -2374,7 +1953,6 @@ This section configures a streamlined citation workflow centered around **Citar*
   ;; Note: NOT using capf setup since acm-enable-capf is disabled
   ;; Citar will still work via other mechanisms
   ((LaTeX-mode org-mode) . (lambda ()
-                             ;; Citar keybindings available in these modes
                              (local-set-key (kbd "C-c b") #'citar-insert-citation))))
 
 ;; Citar-Embark for contextual actions
@@ -2397,18 +1975,15 @@ This section configures a streamlined citation workflow centered around **Citar*
   (setq reftex-plug-into-AUCTeX t)
   ;; Let Citar handle bibliographies
   (setq reftex-default-bibliography '()))
-
 #+end_src
 
 ** Writing UI and Editing Enhancements
-This section improves the interactive writing experience with faster math input
-and aesthetic ligatures.
 #+begin_src emacs-lisp
 (use-package cdlatex
   :ensure t
-  :hook (LaTeX-mode . cdlatex-mode)
+  :hook ((LaTeX-mode . cdlatex-mode)
+         (latex-mode . cdlatex-mode))
   :config
-  ;; Customize cdlatex snippets
   (setq cdlatex-math-modify-alist
         '((?B "\\mathbb" nil t nil nil)
           (?C "\\mathcal" nil t nil nil)
@@ -2434,45 +2009,6 @@ and aesthetic ligatures.
                     ;; add accent snippets
                     :cond #'laas-object-on-left-condition
                     "qq" (lambda () (interactive) (laas-wrap-previous-object "sqrt"))))
-
-;; (use-package laas
-;;   :ensure t
-;;   :hook (LaTeX-mode . laas-mode)
-;;   :config
-;;   ;; Custom snippets for fast math typing
-;;   (aas-set-snippets 'laas-mode
-;;                     ;; Greek letters
-;;                     ";a" "\\alpha"
-;;                     ";b" "\\beta"
-;;                     ";g" "\\gamma"
-;;                     ";d" "\\delta"
-;;                     ";e" "\\epsilon"
-;;                     ";l" "\\lambda"
-;;                     ";m" "\\mu"
-;;                     ";p" "\\pi"
-;;                     ";s" "\\sigma"
-;;                     ";t" "\\theta"
-;;                     ";o" "\\omega"
-;;                     ;; Uppercase Greek
-;;                     ";G" "\\Gamma"
-;;                     ";D" "\\Delta"
-;;                     ";L" "\\Lambda"
-;;                     ";O" "\\Omega"
-;;                     ;; Math operators
-;;                     ";int" (lambda () (interactive)
-;;                              (insert "\\int_{")
-;;                              (laas-smart-position))
-;;                     ";sum" (lambda () (interactive)
-;;                              (insert "\\sum_{")
-;;                              (laas-smart-position))
-;;                     ";prod" (lambda () (interactive)
-;;                               (insert "\\prod_{")
-;;                               (laas-smart-position))
-;;                     ;; Quick environments
-;;                     ";eq" (lambda () (interactive)
-;;                             (laas-wrap-previous-object "equation"))
-;;                     ";ali" (lambda () (interactive)
-;;                              (laas-wrap-previous-object "align"))))
 
 (defun my/latex-prettify-symbols-setup ()
   "Enable prettify-symbols-mode with LaTeX ligatures."
@@ -2511,22 +2047,41 @@ and aesthetic ligatures.
 
 ** Org Mode Integration
 #+begin_src emacs-lisp
-(with-eval-after-load 'ox-latex
+(with-eval-after-load 'org
+  ;; CRITICAL: Require ox-latex BEFORE configuring latex settings
+  (require 'ox-latex)
+  
   ;; Enable LaTeX in org-babel
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '(latex . t))
+   '((latex . t)))
 
   ;; Use Citar for citations in Org
-  (setq org-cite-global-bibliography citar-bibliography)
-  (setq org-cite-follow-processor 'citar)
-  (setq org-cite-activate-processor 'citar)
-  (setq org-cite-insert-processor 'citar)
+  (setq org-cite-global-bibliography citar-bibliography
+        org-cite-follow-processor 'citar
+        org-cite-activate-processor 'citar
+        org-cite-insert-processor 'citar)
 
   ;; Use Tectonic for Org LaTeX exports
   (setq org-latex-compiler "tectonic")
   (setq org-latex-pdf-process '("tectonic -X compile %f"))
-
+  
+  ;; Configure preview process with Tectonic
+  (add-to-list 'org-preview-latex-process-alist
+               '(tectonic 
+                 :programs ("tectonic" "magick")
+                 :description "pdf > png"
+                 :message "you need install the programs: tectonic and imagemagick."
+                 :image-input-type "pdf"
+                 :image-output-type "png"
+                 :image-size-adjust (1.0 . 1.0)
+                 :latex-compiler
+                 ("tectonic -X compile -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
+                 :image-converter
+                 ("magick -density %D -trim -antialias %f -quality 100 %O")))
+  
+  (setq org-preview-latex-default-process 'tectonic)
+  
   ;; Custom LaTeX classes for Org export
   (add-to-list 'org-latex-classes
                '("article"
@@ -2534,7 +2089,7 @@ and aesthetic ligatures.
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")) t)
-
+  
   (add-to-list 'org-latex-classes
                '("beamer"
                  "\\documentclass{beamer}"
@@ -2544,53 +2099,31 @@ and aesthetic ligatures.
 
 ** Custom Snippets for Scientific Writing
 #+begin_src emacs-lisp
-  (with-eval-after-load 'yasnippet
-    (yas-define-snippets 'latex-mode
-                         '(;; Environments
-                           ("beg" "\\begin{${1:env}}\n  $0\n\\end{$1}" "begin-end")
-                           ("eq" "\\begin{equation}\n  ${1:equation}\n  \\label{eq:${2:label}}\n\\end{equation}\n$0" "equation")
-                           ("ali" "\\begin{align}\n  ${1:a} &= ${2:b} \\\\\\\\\n  ${3:c} &= ${4:d}\n  \\label{eq:${5:label}}\n\\end{align}\n$0" "align")
-                           ("fig" "\\begin{figure}[htbp]\n  \\centering\n  \\includegraphics[width=${1:0.8}\\textwidth]{${2:path}}\n  \\caption{${3:caption}}\n  \\label{fig:${4:label}}\n\\end{figure}\n$0" "figure")
-                           ("tab" "\\begin{table}[htbp]\n  \\centering\n  \\caption{${1:caption}}\n  \\label{tab:${2:label}}\n  \\begin{tabular}{${3:lll}}\n    \\toprule\n    ${4:header} \\\\\\\\\n    \\midrule\n    ${5:data} \\\\\\\\\n    \\bottomrule\n  \\end{tabular}\n\\end{table}\n$0" "table")
+(with-eval-after-load 'yasnippet
+  (yas-define-snippets 'latex-mode
+                       '(;; Environments
+                         ("beg" "\\begin{${1:env}}\n  $0\n\\end{$1}" "begin-end")
+                         ("eq" "\\begin{equation}\n  ${1:equation}\n  \\label{eq:${2:label}}\n\\end{equation}\n$0" "equation")
+                         ("ali" "\\begin{align}\n  ${1:a} &= ${2:b} \\\\\\\\\n  ${3:c} &= ${4:d}\n  \\label{eq:${5:label}}\n\\end{align}\n$0" "align")
+                         ("fig" "\\begin{figure}[htbp]\n  \\centering\n  \\includegraphics[width=${1:0.8}\\textwidth]{${2:path}}\n  \\caption{${3:caption}}\n  \\label{fig:${4:label}}\n\\end{figure}\n$0" "figure")
+                         ("tab" "\\begin{table}[htbp]\n  \\centering\n  \\caption{${1:caption}}\n  \\label{tab:${2:label}}\n  \\begin{tabular}{${3:lll}}\n    \\toprule\n    ${4:header} \\\\\\\\\n    \\midrule\n    ${5:data} \\\\\\\\\n    \\bottomrule\n  \\end{tabular}\n\\end{table}\n$0" "table")
 
-                           ;; Math
-                           ("frac" "\\frac{${1:num}}{${2:denom}}$0" "fraction")
-                           ("sum" "\\sum_{${1:i=1}}^{${2:n}} ${3:x_i}$0" "sum")
-                           ("int" "\\int_{${1:a}}^{${2:b}} ${3:f(x)} \\, dx$0" "integral")
-                           ("lim" "\\lim_{${1:x \\to \\infty}} ${2:f(x)}$0" "limit")
-
-                           ;; Physics
-                           ("pd" "\\frac{\\partial ${1:f}}{\\partial ${2:x}}$0" "partial derivative")
-                           ("dd" "\\frac{d ${1:f}}{d ${2:x}}$0" "derivative")
-                           ("vv" "\\vec{${1:v}}$0" "vector")
-
-                           ;; Citations and references
-                           ("cite" "\\cite{${1:key}}$0" "cite")
-                           ("ref" "\\ref{${1:label}}$0" "reference")
+                         ;; Math
+                         ("frac" "\\frac{${1:num}}{${2:denom}}$0" "fraction")
+                         ("sum" "\\sum_{${1:i=1}}^{${2:n}} ${3:x_i}$0" "sum")
+                         ("int" "\\int_{${1:a}}^{${2:b}} ${3:f(x)} \\, dx$0" "integral")
+                         ("lim" "\\lim_{${1:x \\to \\infty}} ${2:f(x)}$0" "limit")
+                         
+                         ;; Physics
+                         ("pd" "\\frac{\\partial ${1:f}}{\\partial ${2:x}}$0" "partial derivative")
+                         ("dd" "\\frac{d ${1:f}}{d ${2:x}}$0" "derivative")
+                         ("vv" "\\vec{${1:v}}$0" "vector")
+                         
+                         ;; Citations and references
+                         ("cite" "\\cite{${1:key}}$0" "cite")
+                         ("ref" "\\ref{${1:label}}$0" "reference")
                            ("eqref" "\\eqref{${1:eq:label}}$0" "equation reference"))))
 #+end_src
-
-** Org Mode Integration
-#+begin_src emacs-lisp
-(with-eval-after-load 'org
-  ;; Use Tectonic for Org LaTeX exports
-  (setq org-latex-compiler "tectonic")
-  (setq org-latex-pdf-process '("tectonic -X compile %f"))
-
-  (add-to-list 'org-preview-latex-process-alist
-               '(tectonic :programs ("tectonic" "magick")
-        	 :description "pdf > png"
-        	 :message "you need install the programs: tectonic and imagemagick."
-        	 :image-input-type "pdf"
-        	 :image-output-type "png"
-        	 :image-size-adjust (1.0 . 1.0)
-        	 :latex-compiler
-        	 ("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
-        	 :image-converter
-        	 ("magick -density %D -trim -antialias %f -quality 300 %O")))
-  (setq org-preview-latex-default-process 'tectonic))
-#+end_src
-
 
 ** Keybindings
 #+begin_src emacs-lisp
@@ -2958,6 +2491,11 @@ This section adds Spacemacs-like keybindings for efficient window, buffer,
 and general workflow management. The bindings are organized under logical and
 non-conflicting prefixes.
 #+begin_src emacs-lisp
+(defun kill-other-buffers ()
+  "Kill all buffers except the current one."
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
 (ar/global-leader
   ;; --- Window Management ---
   "w" '(:ignore t :wk "windows")
