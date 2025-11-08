@@ -29,7 +29,7 @@
         nvidia-vaapi-driver
         mesa
       ];
-      # enable32Bit = true;
+      enable32Bit = true;
     };
     nvidia = {
       package = config.boot.kernelPackages.nvidiaPackages.latest;

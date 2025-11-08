@@ -108,11 +108,11 @@ in {
       outputs = {
         "HDMI-A-1" = {
           mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 60.0;
+            width = 1920;
+            height = 1080;
+            refresh = 120.0;
           };
-          scale = 2.0;
+          scale = 1.0;
         };
         "eDP-1".enable = false;
       };
@@ -141,7 +141,7 @@ in {
 
         # Focus ring with DYNAMIC colors from DMS
         focus-ring = {
-          width = 2;
+          width = 3;
           enable = true;
           active.color = colorConfig.primary;
           inactive.color = colorConfig.inactive;

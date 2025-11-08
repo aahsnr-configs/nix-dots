@@ -52,12 +52,8 @@
     ./eza
     ./fd-find
     ./fish
-    #./foot
     ./fzf
-    #./gammastep
     ./git
-    #./hyprland
-    #./hyprpaper
     ./imv
     ./keyring
     ./kitty
@@ -75,7 +71,6 @@
     ./scripts
     ./swappy
     ./texlive
-    ./theming
     ./tldr
     ./tmux
     ./udiskie

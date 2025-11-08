@@ -25,5 +25,6 @@ in {
     tectonic
     ghostscript
     imagemagick
+    texlivePackages.cascadia-code
   ];
 }

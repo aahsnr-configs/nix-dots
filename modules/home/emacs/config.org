@@ -332,9 +332,9 @@ This setup defines a robust function to find and set the best available font fro
 #+begin_src emacs-lisp
 (defun ar/set-fonts ()
   "Set the default, fixed-pitch, and variable-pitch fonts for the current frame."
-  (set-face-attribute 'default nil :font "JetBrains Mono" :height 120 :weight 'medium)
-  (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 120 :weight 'medium)
-  (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height 120 :weight 'medium)
+  (set-face-attribute 'default nil :font "Cascadia Code" :height 120 :weight 'medium)
+  (set-face-attribute 'fixed-pitch nil :font "Cascadia Code" :height 120 :weight 'medium)
+  (set-face-attribute 'variable-pitch nil :font "Cascadia Code" :height 120 :weight 'medium)
   ;; Apply italic slant to comments and keywords for visual distinction
   (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
   (set-face-attribute 'font-lock-keyword-face nil :slant 'italic))
@@ -996,13 +996,20 @@ appear, ensuring a consistent and predictable windowing layout.
   ;; File-visiting buffers appear under "Files" headline
   ;; Recent files and bookmarks provide additional navigation options
   (setq consult-buffer-sources
-        '(consult--source-file-visiting-buffer))
+        '(consult--source-file-visiting-buffer)) 
   
   (consult-customize
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file
    consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
    :preview-key "C-SPC"))
+
+(use-package consult-dir
+  :ensure t
+  :bind (("C-x C-d" . consult-dir)
+         :map vertico-map
+         ("C-x C-d" . consult-dir)
+         ("C-x C-j" . consult-dir-jump-file)))
 #+end_src
 
 ** Embark
@@ -1231,7 +1238,7 @@ project-wide refactoring.
                   (org-level-6 . 1.03)
                   (org-level-7 . 1.02)
                   (org-level-8 . 1)))
-    (set-face-attribute (car face) nil :font "JetBrainsMono Nerd Font" :weight 'bold :height (cdr face))))
+    (set-face-attribute (car face) nil :font "Cascadia Code" :weight 'bold :height (cdr face))))
 #+end_src
 
 ** Core Configuration
@@ -2280,11 +2287,20 @@ This configures the foundational packages. *AUCTeX* is the primary editing envir
   :ensure auctex
   :defer t
   :config
-  ;; Set the default TeX engine to Tectonic.
+  ;; Set Tectonic as the default engine
   (setq TeX-engine 'tectonic)
-  (add-to-list 'TeX-engine-alist
-               '(tectonic "Tectonic" "tectonic -X compile %s -o %o" "tectonic -X compile %s -o %o" "tectonic -X compile %s -o %o"))
 
+  ;; Register Tectonic as a TeX engine
+  (add-to-list 'TeX-engine-alist
+               '(tectonic
+                 "Tectonic"
+                 "tectonic -X compile -f plain %T"
+                 "tectonic -X watch"
+                 nil))
+
+  ;; Simplify LaTeX command style for Tectonic compatibility
+  (setq LaTeX-command-style '(("" "%(latex)")))
+  
   ;; Add compilation and syntax checking commands
   (setq TeX-command-list
         (append TeX-command-list
@@ -2297,6 +2313,14 @@ This configures the foundational packages. *AUCTeX* is the primary editing envir
                   ("Check" "lacheck %s" TeX-run-compile nil
                    (latex-mode) :help "Check with lacheck"))))
 
+  (add-hook 'after-change-major-mode-hook
+            (lambda ()
+              (when-let ((project (project-current))
+                         (proot (project-root project)))
+                (when (file-exists-p (expand-file-name "Tectonic.toml" proot))
+                  (setq-local TeX-output-dir (expand-file-name "build/index" proot))))))
+
+  
   ;; Use PDF-Tools as the default viewer and enable source correlation (SyncTeX).
   (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
   (setq TeX-source-correlate-mode t)
@@ -2393,41 +2417,62 @@ and aesthetic ligatures.
 (use-package laas
   :ensure t
   :hook (LaTeX-mode . laas-mode)
-  :config
-  ;; Custom snippets for fast math typing
+  :config ; do whatever here
   (aas-set-snippets 'laas-mode
-                    ;; Greek letters
-                    ";a" "\\alpha"
-                    ";b" "\\beta"
-                    ";g" "\\gamma"
-                    ";d" "\\delta"
-                    ";e" "\\epsilon"
-                    ";l" "\\lambda"
-                    ";m" "\\mu"
-                    ";p" "\\pi"
-                    ";s" "\\sigma"
-                    ";t" "\\theta"
-                    ";o" "\\omega"
-                    ;; Uppercase Greek
-                    ";G" "\\Gamma"
-                    ";D" "\\Delta"
-                    ";L" "\\Lambda"
-                    ";O" "\\Omega"
-                    ;; Math operators
-                    ";int" (lambda () (interactive)
-                             (insert "\\int_{")
-                             (laas-smart-position))
-                    ";sum" (lambda () (interactive)
-                             (insert "\\sum_{")
-                             (laas-smart-position))
-                    ";prod" (lambda () (interactive)
-                              (insert "\\prod_{")
-                              (laas-smart-position))
-                    ;; Quick environments
-                    ";eq" (lambda () (interactive)
-                            (laas-wrap-previous-object "equation"))
-                    ";ali" (lambda () (interactive)
-                             (laas-wrap-previous-object "align"))))
+                    ;; set condition!
+                    :cond #'texmathp ; expand only while in math
+                    "supp" "\\supp"
+                    "On" "O(n)"
+                    "O1" "O(1)"
+                    "Olog" "O(\\log n)"
+                    "Olon" "O(n \\log n)"
+                    ;; bind to functions!
+                    "Sum" (lambda () (interactive)
+                            (yas-expand-snippet "\\sum_{$1}^{$2} $0"))
+                    "Span" (lambda () (interactive)
+                             (yas-expand-snippet "\\Span($1)$0"))
+                    ;; add accent snippets
+                    :cond #'laas-object-on-left-condition
+                    "qq" (lambda () (interactive) (laas-wrap-previous-object "sqrt"))))
+
+;; (use-package laas
+;;   :ensure t
+;;   :hook (LaTeX-mode . laas-mode)
+;;   :config
+;;   ;; Custom snippets for fast math typing
+;;   (aas-set-snippets 'laas-mode
+;;                     ;; Greek letters
+;;                     ";a" "\\alpha"
+;;                     ";b" "\\beta"
+;;                     ";g" "\\gamma"
+;;                     ";d" "\\delta"
+;;                     ";e" "\\epsilon"
+;;                     ";l" "\\lambda"
+;;                     ";m" "\\mu"
+;;                     ";p" "\\pi"
+;;                     ";s" "\\sigma"
+;;                     ";t" "\\theta"
+;;                     ";o" "\\omega"
+;;                     ;; Uppercase Greek
+;;                     ";G" "\\Gamma"
+;;                     ";D" "\\Delta"
+;;                     ";L" "\\Lambda"
+;;                     ";O" "\\Omega"
+;;                     ;; Math operators
+;;                     ";int" (lambda () (interactive)
+;;                              (insert "\\int_{")
+;;                              (laas-smart-position))
+;;                     ";sum" (lambda () (interactive)
+;;                              (insert "\\sum_{")
+;;                              (laas-smart-position))
+;;                     ";prod" (lambda () (interactive)
+;;                               (insert "\\prod_{")
+;;                               (laas-smart-position))
+;;                     ;; Quick environments
+;;                     ";eq" (lambda () (interactive)
+;;                             (laas-wrap-previous-object "equation"))
+;;                     ";ali" (lambda () (interactive)
+;;                              (laas-wrap-previous-object "align"))))
 
 (defun my/latex-prettify-symbols-setup ()
   "Enable prettify-symbols-mode with LaTeX ligatures."
@@ -2524,6 +2569,28 @@ and aesthetic ligatures.
                            ("ref" "\\ref{${1:label}}$0" "reference")
                            ("eqref" "\\eqref{${1:eq:label}}$0" "equation reference"))))
 #+end_src
+
+** Org Mode Integration
+#+begin_src emacs-lisp
+(with-eval-after-load 'org
+  ;; Use Tectonic for Org LaTeX exports
+  (setq org-latex-compiler "tectonic")
+  (setq org-latex-pdf-process '("tectonic -X compile %f"))
+
+  (add-to-list 'org-preview-latex-process-alist
+               '(tectonic :programs ("tectonic" "magick")
+        	 :description "pdf > png"
+        	 :message "you need install the programs: tectonic and imagemagick."
+        	 :image-input-type "pdf"
+        	 :image-output-type "png"
+        	 :image-size-adjust (1.0 . 1.0)
+        	 :latex-compiler
+        	 ("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
+        	 :image-converter
+        	 ("magick -density %D -trim -antialias %f -quality 300 %O")))
+  (setq org-preview-latex-default-process 'tectonic))
+#+end_src
+
 
 ** Keybindings
 #+begin_src emacs-lisp

@@ -3,7 +3,8 @@
     #./asus
     ./bluetooth
     ./catppuccin
-    ./greeter
+    ./fonts
+    #./greeter
     ./hardware
     #./hyprland
     ./kernel

@@ -80,7 +80,7 @@
     mplus-outline-fonts.githubRelease
     nerd-fonts.jetbrains-mono
     nerd-fonts.symbols-only
-    nerd-fonts.caskaydia-mono
+    nerd-fonts.sauce-code-pro
     noto-fonts
     noto-fonts-color-emoji
     rubik
@@ -89,6 +89,8 @@
     ubuntu-classic
     ubuntu-sans
     vista-fonts
+    source-code-pro
+    cascadia-code
   ];
 
   # qt = {

@@ -13,8 +13,6 @@
           jupyter
           treesit-grammars.with-all-grammars
         ];
-      # Override specific package derivations
-      # Use this to apply patches, change versions, etc.
       override = final: prev: {
         org = null;
       };
