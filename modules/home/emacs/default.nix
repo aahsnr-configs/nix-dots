@@ -10,7 +10,9 @@
         with epkgs; [
           use-package
           vterm
-          jupyter
+          adaptive-wrap
+          visual-fill-column
+          auto-dim-other-buffers
           treesit-grammars.with-all-grammars
         ];
       override = final: prev: {

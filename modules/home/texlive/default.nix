@@ -2,7 +2,7 @@
   tex = pkgs.texlive.combine {
     inherit
       (pkgs.texlive)
-      scheme-medium
+      scheme-full
       metapost
       xetex
       dvisvgm
@@ -25,5 +25,6 @@ in {
     tectonic
     ghostscript
     imagemagick
+    djvu2pdf
   ];
 }

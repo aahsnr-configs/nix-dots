@@ -77,7 +77,7 @@
     ./xdg
     ./yazi
     ./zathura
-    ./zen-browser
+    #./zen-browser
     ./zoxide
   ];
 
