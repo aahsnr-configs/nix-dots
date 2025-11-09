@@ -1817,8 +1817,6 @@ We use *dape* for debugging. The UI for debugger windows is cleanly managed by t
 ;; Auto-open .ipynb files with ein
 (add-to-list 'auto-mode-alist '("\\.ipynb\\'" . ein:ipynb-mode))
 #+end_src
-
-
 ** ANSI Colors
 #+begin_src emacs-lisp
 (defun my/babel-ansi ()

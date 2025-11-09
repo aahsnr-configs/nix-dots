@@ -122,11 +122,11 @@ anything:
       where I don't have to export the python source code blocks to a pdf file.
 - [ ] I have set the following configuration options:
       `(setq-local
-      bidi-paragraph-direction 'left-to-right)`,
+bidi-paragraph-direction 'left-to-right)`,
       `(setq-local bidi-inhibit-bpa
-      t)` - instead of setting them with
-      org-mode using a lambda function. Does my method achieve the same
-      performance optimizations.?
+t)` - instead of setting them with org-mode
+      using a lambda function. Does my method achieve the same performance
+      optimizations.?
 - [ ] For the `Jupyter Configuration` of my emacs configuration file, is the
       `(with-eval-after-load 'ob-jupyter` necessary?
 
@@ -182,3 +182,29 @@ But also implement doom emacs's smartparens implementation and provide with
 instructions on how to use inheritance with direnv and .envrc using `use flake`
 
 Then update the existing markdown file with any changes.
+
+My emacs configuration is stored in ahsanur041@proton.me
+
+[without longer thinking] I basically queried with 2 prompts. Write 2 separate
+markdown files distinguishing so I can tell which prompt resulted in what
+response in the markdown. I know version 11 of the markdown output is the
+response from the 2nd prompt. Write another markdown file that contains the
+final form of the response from the 1st prompt. Furthermore the version 11 of
+the markdown output of the 2nd prompt is not properly formatted. There are
+errors in this markdown output. Make sure both the markdown output are
+well-formatted and are labelled 1st-prompt-markdown-output and
+2nd-prompt-markdown-output.
+
+[without longer thinking] Study my newly attached emacs configuration and
+determined what this green color comes from. Help me debug this. This green
+color should not come from the doom themes package or the theming setup in my
+emacs configuration
+
+[with longer thinking] Without using external emacs modeline package, modify the
+built-in emacs modeline with external emacs packages (not modeline package like
+doom-modeline, telephone-line) to have features, functionalities and aesthetics
+that mimic the modeline configuration from popular neovim distributions like
+nvchad and astronvim. The modeline configuration must also make use of nerd
+icons. It must also have quality-of-life features for use in emacs that are
+commonly found in emacs packages such doom-modeline. Furthermore the modeline's
+theming must match the color palette of the catppuccin mocha theme

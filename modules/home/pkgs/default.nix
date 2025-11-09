@@ -10,7 +10,6 @@
     zotero
     adw-gtk3
     qt6Packages.qt6ct
-    chafa
     trash-cli
     obsidian
     bottom

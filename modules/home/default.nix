@@ -66,7 +66,6 @@
     ./polkit
     ./python
     ./ripgrep
-    ./schizofox
     ./starship
     ./scripts
     ./swappy
@@ -77,7 +76,7 @@
     ./xdg
     ./yazi
     ./zathura
-    #./zen-browser
+    ./zen-browser
     ./zoxide
   ];
 

@@ -14,6 +14,8 @@
           visual-fill-column
           auto-dim-other-buffers
           treesit-grammars.with-all-grammars
+          minions
+          telephone-line
         ];
       override = final: prev: {
         org = null;
