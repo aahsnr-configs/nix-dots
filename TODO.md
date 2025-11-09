@@ -43,3 +43,8 @@ sudo nixos-rebuild boot --option extra-substituters https://install.determinate.
 - [ ] add environment variables
 - [ ] add systemd user service for nix-switcher-daemon
 - [ ] add environmental variables directly to system module
+
+# TODO emacs
+
+- [ ] Write a complete configuration for both doom emacs and vanilla emacs and
+      find a way to load these configs individually.
