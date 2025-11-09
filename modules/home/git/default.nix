@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # -------------------------------------------------------------------
   # SSH Configuration for Multiple GitHub Accounts
   # -------------------------------------------------------------------
@@ -56,7 +55,6 @@
       user = {
         name = "aahsnr-configs";
         email = "ahsanur041@proton.me";
-
       };
       init.defaultBranch = "main";
       "url \"git@github.com-aahsnr-configs:\"" = {
@@ -123,11 +121,10 @@
       editor = "nvim";
       aliases = {
         "auth-configs" = "auth switch --hostname github.com --user aahsnr-configs";
-        "auth-personal" = "auth switch --hostname github.com --user aahsnr-personal";
+        "auth-peronal" = "auth switch --hostname github.com --user aahsnr-personal";
         "auth-work" = "auth switch --hostname github.com --user aahsnr-work";
         "auth-common" = "auth switch --hostname github.com --user aahsnr-common";
       };
     };
   };
-
 }

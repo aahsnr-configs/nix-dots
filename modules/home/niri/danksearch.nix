@@ -5,12 +5,9 @@
   inputs,
   ...
 }:
-
-with lib;
-
-let
+with lib; let
   cfg = config.programs.danksearch;
-  tomlFormat = pkgs.formats.toml { };
+  tomlFormat = pkgs.formats.toml {};
 
   # Optimized default configuration
   defaultConfig = {
@@ -204,9 +201,7 @@ let
       ];
     };
   };
-
-in
-{
+in {
   options.programs.danksearch = {
     enable = mkEnableOption "danksearch filesystem search service";
 
@@ -280,7 +275,7 @@ in
         echo "URL: $API_URL"
         if ${curl}/bin/curl -s -o /dev/null -w "%{http_code}" "$API_URL/health" 2>/dev/null | ${gnugrep}/bin/grep -q "200"; then
           echo "Status: ✓ API responding"
-          
+
           # Try to get stats
           STATS=$(${curl}/bin/curl -s "$API_URL/api/stats" 2>/dev/null || echo "{}")
           if [ "$STATS" != "{}" ]; then
@@ -394,7 +389,7 @@ in
       Unit = {
         Description = "danksearch - Indexed filesystem search service";
         Documentation = "https://github.com/AvengeMedia/danksearch";
-        After = [ "graphical-session.target" ];
+        After = ["graphical-session.target"];
       };
 
       Service = {
@@ -426,7 +421,7 @@ in
       };
 
       Install = {
-        WantedBy = [ "graphical-session.target" ];
+        WantedBy = ["graphical-session.target"];
       };
     };
 
@@ -444,7 +439,7 @@ in
     };
 
     # Create directories
-    home.activation.dsearchSetup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    home.activation.dsearchSetup = lib.hm.dag.entryAfter ["writeBoundary"] ''
       $DRY_RUN_CMD mkdir -p ${config.home.homeDirectory}/.local/share/dsearch
       $DRY_RUN_CMD mkdir -p ${config.home.homeDirectory}/.config/dsearch
     '';
@@ -490,7 +485,11 @@ in
 
       Workers: ${toString cfg.settings.indexing.workers}
       Max file size: ${toString cfg.settings.indexing.max_content_size} bytes
-      Content extraction: ${if cfg.settings.indexing.extract_content then "enabled" else "disabled"}
+      Content extraction: ${
+        if cfg.settings.indexing.extract_content
+        then "enabled"
+        else "disabled"
+      }
 
       ## Troubleshooting
 

@@ -4,7 +4,7 @@
     ./bluetooth
     ./catppuccin
     ./fonts
-    #./greeter
+    ./greeter
     ./hardware
     #./hyprland
     ./kernel
@@ -19,7 +19,6 @@
     ./services
     ./security
     ./sound
-    ./systemd
     ./users
     ./zram
   ];

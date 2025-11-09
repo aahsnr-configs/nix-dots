@@ -11,8 +11,8 @@
 
     # Set default editor and other environment variables
     sessionVariables = {
-      BROWSER = "zen";
-      TERMINAL = "footclient";
+      BROWSER = "brave";
+      TERMINAL = "kitty";
       EDITOR = "emacsclient -t -a 'emacs'";
       VISUAL = "emacsclient -c -a 'emacs'";
     };
@@ -20,7 +20,7 @@
     pointerCursor = {
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Ice";
-      size = 20;
+      size = 14;
       gtk.enable = true;
       x11.enable = true;
     };
@@ -47,8 +47,8 @@
     ./btop
     ./cliphist
     ./dev
-    #./doom
-    ./emacs
+    ./doom
+    #./emacs
     ./eza
     ./fd-find
     ./fish

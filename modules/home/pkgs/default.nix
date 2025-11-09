@@ -17,7 +17,7 @@
     protonvpn-gui
     ticktick
     onlyoffice-desktopeditors
-    firefox
     papirus-icon-theme
+    tasks
   ];
 }

@@ -110,7 +110,7 @@ in {
           mode = {
             width = 1920;
             height = 1080;
-            refresh = 120.0;
+            refresh = 60.0;
           };
           scale = 1.0;
         };
@@ -291,6 +291,7 @@ in {
         QT_QPA_PLATFORMTHEME = "gtk3";
         QT_QPA_PLATFORMTHEME_QT6 = "gtk3";
         TERMINAL = "kitty";
+        BROWSER = "zen";
       };
 
       # Animations
@@ -530,10 +531,10 @@ in {
         "Mod+Ctrl+C".action = center-visible-columns;
 
         # Manual Sizing
-        "Mod+Minus".action = set-column-width "-10%";
-        "Mod+Equal".action = set-column-width "+10%";
-        "Mod+Shift+Minus".action = set-window-height "-10%";
-        "Mod+Shift+Equal".action = set-window-height "+10%";
+        "Mod+Minus".action = set-column-width "-5%";
+        "Mod+Equal".action = set-column-width "+5%";
+        "Mod+Shift+Minus".action = set-window-height "-5%";
+        "Mod+Shift+Equal".action = set-window-height "+5%";
 
         # Screenshots (using grim, slurp, and swappy)
         "Ctrl+Print".action = spawn "${screenshotScript}/bin/niri-screenshot" "full";

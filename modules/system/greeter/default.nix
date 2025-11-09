@@ -7,7 +7,7 @@
       };
       default_session = {
         user = "greeter";
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --command niri";
+        command = "${pkgs.tuigreet}/bin/tuigreet --command niri";
       };
     };
   };
