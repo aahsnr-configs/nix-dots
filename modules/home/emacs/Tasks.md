@@ -1,6 +1,0 @@
-- [ ] fix jupyter from being search outside of my project
-- [ ] install dictionaries programs for jinx
-- [x] delete recent files list if the emacs daemon is killed
-- [ ] use bufler instead of ibuffer
-- [ ] add smooth scrollig settings from doom emacs
-- [ ] remove all after-init hook to their default method
