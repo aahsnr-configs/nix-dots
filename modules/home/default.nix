@@ -47,7 +47,8 @@
     ./btop
     ./cliphist
     ./dev
-    ./doom
+    #./doom
+    ./emacs
     ./eza
     ./fd-find
     ./fish

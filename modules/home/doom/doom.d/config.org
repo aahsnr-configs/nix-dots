@@ -123,28 +123,13 @@
         lsp-bridge-enable-org-babel t))
 #+end_src
 
-** Code Formatting
-*Disable for now*
-#+begin_src emacs-lisp
-;; (after! apheleia
-;;   (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff))
-;;   (setf (alist-get 'python-ts-mode apheleia-mode-alist) '(ruff)))
-#+end_src
-
-** Flymake
-#+begin_src emacs-lisp
-(after! flymake
-  (setq flymake-no-changes-timeout 0.3
-        flymake-start-on-save-buffer t))
-#+end_src
-
 ** Jupyter
 #+begin_src emacs-lisp
-(after! ob-jupyter
+(after! org
   (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
                                                        (:session . "py")
                                                        (:kernel . "python3")))
-
+  (org-babel-jupyter-override-src-block "python")
   (setq ob-async-no-async-languages-alist '("jupyter-python")))
 #+end_src
 

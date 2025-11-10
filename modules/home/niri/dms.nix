@@ -95,13 +95,18 @@ in {
   ];
 
   programs.dankMaterialShell = {
+    quickshell.package = inputs.quickshell.packages.${pkgs.system}.default;
     enable = true;
     niri.enableSpawn = true;
-    quickshell.package = inputs.quickshell.packages.${pkgs.system}.default;
-    default.settings = {
-      theme = "dark";
-      dynamicTheming = true;
-    };
+    enableSystemMonitoring = true; # System monitoring widgets (dgop)
+    enableClipboard = true; # Clipboard history manager
+    enableVPN = true; # VPN management widget
+    enableBrightnessControl = true; # Backlight/brightness controls
+    enableColorPicker = true; # Color picker tool
+    enableDynamicTheming = true; # Wallpaper-based theming (matugen)
+    enableAudioWavelength = true; # Audio visualizer (cava)
+    enableCalendarEvents = true; # Calendar integration (khal)
+    enableSystemSound = true; # System sound effects
   };
 
   # Install dependencies and helper scripts
