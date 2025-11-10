@@ -367,26 +367,6 @@
           };
         };
 
-        # Notes (optional, useful for markdown)
-        notes = {
-          # obsidian-nvim = {
-          #   enable = true;
-          #   setupOpts = {
-          #     workspaces = [
-          #       {
-          #         name = "personal";
-          #         path = "~/notes";
-          #       }
-          #     ];
-          #   };
-          # };
-
-          # Or use mind-nvim for simpler note-taking
-          mind-nvim = {
-            enable = true;
-          };
-        };
-
         # Custom keymaps
         maps = {
           normal = {

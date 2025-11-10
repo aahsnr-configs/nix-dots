@@ -91,11 +91,6 @@ in {
           minions
           telephone-line
         ];
-
-      override = final: prev: {
-        # Use built-in org-mode instead of the version from repositories
-        org = null;
-      };
     })
   ];
 

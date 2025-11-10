@@ -47,8 +47,8 @@
     ./btop
     ./cliphist
     ./dev
-    ./doom
-    #./emacs
+    #./doom
+    ./emacs
     ./eza
     ./fd-find
     ./fish
@@ -68,6 +68,7 @@
     ./ripgrep
     ./starship
     ./scripts
+    ./schizofox
     ./swappy
     ./texlive
     ./tldr
