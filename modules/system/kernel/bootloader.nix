@@ -8,7 +8,7 @@
       luks.devices."luks-f3d8460b-b00c-4eba-ac46-e1b8478a46c8".device = "/dev/disk/by-uuid/f3d8460b-b00c-4eba-ac46-e1b8478a46c8";
     };
 
-    kernelPackages = pkgs.linuxPackages_cachyos;
+    kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
     kernelParams = [
       "splash"
@@ -34,6 +34,13 @@
 
     plymouth = {
       enable = true;
+      theme = "square_hud";
+      themePackages = with pkgs; [
+        # By default we would install all themes
+        (adi1090x-plymouth-themes.override {
+          selected_themes = ["square_hud"];
+        })
+      ];
     };
 
     tmp = {

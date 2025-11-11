@@ -2194,7 +2194,7 @@ wrap at `fill-column' via `ar/word-wrap-fill-style'."
   
   (setq acm-enable-doc nil
         acm-enable-jupyter t
-        acm-enable-capf nil
+        acm-enable-capf t
         acm-enable-doc-markdown-render 'async
         acm-enable-icon t
         acm-candidate-match-function 'orderless-literal
@@ -2202,8 +2202,15 @@ wrap at `fill-column' via `ar/word-wrap-fill-style'."
 
   (setq lsp-bridge-enable-hover-diagnostic t
         lsp-bridge-enable-auto-format-code t
+        lsp-bridge-enable-with-tramp t
+        lsp-bridge-enable-inlay-hint t
+        lsp-bridge-signature-show-function 'lsp-bridge-signature-show-with-frame
         lsp-bridge-enable-org-babel t
-        lsp-bridge-org-babel-lang-list nil))
+        lsp-bridge-org-babel-lang-list nil)
+
+  (setq lsp-bridge-semantic-tokens t)
+  (setq-default lsp-bridge-semantic-tokens-ignore-modifier-limit-types ["variable"]))
+
 
 ;; will this conflict with enable-search-words nil?
 ;; Enable search words only in specific modes

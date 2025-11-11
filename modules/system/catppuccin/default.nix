@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   catppuccin = {
     # cache.enable = true;
 
@@ -8,9 +7,9 @@
       flavor = "mocha";
     };
 
-    plymouth = {
-      enable = true;
-      flavor = "mocha";
-    };
+    # plymouth = {
+    #   enable = true;
+    #   flavor = "mocha";
+    # };
   };
 }

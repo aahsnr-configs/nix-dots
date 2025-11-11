@@ -4,7 +4,7 @@
     ./bluetooth
     ./catppuccin
     ./fonts
-    ./greeter
+    #./greeter
     ./hardware
     #./hyprland
     ./kernel
