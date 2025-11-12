@@ -1,19 +1,19 @@
 # TODO
 
-- [x] Furthermore, the lsp-brigde completion in my vanilla emacs configuration
+- [ ] Furthermore, the lsp-brigde completion in my vanilla emacs configuration
       is messing up with entering org structure templates using <el followed by
       TAB key to input the org-structure-template for elisp and other templates.
       Fix this issue as well.
 - [ ] find any duplicate, unneeded or overlapping configurations from different
       packages
-- [x] prevent search word from appearing as completion candidates for lsp-bridge
+- [ ] prevent search word from appearing as completion candidates for lsp-bridge
       as it lowers my typing speed and explain what purpose it serves by
       studying the lsp-bridge github page's readme in
       `https://raw.githubusercontent.com/manateelazycat/lsp-bridge/refs/heads/master/README.md`
 - [ ] fix typing lag in org-mode
 - [x] determine if it might be beneficial to make use of emacs' built-in
       project.el package might be more
-- [x] Is it possible to add :tangle to
+- [ ] Is it possible to add :tangle to
       org-babel-default-header-args:jupyter-python in the jupyter configuration
       section? If yes to this question, then add a default .py file. But since
       my org files and python files will be project specific, is it possible to
